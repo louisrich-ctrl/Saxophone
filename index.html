@@ -1,4 +1,3 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -41,16 +40,28 @@ svg{display:block;width:100%;height:auto}
 .warn{font-size:12px;color:var(--mute);margin-top:6px}
 .key{font-size:13px;color:var(--mute);font-family:system-ui,sans-serif;margin:0 0 10px}
 .empty{color:var(--mute);font-size:16px}
+.ad{display:flex;align-items:center;justify-content:center;text-align:center;color:var(--mute);font:12px system-ui,sans-serif;border:1px dashed var(--bd);border-radius:6px;overflow:hidden}
+.ad ins{display:block;width:100%;height:100%}
+.ad-top{width:100%;height:90px;margin:0 0 12px}
+.rail{display:none;position:fixed;top:24px;width:160px;height:600px}
+@media (min-width:1060px){
+ .rail{display:flex}
+ .rail-l{left:calc(50% - 320px - 190px)}
+ .rail-r{left:calc(50% + 320px + 30px)}
+}
 </style>
 </head>
 <body>
 <main>
 <h1>Alto Sax Note Finder</h1>
+<div class="ad ad-top" data-slot="top">Ad space (banner)</div>
 <p class="lead">Pick a note type, then tap a note to see its name and fingering.</p>
 <p class="key">Filled = pressed, open = up. Small boxes and circles around the holes are the octave, palm, pinky, side, bis and bell keys, as on your chart. <span class="red">Sharps ♯ are red</span>, <span class="blue">flats ♭ are blue</span>. Written pitch for E♭ alto sax.</p>
 <div class="tabs" id="mode" style="margin-bottom:12px"><button class="on" data-m="n" onclick="setMode('n')">Normal notes</button><button data-m="#" onclick="setMode('#')">Sharps ♯</button><button data-m="b" onclick="setMode('b')">Flats ♭</button></div>
 <div id="staves"></div>
 </main>
+<div class="ad rail rail-l" data-slot="left">Ad space<br>160 × 600</div>
+<div class="ad rail rail-r" data-slot="right">Ad space<br>160 × 600</div>
 <div id="panel"><div id="in">
 <div id="dia"></div>
 <div id="info"><div class="empty">Tap a note above.</div></div>
@@ -186,8 +197,24 @@ for(let st=0;st<F.length;st+=per){
 if(cur!==null)show(cur,alt)}
 function setMode(m){mode=m;document.querySelectorAll('#mode button').forEach(b=>b.classList.toggle('on',b.dataset.m===m));draw()}
 draw();
+
+// ---- ADS ----
+// 1. Sign up at https://adsense.google.com and add your site.
+// 2. Paste your publisher ID below (looks like 'ca-pub-1234567890123456').
+// 3. In AdSense, create three display ad units and paste each unit's slot number.
+// Leave client empty to keep the grey placeholders.
+const ADS={client:'',slots:{top:'',left:'',right:''}};
+(function(){
+ if(!ADS.client)return;
+ const sc=document.createElement('script');sc.async=true;sc.crossOrigin='anonymous';
+ sc.src='https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client='+ADS.client;
+ document.head.appendChild(sc);
+ document.querySelectorAll('.ad[data-slot]').forEach(box=>{
+  const id=ADS.slots[box.dataset.slot];if(!id)return;
+  box.innerHTML='<ins class="adsbygoogle" data-ad-client="'+ADS.client+'" data-ad-slot="'+id+'" data-ad-format="auto" data-full-width-responsive="true"></ins>';
+  (window.adsbygoogle=window.adsbygoogle||[]).push({});
+ });
+})();
 </script>
 </body>
 </html>
-
-</body></html>
