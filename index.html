@@ -5,12 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Alto Sax Note Finder</title>
 <style>
-:root{--bg:#f3efe6;--ink:#1d2a33;--mute:#6b7780;--line:#3a4650;--sel:#b8461f;--card:#fffdf8;--bd:#d9d2c3;--red:#d0202f;--blue:#1f5fd0;
+:root{--bg:#ffffff;--ink:#1d2a33;--mute:#6b7780;--line:#3a4650;--sel:#b8461f;--card:#ffffff;--bd:#d8dce0;--red:#d0202f;--blue:#1f5fd0;
 box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141b20;--ink:#e8e4da;--mute:#93a0a8;--line:#aab5bc;--sel:#f08a5d;--card:#1d262c;--bd:#33414a;--red:#ff6b6b;--blue:#6aa8ff}}
-:root[data-theme="dark"]{--bg:#141b20;--ink:#e8e4da;--mute:#93a0a8;--line:#aab5bc;--sel:#f08a5d;--card:#1d262c;--bd:#33414a;--red:#ff6b6b;--blue:#6aa8ff}
 *{box-sizing:border-box}
-html{scroll-padding-top:env(safe-area-inset-top,0px)}
+html{color-scheme:light;scroll-padding-top:env(safe-area-inset-top,0px)}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:Georgia,"Times New Roman",serif;padding-bottom:260px}
 main{max-width:640px;margin:0 auto;padding:16px 14px}
 h1{font-size:24px;margin:0 0 4px;font-weight:700}
@@ -41,6 +39,10 @@ svg{display:block;width:100%;height:auto}
 .key{font-size:13px;color:var(--mute);font-family:system-ui,sans-serif;margin:0 0 10px}
 .empty{color:var(--mute);font-size:16px}
 .ad{display:flex;align-items:center;justify-content:center;text-align:center;color:var(--mute);font:12px system-ui,sans-serif;border:1px dashed var(--bd);border-radius:6px;overflow:hidden}
+.ad a{display:flex;width:100%;height:100%;align-items:center;justify-content:center;color:inherit;text-decoration:none}
+.ad a:hover .adtxt{text-decoration:underline}
+.ad img{max-width:100%;max-height:100%;display:block}
+.adtxt b{display:block;font-size:13px;color:var(--ink);margin-bottom:2px}
 .ad ins{display:block;width:100%;height:100%}
 .ad-top{width:100%;height:90px;margin:0 0 12px}
 .rail{display:none;position:fixed;top:24px;width:160px;height:600px}
@@ -54,14 +56,14 @@ svg{display:block;width:100%;height:auto}
 <body>
 <main>
 <h1>Alto Sax Note Finder</h1>
-<div class="ad ad-top" data-slot="top">Ad space (banner)</div>
+<div class="ad ad-top" data-slot="top"><a href="#" class="adlink"></a></div>
 <p class="lead">Pick a note type, then tap a note to see its name and fingering.</p>
 <p class="key">Filled = pressed, open = up. Small boxes and circles around the holes are the octave, palm, pinky, side, bis and bell keys, as on your chart. <span class="red">Sharps ♯ are red</span>, <span class="blue">flats ♭ are blue</span>. Written pitch for E♭ alto sax.</p>
 <div class="tabs" id="mode" style="margin-bottom:12px"><button class="on" data-m="n" onclick="setMode('n')">Normal notes</button><button data-m="#" onclick="setMode('#')">Sharps ♯</button><button data-m="b" onclick="setMode('b')">Flats ♭</button></div>
 <div id="staves"></div>
 </main>
-<div class="ad rail rail-l" data-slot="left">Ad space<br>160 × 600</div>
-<div class="ad rail rail-r" data-slot="right">Ad space<br>160 × 600</div>
+<div class="ad rail rail-l" data-slot="left"><a href="#" class="adlink"></a></div>
+<div class="ad rail rail-r" data-slot="right"><a href="#" class="adlink"></a></div>
 <div id="panel"><div id="in">
 <div id="dia"></div>
 <div id="info"><div class="empty">Tap a note above.</div></div>
@@ -204,13 +206,27 @@ draw();
 // 3. In AdSense, create three display ad units and paste each unit's slot number.
 // Leave client empty to keep the grey placeholders.
 const ADS={client:'',slots:{top:'',left:'',right:''}};
+// ---- DIRECT SPONSORS ----
+// Sell a slot to a sax shop or teacher, then fill it in here. Leave img empty to show "Advertise here".
+// top = 728x90 banner, left/right = 160x600 tower. href = their website. alt = their name.
+const CONTACT='mailto:ads@altosaxfingerings.com?subject=Advertising%20on%20Alto%20Sax%20Fingerings';
+const SPONSORS={
+ top:{img:'',href:'',alt:''},
+ left:{img:'',href:'',alt:''},
+ right:{img:'',href:'',alt:''}
+};
+document.querySelectorAll('.ad[data-slot]').forEach(box=>{
+ const sp=SPONSORS[box.dataset.slot],a=box.querySelector('.adlink');if(!a)return;
+ if(sp&&sp.img){a.href=sp.href;a.target='_blank';a.rel='sponsored noopener';a.innerHTML='<img src="'+sp.img+'" alt="'+sp.alt+'">';}
+ else{a.href=CONTACT;a.innerHTML='<span class="adtxt"><b>Advertise here</b>Reach alto sax players. Click to enquire.</span>';}
+});
 (function(){
  if(!ADS.client)return;
  const sc=document.createElement('script');sc.async=true;sc.crossOrigin='anonymous';
  sc.src='https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client='+ADS.client;
  document.head.appendChild(sc);
  document.querySelectorAll('.ad[data-slot]').forEach(box=>{
-  const id=ADS.slots[box.dataset.slot];if(!id)return;
+  const id=ADS.slots[box.dataset.slot];if(!id||(SPONSORS[box.dataset.slot]&&SPONSORS[box.dataset.slot].img))return;
   box.innerHTML='<ins class="adsbygoogle" data-ad-client="'+ADS.client+'" data-ad-slot="'+id+'" data-ad-format="auto" data-full-width-responsive="true"></ins>';
   (window.adsbygoogle=window.adsbygoogle||[]).push({});
  });
