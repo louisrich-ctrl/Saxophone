@@ -61,6 +61,7 @@ svg{display:block;width:100%;height:auto}
 <p class="key">Filled = pressed, open = up. Small boxes and circles around the holes are the octave, palm, pinky, side, bis and bell keys, as on your chart. <span class="red">Sharps ♯ are red</span>, <span class="blue">flats ♭ are blue</span>. Written pitch for E♭ alto sax.</p>
 <div class="tabs" id="mode" style="margin-bottom:12px"><button class="on" data-m="n" onclick="setMode('n')">Normal notes</button><button data-m="#" onclick="setMode('#')">Sharps ♯</button><button data-m="b" onclick="setMode('b')">Flats ♭</button></div>
 <div id="staves"></div>
+<p id="privacy-note" class="key" hidden style="margin-top:14px">Visits are counted with Cloudflare Web Analytics. It uses no cookies and collects no personal information.</p>
 </main>
 <div class="ad rail rail-l" data-slot="left"><a href="#" class="adlink"></a></div>
 <div class="ad rail rail-r" data-slot="right"><a href="#" class="adlink"></a></div>
@@ -206,6 +207,21 @@ draw();
 // 3. In AdSense, create three display ad units and paste each unit's slot number.
 // Leave client empty to keep the grey placeholders.
 const ADS={client:'',slots:{top:'',left:'',right:''}};
+// ---- VISITOR COUNTER (Cloudflare Web Analytics: free, no cookies, no personal data) ----
+// 1. Sign in at https://dash.cloudflare.com, open Analytics & Logs, then Web Analytics, then Add a site.
+// 2. Enter your site address, choose "Manual setup", and copy the token from the snippet
+//    (the long code after "token":).
+// 3. Paste it below. Visits show in your Cloudflare dashboard within a few minutes.
+const ANALYTICS={cfToken:''};
+(function(){
+ if(!ANALYTICS.cfToken)return;
+ const sc=document.createElement('script');sc.defer=true;
+ sc.src='https://static.cloudflareinsights.com/beacon.min.js';
+ sc.setAttribute('data-cf-beacon',JSON.stringify({token:ANALYTICS.cfToken}));
+ document.head.appendChild(sc);
+ const f=document.getElementById('privacy-note');
+ if(f)f.hidden=false;
+})();
 // ---- DIRECT SPONSORS ----
 // Sell a slot to a sax shop or teacher, then fill it in here. Leave img empty to show "Advertise here".
 // top = 728x90 banner, left/right = 160x600 tower. href = their website. alt = their name.
