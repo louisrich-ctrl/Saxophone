@@ -58,7 +58,7 @@ svg{display:block;width:100%;height:auto}
 <h1>Alto Sax Note Finder</h1>
 <div class="ad ad-top" data-slot="top"><a href="#" class="adlink"></a></div>
 <p class="lead">Pick a note type, then tap a note to see its name and fingering.</p>
-<p class="key">Filled = pressed, open = up. Small boxes and circles around the holes are the octave, palm, pinky, side, bis and bell keys, as on your chart. <span class="red">Sharps ♯ are red</span>, <span class="blue">flats ♭ are blue</span>. Written pitch for E♭ alto sax.</p>
+<p class="key">Filled = pressed, open = up. Small boxes and circles around the holes are the octave, palm, pinky, side and bis keys. <span class="red">Sharps ♯ are red</span>, <span class="blue">flats ♭ are blue</span>. Written pitch for E♭ alto sax.</p>
 <div class="tabs" id="mode" style="margin-bottom:12px"><button class="on" data-m="n" onclick="setMode('n')">Normal notes</button><button data-m="#" onclick="setMode('#')">Sharps ♯</button><button data-m="b" onclick="setMode('b')">Flats ♭</button></div>
 <div id="staves"></div>
 <p id="privacy-note" class="key" hidden style="margin-top:14px">Visits are counted with Cloudflare Web Analytics. It uses no cookies and collects no personal information.</p>
@@ -75,31 +75,31 @@ const FL=['C','D♭','D','E♭','E','F','G♭','G','A♭','A','B♭','B'];
 const P='palm';
 // [letter, octave, accidental, [[octaveKey, leftHand, rightHand, extras]...]]
 const N=[
-['B',3,'b',[[0,'123','123','bell,tbBb']]],
-['B',3,'',[[0,'123','123','bell,tbB']]],
-['C',4,'',[[0,'123','123','bell']]],
-['C',4,'#',[[0,'123','123','bell,tbC#']]],
+['B',3,'b',[[0,'123','123','rpC,tbBb']]],
+['B',3,'',[[0,'123','123','rpC,tbB']]],
+['C',4,'',[[0,'123','123','rpC']]],
+['C',4,'#',[[0,'123','123','rpC,tbC#']]],
 ['D',4,'',[[0,'123','123','']]],
-['E',4,'b',[[0,'123','123','bell']]],
+['E',4,'b',[[0,'123','123','rpEb']]],
 ['E',4,'',[[0,'123','12','']]],
 ['F',4,'',[[0,'123','1','']]],
 ['F',4,'#',[[0,'123','2',''],[0,'123','1','sideF#']]],
 ['G',4,'',[[0,'123','','']]],
 ['G',4,'#',[[0,'123','','tbG#']]],
 ['A',4,'',[[0,'12','','']]],
-['B',4,'b',[[0,'12','','sideBb'],[0,'1','1',''],[0,'1','','bis']]],
+['B',4,'b',[[0,'12','','sideBb'],[0,'1','1',''],[0,'1','','bis'],[0,'1','2','']]],
 ['B',4,'',[[0,'1','','']]],
 ['C',5,'',[[0,'2','',''],[0,'1','','sideC']]],
 ['C',5,'#',[[0,'','','']]],
 ['D',5,'',[[1,'123','123','']]],
-['E',5,'b',[[1,'123','123','bell']]],
+['E',5,'b',[[1,'123','123','rpEb']]],
 ['E',5,'',[[1,'123','12','']]],
 ['F',5,'',[[1,'123','1','']]],
 ['F',5,'#',[[1,'123','2',''],[1,'123','1','sideF#']]],
 ['G',5,'',[[1,'123','','']]],
 ['G',5,'#',[[1,'123','','tbG#']]],
 ['A',5,'',[[1,'12','','']]],
-['B',5,'b',[[1,'12','','sideBb'],[1,'1','1',''],[1,'1','','bis']]],
+['B',5,'b',[[1,'12','','sideBb'],[1,'1','1',''],[1,'1','','bis'],[1,'1','2','']]],
 ['B',5,'',[[1,'1','','']]],
 ['C',6,'',[[1,'2','',''],[1,'1','','sideC']]],
 ['C',6,'#',[[1,'','','']]],
@@ -108,7 +108,7 @@ const N=[
 ['E',6,'',[[1,'','','palmD,palmEb,sideE']]],
 ['F',6,'',[[1,'','','palmD,palmEb,palmF,sideE'],[1,'2','','frontF']]]
 ];
-const CHIP={bell:'Bell key (pinky)',tbBb:'L pinky: B♭ key',tbB:'L pinky: B key','tbC#':'L pinky: C♯ key','tbG#':'L pinky: G♯ key',sideBb:'Side B♭ key',sideC:'Side C key',sideE:'Side E key','sideF#':'Side F♯ key',bis:'Bis key (small key between 1 and 2)',frontF:'Front F key',palmD:'Palm D key',palmEb:'Palm E♭ key',palmF:'Palm F key'};
+const CHIP={rpC:'R pinky: low C key',rpEb:'R pinky: low E♭ key',tbBb:'L pinky: B♭ key',tbB:'L pinky: B key','tbC#':'L pinky: C♯ key','tbG#':'L pinky: G♯ key',sideBb:'Side B♭ key',sideC:'Side C key',sideE:'Side E key','sideF#':'Side F♯ key',bis:'Bis key (small key between 1 and 2)',frontF:'Front F key',palmD:'Palm D key',palmEb:'Palm E♭ key',palmF:'Palm F key'};
 const Y=(s)=>100-(s-30)*5;
 let mode='n';
 function sp(n){let [l,o,a]=n;
@@ -161,10 +161,11 @@ function dia(f){
   const y=146+j*12;
   s+=`<rect x="28" y="${y}" width="10" height="10" stroke-width="1" ${fl(has(k))}/>`+t(25,y+8,l,7,'end');
  });
- // bell key
- s+=`<circle cx="38" cy="218" r="7" stroke-width="1.5" fill="none" stroke="${has('bell')?I:Mu}"/>`;
- if(has('bell'))s+=`<path d="M31 218 A7 7 0 0 0 45 218 Z" fill="${I}"/>`;
- s+=t(52,221,'bell',8,'start');
+ // right-hand pinky keys (low E♭, low C)
+ [['rpEb','E♭'],['rpC','C']].forEach(([k,l],j)=>{
+  const y=196+j*13;
+  s+=`<rect x="84" y="${y}" width="14" height="10" rx="3" stroke-width="1" ${fl(has(k))}/>`+t(101,y+8,l,7,'start');
+ });
  return s+'</svg>';
 }
 let cur=null,alt=0;
