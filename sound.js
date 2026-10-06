@@ -39,14 +39,14 @@
   if(ctx.state==='suspended')ctx.resume();
   var now=ctx.currentTime;
   stopWeb(now);
-  cur=build(ctx,ctx.destination,f,now+0.01,dur||1.3);
+  cur=build(ctx,ctx.destination,f,now+0.01,dur||DUR);
   return true;
  }
  function stopWeb(now){
   if(cur){try{cur.out.gain.cancelScheduledValues(now);cur.out.gain.setTargetAtTime(0.0001,now,0.03);cur.oscs.forEach(function(o){try{o.stop(now+0.2)}catch(e){}})}catch(e){}cur=null}
  }
  // Pre-rendered WAV played through an <audio> element: unlike raw Web Audio, iPhones do not mute it with the silent switch.
- var cache={},queued={},queue=[],busy=false,el=null,SR=44100;
+ var DUR=3,cache={},queued={},queue=[],busy=false,el=null,SR=22050; // DUR = note length in seconds
  function key(f){return f.toFixed(2)}
  function wav(buf){
   var d=buf.getChannelData(0),n=d.length,out=new DataView(new ArrayBuffer(44+n*2));
@@ -60,7 +60,7 @@
   var OAC=window.OfflineAudioContext||window.webkitOfflineAudioContext;if(!OAC||!window.URL||!window.Blob){done();return}
   var finished=false;function fin(buf){if(finished)return;finished=true;try{cache[key(f)]=wav(buf)}catch(e){}done()}
   try{
-   var ac=new OAC(1,Math.ceil(SR*1.6),SR);build(ac,ac.destination,f,0,1.3);
+   var ac=new OAC(1,Math.ceil(SR*(DUR+0.3)),SR);build(ac,ac.destination,f,0,DUR);
    ac.oncomplete=function(e){fin(e.renderedBuffer)};
    var r=ac.startRendering();if(r&&r.then)r.then(fin,function(){finished=true;done()});
   }catch(e){done()}
