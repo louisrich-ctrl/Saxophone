@@ -16,7 +16,7 @@
   var vib=ac.createOscillator();vib.frequency.value=5.3;
   var vg=ac.createGain();vg.gain.setValueAtTime(0,t0);vg.gain.linearRampToValueAtTime(0,t0+0.3);vg.gain.linearRampToValueAtTime(9,t0+0.8);
   vib.connect(vg);
-  var oscs=[vib],specs=[['sawtooth',-5,0.5],['sawtooth',5,0.5],['square',0,0.22]];
+  var oscs=[vib],specs=[['sawtooth',0,0.62],['square',0,0.22]];
   specs.forEach(function(s){
    var o=ac.createOscillator();o.type=s[0];o.frequency.value=f;o.detune.value=s[1];
    var g=ac.createGain();g.gain.value=s[2];
