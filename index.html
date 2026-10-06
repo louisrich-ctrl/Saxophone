@@ -273,15 +273,29 @@ const ANALYTICS={cfToken:''};
 // Sell a slot to a sax shop or teacher, then fill it in here. Leave img empty to show "Advertise here".
 // top = 728x90 banner, left/right = 160x600 tower. href = their website. alt = their name.
 const CONTACT='mailto:ads@altosaxfingerings.com?subject=Advertising%20on%20Alto%20Sax%20Fingerings';
+// Each slot takes ONE sponsor (exclusive) or a LIST of sponsors (shared, they take turns).
+// Exclusive:  top:{img:'banner.png',href:'https://shop.com',alt:'Shop name'},
+// Shared:     top:[{img:'a.png',href:'https://a.com',alt:'A'},{img:'b.png',href:'https://b.com',alt:'B'}],
+// Leave a slot as [] to show "Advertise here". Shared sponsors rotate every ROTATE_SECONDS.
+const ROTATE_SECONDS=12;
 const SPONSORS={
- top:{img:'',href:'',alt:''},
- left:{img:'',href:'',alt:''},
- right:{img:'',href:'',alt:''}
+ top:[],
+ left:[],
+ right:[]
 };
+const sponsorsFor=k=>[].concat(SPONSORS[k]||[]).filter(x=>x&&x.img);
 document.querySelectorAll('.ad[data-slot]').forEach(box=>{
- const sp=SPONSORS[box.dataset.slot],a=box.querySelector('.adlink');if(!a)return;
- if(sp&&sp.img){a.href=sp.href;a.target='_blank';a.rel='sponsored noopener';a.innerHTML='<img src="'+sp.img+'" alt="'+sp.alt+'">';}
- else{a.href=CONTACT;a.innerHTML='<span class="adtxt"><b>Advertise here</b>Reach alto sax players. Click to enquire.</span>';}
+ const a=box.querySelector('.adlink');if(!a)return;
+ const list=sponsorsFor(box.dataset.slot);
+ const show=sp=>{a.href=sp.href;a.target='_blank';a.rel='sponsored noopener';
+  a.innerHTML='';const im=new Image();im.src=sp.img;im.alt=sp.alt||'Sponsor';a.appendChild(im)};
+ if(!list.length){a.href=CONTACT;a.innerHTML='<span class="adtxt"><b>Advertise here</b>Reach alto sax players. Click to enquire.</span>';return}
+ let i=Math.floor(Math.random()*list.length);show(list[i]);
+ if(list.length>1){
+  let paused=false;
+  box.addEventListener('mouseenter',()=>paused=true);box.addEventListener('mouseleave',()=>paused=false);
+  setInterval(()=>{if(paused||document.hidden)return;i=(i+1)%list.length;show(list[i])},ROTATE_SECONDS*1000);
+ }
 });
 (function(){
  if(!ADS.client)return;
@@ -289,7 +303,7 @@ document.querySelectorAll('.ad[data-slot]').forEach(box=>{
  sc.src='https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client='+ADS.client;
  document.head.appendChild(sc);
  document.querySelectorAll('.ad[data-slot]').forEach(box=>{
-  const id=ADS.slots[box.dataset.slot];if(!id||(SPONSORS[box.dataset.slot]&&SPONSORS[box.dataset.slot].img))return;
+  const id=ADS.slots[box.dataset.slot];if(!id||sponsorsFor(box.dataset.slot).length)return;
   box.innerHTML='<ins class="adsbygoogle" data-ad-client="'+ADS.client+'" data-ad-slot="'+id+'" data-ad-format="auto" data-full-width-responsive="true"></ins>';
   (window.adsbygoogle=window.adsbygoogle||[]).push({});
  });
