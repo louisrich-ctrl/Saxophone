@@ -38,6 +38,12 @@ svg{display:block;width:100%;height:auto}
 .warn{font-size:12px;color:var(--mute);margin-top:6px}
 .key{font-size:13px;color:var(--mute);font-family:system-ui,sans-serif;margin:0 0 10px}
 .empty{color:var(--mute);font-size:16px}
+.hero{min-height:150px;background:#10243a;color:#fff;display:flex;align-items:center;justify-content:center;gap:28px;padding:18px 20px calc(18px) ;border-bottom:4px solid #d9a441}
+.hero-t{max-width:340px}
+.hero h1{font-family:Georgia,serif;font-size:30px;line-height:1.1;margin:0 0 6px;color:#fff}
+.hero p{margin:0;font:16px/1.4 system-ui,sans-serif;color:#cfd8e3}
+.sax{width:118px;height:auto;flex:0 0 auto}
+@media (max-width:420px){.hero{gap:14px;padding:14px 16px}.hero h1{font-size:24px}.sax{width:70px}}
 .ad{display:flex;align-items:center;justify-content:center;text-align:center;color:var(--mute);font:12px system-ui,sans-serif;border:1px dashed var(--bd);border-radius:6px;overflow:hidden}
 .ad a{display:flex;width:100%;height:100%;align-items:center;justify-content:center;color:inherit;text-decoration:none}
 .ad a:hover .adtxt{text-decoration:underline}
@@ -45,7 +51,7 @@ svg{display:block;width:100%;height:auto}
 .adtxt b{display:block;font-size:13px;color:var(--ink);margin-bottom:2px}
 .ad ins{display:block;width:100%;height:100%}
 .ad-top{width:100%;height:90px;margin:0 0 12px}
-.rail{display:none;position:fixed;top:24px;width:160px;height:600px}
+.rail{display:none;position:fixed;top:190px;width:160px;height:600px}
 @media (min-width:1060px){
  .rail{display:flex}
  .rail-l{left:calc(50% - 320px - 190px)}
@@ -54,8 +60,37 @@ svg{display:block;width:100%;height:auto}
 </style>
 </head>
 <body>
+<header class="hero">
+ <div class="hero-t"><h1>Alto Sax Fingerings</h1><p>Tap a note. See the fingering.</p></div>
+ <svg class="sax" viewBox="0 0 220 300" aria-hidden="true" focusable="false">
+ <g fill="none" stroke="#d9a441" stroke-linecap="round" stroke-linejoin="round">
+  <!-- mouthpiece and neck -->
+  <path d="M38 22 L66 40" stroke-width="9"/>
+  <path d="M66 40 C96 46 112 60 110 88" stroke-width="7"/>
+  <!-- body tube, tapering down -->
+  <path d="M102 88 L88 214" stroke-width="4"/>
+  <path d="M118 88 L112 214" stroke-width="3"/>
+  <path d="M102 88 L118 88" stroke-width="3"/>
+  <!-- bow -->
+  <path d="M88 214 C84 268 168 280 176 222" stroke-width="3"/>
+  <path d="M112 214 C113 244 146 246 148 224" stroke-width="3"/>
+  <!-- bell -->
+  <path d="M176 222 C180 196 188 170 196 150" stroke-width="3"/>
+  <path d="M148 224 C150 206 154 188 158 170" stroke-width="3"/>
+  <ellipse cx="177" cy="160" rx="23" ry="9" transform="rotate(-26 177 160)" stroke-width="3"/>
+ </g>
+ <!-- keys -->
+ <g fill="#d9a441">
+  <circle cx="106" cy="112" r="5"/><circle cx="104" cy="132" r="5"/><circle cx="102" cy="152" r="5"/>
+  <circle cx="100" cy="176" r="5"/><circle cx="98" cy="194" r="5"/><circle cx="96" cy="210" r="4.2"/>
+  <rect x="121" y="104" width="12" height="6" rx="3"/><rect x="120" y="124" width="12" height="6" rx="3"/>
+  <rect x="118" y="146" width="12" height="6" rx="3"/><rect x="117" y="168" width="12" height="6" rx="3"/>
+  <circle cx="132" cy="196" r="4"/>
+  <circle cx="64" cy="58" r="3"/>
+ </g>
+</svg>
+</header>
 <main>
-<h1>Alto Sax Note Finder</h1>
 <div class="ad ad-top" data-slot="top"><a href="#" class="adlink"></a></div>
 <p class="lead">Pick a note type, then tap a note to see its name and fingering.</p>
 <p class="key">Filled = pressed, open = up. Small boxes and circles around the holes are the octave, palm, pinky, side and bis keys. <span class="red">Sharps ♯ are red</span>, <span class="blue">flats ♭ are blue</span>. Written pitch for E♭ alto sax.</p>
