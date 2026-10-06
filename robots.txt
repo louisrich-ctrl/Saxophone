@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://louisrich-ctrl.github.io/Saxophone/sitemap.xml

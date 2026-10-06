@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Alto Sax Note Finder</title>
+<title>Alto Sax Fingering Chart: tap any note | Alto Sax Fingerings</title>
 <style>
 :root{--bg:#ffffff;--ink:#1d2a33;--mute:#6b7780;--line:#3a4650;--sel:#b8461f;--card:#ffffff;--bd:#d8dce0;--red:#d0202f;--blue:#1f5fd0;
 box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);}
@@ -38,6 +38,8 @@ svg{display:block;width:100%;height:auto}
 .warn{font-size:12px;color:var(--mute);margin-top:6px}
 .key{font-size:13px;color:var(--mute);font-family:system-ui,sans-serif;margin:0 0 10px}
 .empty{color:var(--mute);font-size:16px}
+.about{margin-top:28px;font:16px/1.55 Georgia,serif;color:var(--ink)}.about h2{font-size:20px;margin:22px 0 6px}.about h3{font:600 15px system-ui,sans-serif;margin:14px 0 4px;color:var(--mute)}.about p{margin:6px 0}
+.notelinks{display:flex;flex-wrap:wrap;gap:6px}.notelinks a{border:1px solid var(--bd);border-radius:14px;padding:4px 10px;color:var(--ink);text-decoration:none;font:15px system-ui,sans-serif}.notelinks a:hover{background:#f1f4f7}.notelinks small{color:var(--mute);margin-left:1px}
 .hero{min-height:150px;background:#10243a;color:#fff;display:flex;align-items:center;justify-content:center;gap:28px;padding:18px 20px calc(18px) ;border-bottom:4px solid #d9a441}
 .hero-t{max-width:340px}
 .hero h1{font-family:Georgia,serif;font-size:30px;line-height:1.1;margin:0 0 6px;color:#fff}
@@ -58,6 +60,11 @@ svg{display:block;width:100%;height:auto}
  .rail-r{left:calc(50% + 320px + 30px)}
 }
 </style>
+<!--SEO-HEAD-START-->
+<meta name="description" content="Free interactive alto sax fingering chart. Tap any note on the staff to see its name and fingering, with sharps and flats shown separately. Low B♭ to high F.">
+<link rel="canonical" href="https://louisrich-ctrl.github.io/Saxophone/">
+<meta property="og:title" content="Alto Sax Fingering Chart: tap any note | Alto Sax Fingerings"><meta property="og:description" content="Free interactive alto sax fingering chart. Tap any note on the staff to see its name and fingering, with sharps and flats shown separately. Low B♭ to high F."><meta property="og:type" content="website"><meta property="og:url" content="https://louisrich-ctrl.github.io/Saxophone/">
+<!--SEO-HEAD-END-->
 </head>
 <body>
 <header class="hero">
@@ -97,6 +104,20 @@ svg{display:block;width:100%;height:auto}
 <div class="tabs" id="mode" style="margin-bottom:12px"><button class="on" data-m="n" onclick="setMode('n')">Normal notes</button><button data-m="#" onclick="setMode('#')">Sharps ♯</button><button data-m="b" onclick="setMode('b')">Flats ♭</button></div>
 <div id="staves"></div>
 <p class="key" style="margin-top:14px">Think a fingering is wrong? <a id="report" href="#">Tell us</a>. Corrections from teachers and players are welcome.</p>
+<!--NOTES-START-->
+<section class="about">
+<h2>Alto sax fingering chart</h2>
+<p>This interactive alto saxophone fingering chart covers every note from low B♭ to high F. Choose normal notes, sharps or flats, tap a note on the staff, and the chart shows its name, its written and concert pitch, and the keys to press. Where a note has alternate fingerings, such as F♯, B♭ and C, you can switch between them.</p>
+<h2>How to read the fingering diagram</h2>
+<p>A filled circle is a hole or key you press, and an open circle is one you leave up. The left hand plays the top three holes and the octave key, and the right hand plays the bottom three. The small shapes around them are the palm keys, the left and right pinky keys, the side keys and the bis key. Sharps are shown in red and flats in blue. A sharp and its matching flat, such as C♯ and D♭, use the same fingering.</p>
+<h2>Written pitch and concert pitch</h2>
+<p>Alto saxophone is an E♭ instrument. The notes on this chart are the written notes you read in your music. They sound a major sixth lower than written, so a written C sounds as an E♭.</p>
+<h2>Fingerings by note</h2>
+<h3>Low register (no octave key)</h3><p class="notelinks"><a href="notes/b-flat-3/">B♭<small>3</small></a> <a href="notes/b-3/">B<small>3</small></a> <a href="notes/c-4/">C<small>4</small></a> <a href="notes/c-sharp-4/">C♯<small>4</small></a> <a href="notes/d-4/">D<small>4</small></a> <a href="notes/e-flat-4/">E♭<small>4</small></a> <a href="notes/e-4/">E<small>4</small></a> <a href="notes/f-4/">F<small>4</small></a> <a href="notes/f-sharp-4/">F♯<small>4</small></a> <a href="notes/g-4/">G<small>4</small></a> <a href="notes/g-sharp-4/">G♯<small>4</small></a> <a href="notes/a-4/">A<small>4</small></a> <a href="notes/b-flat-4/">B♭<small>4</small></a> <a href="notes/b-4/">B<small>4</small></a> <a href="notes/c-5/">C<small>5</small></a> <a href="notes/c-sharp-5/">C♯<small>5</small></a></p>
+<h3>Middle register (octave key)</h3><p class="notelinks"><a href="notes/d-5/">D<small>5</small></a> <a href="notes/e-flat-5/">E♭<small>5</small></a> <a href="notes/e-5/">E<small>5</small></a> <a href="notes/f-5/">F<small>5</small></a> <a href="notes/f-sharp-5/">F♯<small>5</small></a> <a href="notes/g-5/">G<small>5</small></a> <a href="notes/g-sharp-5/">G♯<small>5</small></a> <a href="notes/a-5/">A<small>5</small></a> <a href="notes/b-flat-5/">B♭<small>5</small></a> <a href="notes/b-5/">B<small>5</small></a> <a href="notes/c-6/">C<small>6</small></a> <a href="notes/c-sharp-6/">C♯<small>6</small></a></p>
+<h3>High register (palm keys)</h3><p class="notelinks"><a href="notes/d-6/">D<small>6</small></a> <a href="notes/e-flat-6/">E♭<small>6</small></a> <a href="notes/e-6/">E<small>6</small></a> <a href="notes/f-6/">F<small>6</small></a></p>
+</section>
+<!--NOTES-END-->
 <p id="privacy-note" class="key" hidden style="margin-top:14px">Visits are counted with Cloudflare Web Analytics. It uses no cookies and collects no personal information.</p>
 </main>
 <div class="ad rail rail-l" data-slot="left"><a href="#" class="adlink"></a></div>
