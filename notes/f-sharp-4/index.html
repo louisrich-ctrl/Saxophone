@@ -30,5 +30,5 @@ p{margin:8px 0}.sub{color:var(--mute);font:15px/1.4 system-ui,sans-serif}
 <div class="nav"><span><a href="../f-4/">&larr; F (F4)</a></span><span><a href="../g-4/">G (G4) &rarr;</a></span></div>
 </main>
 <script src="../../sound.js"></script>
-<script>document.getElementById('play').addEventListener('click',function(){if(window.SaxSound)SaxSound.play(220.000)});</script>
+<script>document.getElementById('play').addEventListener('click',function(){if(window.SaxSound)SaxSound.play(220.000)});if(window.SaxSound)SaxSound.prepare([220.000]);</script>
 </body></html>

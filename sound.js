@@ -33,14 +33,60 @@
   oscs.forEach(function(o){o.start(t0);o.stop(t0+dur+0.3)});
   return{out:out,oscs:oscs};
  }
- function play(f,dur){
+ function webPlay(f,dur){
   var AC=window.AudioContext||window.webkitAudioContext;if(!AC)return false;
   if(!ctx)ctx=new AC();
   if(ctx.state==='suspended')ctx.resume();
   var now=ctx.currentTime;
-  if(cur){try{cur.out.gain.cancelScheduledValues(now);cur.out.gain.setTargetAtTime(0.0001,now,0.03);cur.oscs.forEach(function(o){try{o.stop(now+0.2)}catch(e){}})}catch(e){}}
+  stopWeb(now);
   cur=build(ctx,ctx.destination,f,now+0.01,dur||1.3);
   return true;
  }
- window.SaxSound={play:play,build:build};
+ function stopWeb(now){
+  if(cur){try{cur.out.gain.cancelScheduledValues(now);cur.out.gain.setTargetAtTime(0.0001,now,0.03);cur.oscs.forEach(function(o){try{o.stop(now+0.2)}catch(e){}})}catch(e){}cur=null}
+ }
+ // Pre-rendered WAV played through an <audio> element: unlike raw Web Audio, iPhones do not mute it with the silent switch.
+ var cache={},queued={},queue=[],busy=false,el=null,SR=44100;
+ function key(f){return f.toFixed(2)}
+ function wav(buf){
+  var d=buf.getChannelData(0),n=d.length,out=new DataView(new ArrayBuffer(44+n*2));
+  function w(o,t){for(var i=0;i<t.length;i++)out.setUint8(o+i,t.charCodeAt(i))}
+  w(0,'RIFF');out.setUint32(4,36+n*2,true);w(8,'WAVE');w(12,'fmt ');out.setUint32(16,16,true);out.setUint16(20,1,true);out.setUint16(22,1,true);
+  out.setUint32(24,buf.sampleRate,true);out.setUint32(28,buf.sampleRate*2,true);out.setUint16(32,2,true);out.setUint16(34,16,true);w(36,'data');out.setUint32(40,n*2,true);
+  for(var i=0;i<n;i++){var v=Math.max(-1,Math.min(1,d[i]));out.setInt16(44+i*2,v<0?v*32768:v*32767,true)}
+  return URL.createObjectURL(new Blob([out],{type:'audio/wav'}));
+ }
+ function renderOne(f,done){
+  var OAC=window.OfflineAudioContext||window.webkitOfflineAudioContext;if(!OAC||!window.URL||!window.Blob){done();return}
+  var finished=false;function fin(buf){if(finished)return;finished=true;try{cache[key(f)]=wav(buf)}catch(e){}done()}
+  try{
+   var ac=new OAC(1,Math.ceil(SR*1.6),SR);build(ac,ac.destination,f,0,1.3);
+   ac.oncomplete=function(e){fin(e.renderedBuffer)};
+   var r=ac.startRendering();if(r&&r.then)r.then(fin,function(){finished=true;done()});
+  }catch(e){done()}
+ }
+ function pump(){
+  if(busy||!queue.length)return;busy=true;
+  var f=queue.shift();
+  setTimeout(function(){renderOne(f,function(){busy=false;pump()})},0);
+ }
+ function prepare(freqs){freqs.forEach(function(f){var k=key(f);if(!cache[k]&&!queued[k]){queued[k]=1;queue.push(f)}});pump()}
+ function session(){try{if(navigator.audioSession)navigator.audioSession.type='playback'}catch(e){}}
+ function play(f,dur){
+  session();
+  var url=cache[key(f)];
+  if(url&&window.Audio){
+   try{
+    if(!el){el=new Audio();el.preload='auto'}
+    stopWeb(ctx?ctx.currentTime:0);
+    el.pause();el.src=url;el.currentTime=0;
+    var p=el.play();
+    if(p&&p.catch)p.catch(function(){webPlay(f,dur)});
+    return true;
+   }catch(e){}
+  }
+  prepare([f]);
+  return webPlay(f,dur);
+ }
+ window.SaxSound={play:play,prepare:prepare,build:build};
 })();

@@ -102,14 +102,14 @@ svg{display:block;width:100%;height:auto}
 <main>
 <div class="ad ad-top" data-slot="top"><a href="#" class="adlink"></a></div>
 <p class="lead">Pick a note type, then tap a note to see its name and fingering.</p>
-<p class="key">Filled = pressed, open = up. Small boxes and circles around the holes are the octave, palm, pinky, side and bis keys. <span class="red">Sharps ♯ are red</span>, <span class="blue">flats ♭ are blue</span>. Written pitch for E♭ alto sax.</p>
+<p class="key">Filled = pressed, open = up. Small boxes and circles around the holes are the octave, palm, pinky, side and bis keys. <span class="red">Sharps ♯ are red</span>, <span class="blue">flats ♭ are blue</span>. Written pitch for E♭ alto sax. No sound? Check your volume and that your phone is not on silent.</p>
 <div class="tabs" id="mode" style="margin-bottom:12px"><button class="on" data-m="n" onclick="setMode('n')">Normal notes</button><button data-m="#" onclick="setMode('#')">Sharps ♯</button><button data-m="b" onclick="setMode('b')">Flats ♭</button><button id="snd" class="on" onclick="toggleSound()">Sound: on</button></div>
 <div id="staves"></div>
 <p class="key" style="margin-top:14px">Think a fingering is wrong? <a id="report" href="#">Tell us</a>. Corrections from teachers and players are welcome.</p>
 <!--NOTES-START-->
 <section class="about">
 <h2>Alto sax fingering chart</h2>
-<p>This interactive alto saxophone fingering chart covers every note from low B♭ to high F. Choose normal notes, sharps or flats, tap a note on the staff, and the chart shows its name, its written and concert pitch, and the keys to press. Where a note has alternate fingerings, such as F♯, B♭ and C, you can switch between them.</p>
+<p>This interactive alto saxophone fingering chart covers every note from low B♭ to high F. Choose normal notes, sharps or flats, tap a note on the staff, and the chart shows its name, its written and concert pitch, and the keys to press. Tap a note and you also hear it, played at the pitch an alto saxophone sounds. The tone is synthesised, so the pitch is exact but it is not a recording. Where a note has alternate fingerings, such as F♯, B♭ and C, you can switch between them.</p>
 <h2>How to read the fingering diagram</h2>
 <p>A filled circle is a hole or key you press, and an open circle is one you leave up. The left hand plays the top three holes and the octave key, and the right hand plays the bottom three. The small shapes around them are the palm keys, the left and right pinky keys, the side keys and the bis key. Sharps are shown in red and flats in blue. A sharp and its matching flat, such as C♯ and D♭, use the same fingering.</p>
 <h2>Written pitch and concert pitch</h2>
@@ -283,6 +283,7 @@ function setReport(){
  a.href=FEEDBACK+'?subject='+encodeURIComponent('Alto sax fingering correction')+'&body='+encodeURIComponent('Note: '+note+'.'+fing+'\n\nWhat should it be?\n');
 }
 setReport();
+if(window.SaxSound)SaxSound.prepare(N.map(fOf));
 // ---- VISITOR COUNTER (Cloudflare Web Analytics: free, no cookies, no personal data) ----
 // 1. Sign in at https://dash.cloudflare.com, open Analytics & Logs, then Web Analytics, then Add a site.
 // 2. Enter your site address, choose "Manual setup", and copy the token from the snippet

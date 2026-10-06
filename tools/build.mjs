@@ -101,7 +101,7 @@ ${fingBlocks}
 <div class="nav"><span>${prev?`<a href="../${prev.nm.slug}/">&larr; ${prev.nm.full} (${prev.d.written})</a>`:''}</span><span>${next?`<a href="../${next.nm.slug}/">${next.nm.full} (${next.d.written}) &rarr;</a>`:''}</span></div>
 </main>
 <script src="../../sound.js"></script>
-<script>document.getElementById('play').addEventListener('click',function(){if(window.SaxSound)SaxSound.play(${fOf(n).toFixed(3)})});</script>
+<script>document.getElementById('play').addEventListener('click',function(){if(window.SaxSound)SaxSound.play(${fOf(n).toFixed(3)})});if(window.SaxSound)SaxSound.prepare([${fOf(n).toFixed(3)}]);</script>
 </body></html>`;
  fs.mkdirSync(path.join(outDir,nm.slug),{recursive:true});
  fs.writeFileSync(path.join(outDir,nm.slug,'index.html'),page);
@@ -123,7 +123,7 @@ const links=groups.map(([t,fn])=>`<h3>${t}</h3><p class="notelinks">`+notes.filt
 const text=`<!--NOTES-START-->
 <section class="about">
 <h2>Alto sax fingering chart</h2>
-<p>This interactive alto saxophone fingering chart covers every note from low B♭ to high F. Choose normal notes, sharps or flats, tap a note on the staff, and the chart shows its name, its written and concert pitch, and the keys to press. Where a note has alternate fingerings, such as F♯, B♭ and C, you can switch between them.</p>
+<p>This interactive alto saxophone fingering chart covers every note from low B♭ to high F. Choose normal notes, sharps or flats, tap a note on the staff, and the chart shows its name, its written and concert pitch, and the keys to press. Tap a note and you also hear it, played at the pitch an alto saxophone sounds. The tone is synthesised, so the pitch is exact but it is not a recording. Where a note has alternate fingerings, such as F♯, B♭ and C, you can switch between them.</p>
 <h2>How to read the fingering diagram</h2>
 <p>A filled circle is a hole or key you press, and an open circle is one you leave up. The left hand plays the top three holes and the octave key, and the right hand plays the bottom three. The small shapes around them are the palm keys, the left and right pinky keys, the side keys and the bis key. Sharps are shown in red and flats in blue. A sharp and its matching flat, such as C♯ and D♭, use the same fingering.</p>
 <h2>Written pitch and concert pitch</h2>
