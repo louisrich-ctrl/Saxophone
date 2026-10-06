@@ -12,8 +12,8 @@ let html=fs.readFileSync(idxPath,'utf8');
 // ---- load the single source of truth (data + diagram code) from index.html ----
 const js=html.match(/<script>([\s\S]*)<\/script>/)[1];
 const a=js.indexOf('const L='),b=js.indexOf('let cur=null');
-const lib=new Function(js.slice(a,b)+';return {L,N,info,dia,CHIP,Y};')();
-const {L,N,info,dia,CHIP,Y}=lib;
+const lib=new Function(js.slice(a,b)+';return {L,N,info,dia,CHIP,Y,fOf};')();
+const {L,N,info,dia,CHIP,Y,fOf}=lib;
 
 // ---- helpers ----
 const FING={1:'index finger',2:'middle finger',3:'ring finger'};
@@ -68,6 +68,7 @@ p{margin:8px 0}.sub{color:var(--mute);font:15px/1.4 system-ui,sans-serif}
 .card{border:1px solid var(--bd);border-radius:8px;padding:12px 14px;margin:10px 0}
 .btn{display:inline-block;background:#10243a;color:#fff;text-decoration:none;font:600 15px system-ui,sans-serif;padding:10px 16px;border-radius:20px;margin:6px 0}
 .nav{display:flex;justify-content:space-between;gap:10px;margin:20px 0;font:15px system-ui,sans-serif}a{color:#1a4f9c}
+.play{font:600 15px system-ui,sans-serif;border:1px solid #10243a;background:#10243a;color:#fff;border-radius:20px;padding:9px 16px;cursor:pointer;margin:6px 0}.play:focus-visible{outline:3px solid #d9a441;outline-offset:2px}
 .small{font:14px/1.5 system-ui,sans-serif;color:var(--mute)}`;
 
 // ---- note pages ----
@@ -91,14 +92,17 @@ notes.forEach((o,k)=>{
 <main>
 <h1>Alto sax ${nm.full} fingering</h1>
 <p class="sub">Written ${d.written}. Sounds as ${d.concert} on an E♭ alto saxophone. ${register(main)[0].toUpperCase()+register(main).slice(1)}.</p>
-<div class="row"><div class="stf">${staff(n)}</div><div class="fing"><p>${nm.acc?`${nm.both} is the same fingering whichever way it is spelled. `:''}${describe(main)}</p></div></div>
+<div class="row"><div class="stf">${staff(n)}</div><div class="fing"><p><button class="play" id="play" type="button">&#9654; Hear this note</button></p><p>${nm.acc?`${nm.both} is the same fingering whichever way it is spelled. `:''}${describe(main)}</p></div></div>
 ${fingBlocks}
 <p><a class="btn" href="../../">Open the interactive fingering chart</a></p>
 <h2>About this fingering</h2>
 <p>This is the standard fingering for written ${d.written} on an E♭ alto saxophone. In the diagram a filled circle is a key you press and an open circle is one you leave up. The small shapes around the main holes are the octave, palm, pinky, side and bis keys.</p>
 <p class="small">Fingerings can differ slightly between saxophone models, and altissimo notes vary most. If something looks wrong, <a href="mailto:hello@altosaxfingerings.com?subject=${encodeURIComponent('Alto sax fingering correction: '+nm.full+' ('+d.written+')')}">tell us</a> and we will check it.</p>
 <div class="nav"><span>${prev?`<a href="../${prev.nm.slug}/">&larr; ${prev.nm.full} (${prev.d.written})</a>`:''}</span><span>${next?`<a href="../${next.nm.slug}/">${next.nm.full} (${next.d.written}) &rarr;</a>`:''}</span></div>
-</main></body></html>`;
+</main>
+<script src="../../sound.js"></script>
+<script>document.getElementById('play').addEventListener('click',function(){if(window.SaxSound)SaxSound.play(${fOf(n).toFixed(3)})});</script>
+</body></html>`;
  fs.mkdirSync(path.join(outDir,nm.slug),{recursive:true});
  fs.writeFileSync(path.join(outDir,nm.slug,'index.html'),page);
 });

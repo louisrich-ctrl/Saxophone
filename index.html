@@ -38,6 +38,8 @@ svg{display:block;width:100%;height:auto}
 .warn{font-size:12px;color:var(--mute);margin-top:6px}
 .key{font-size:13px;color:var(--mute);font-family:system-ui,sans-serif;margin:0 0 10px}
 .empty{color:var(--mute);font-size:16px}
+.play{font:600 14px system-ui,sans-serif;border:1px solid #10243a;background:#10243a;color:#fff;border-radius:18px;padding:7px 14px;margin:0 0 8px;cursor:pointer}
+.play:focus-visible{outline:3px solid #d9a441;outline-offset:2px}
 .about{margin-top:28px;font:16px/1.55 Georgia,serif;color:var(--ink)}.about h2{font-size:20px;margin:22px 0 6px}.about h3{font:600 15px system-ui,sans-serif;margin:14px 0 4px;color:var(--mute)}.about p{margin:6px 0}
 .notelinks{display:flex;flex-wrap:wrap;gap:6px}.notelinks a{border:1px solid var(--bd);border-radius:14px;padding:4px 10px;color:var(--ink);text-decoration:none;font:15px system-ui,sans-serif}.notelinks a:hover{background:#f1f4f7}.notelinks small{color:var(--mute);margin-left:1px}
 .hero{min-height:150px;background:#10243a;color:#fff;display:flex;align-items:center;justify-content:center;gap:28px;padding:18px 20px calc(18px) ;border-bottom:4px solid #d9a441}
@@ -101,7 +103,7 @@ svg{display:block;width:100%;height:auto}
 <div class="ad ad-top" data-slot="top"><a href="#" class="adlink"></a></div>
 <p class="lead">Pick a note type, then tap a note to see its name and fingering.</p>
 <p class="key">Filled = pressed, open = up. Small boxes and circles around the holes are the octave, palm, pinky, side and bis keys. <span class="red">Sharps ♯ are red</span>, <span class="blue">flats ♭ are blue</span>. Written pitch for E♭ alto sax.</p>
-<div class="tabs" id="mode" style="margin-bottom:12px"><button class="on" data-m="n" onclick="setMode('n')">Normal notes</button><button data-m="#" onclick="setMode('#')">Sharps ♯</button><button data-m="b" onclick="setMode('b')">Flats ♭</button></div>
+<div class="tabs" id="mode" style="margin-bottom:12px"><button class="on" data-m="n" onclick="setMode('n')">Normal notes</button><button data-m="#" onclick="setMode('#')">Sharps ♯</button><button data-m="b" onclick="setMode('b')">Flats ♭</button><button id="snd" class="on" onclick="toggleSound()">Sound: on</button></div>
 <div id="staves"></div>
 <p class="key" style="margin-top:14px">Think a fingering is wrong? <a id="report" href="#">Tell us</a>. Corrections from teachers and players are welcome.</p>
 <!--NOTES-START-->
@@ -126,6 +128,7 @@ svg{display:block;width:100%;height:auto}
 <div id="dia"></div>
 <div id="info"><div class="empty">Tap a note above.</div></div>
 </div></div>
+<script src="sound.js"></script>
 <script>
 const L=['C','D','E','F','G','A','B'],M=[0,2,4,5,7,9,11];
 const FL=['C','D♭','D','E♭','E','F','G♭','G','A♭','A','B♭','B'];
@@ -184,6 +187,7 @@ function info(n){
  const written=l+(a==='#'?'♯':a==='b'?'♭':'')+o;
  return{name,written,concert:FL[c%12]+(Math.floor(c/12)-1),s:o*7+i,a};
 }
+function fOf(n){const [l,o,a]=n,i=L.indexOf(l);const m=12*(o+1)+M[i]+(a==='#'?1:a==='b'?-1:0)-9;return 440*Math.pow(2,(m-69)/12)}
 function dia(f){
  const [oc,lh,rh,kx]=f,K=(kx||'').split(',');
  const has=k=>K.includes(k);
@@ -226,16 +230,20 @@ function dia(f){
  return s+'</svg>';
 }
 let cur=null,alt=0;
-function show(i,k){
+let soundOn=true;
+function playCur(){if(cur!==null&&window.SaxSound)SaxSound.play(fOf(N[cur]))}
+function toggleSound(){soundOn=!soundOn;const b=document.getElementById('snd');b.textContent='Sound: '+(soundOn?'on':'off');b.classList.toggle('on',soundOn)}
+function show(i,k,quiet){
  cur=i;alt=k||0;
  const n=N[i],d=info(n),fs=n[3],f=fs[alt];
  document.querySelectorAll('.hit').forEach(g=>g.classList.toggle('sel',+g.dataset.i===i));
  document.getElementById('dia').innerHTML=dia(f);
  const chips=(f[3]||'').split(',').filter(Boolean).map(k=>`<span class="chip">${CHIP[k]}</span>`).join('')+(f[0]?'<span class="chip">Octave key</span>':'');
- const tabs=fs.length>1?'<div class="tabs">'+fs.map((_,j)=>`<button class="${j===alt?'on':''}" onclick="show(${i},${j})">${j?'Alternate '+j:'Main'}</button>`).join('')+'</div>':'';
+ const tabs=fs.length>1?'<div class="tabs">'+fs.map((_,j)=>`<button class="${j===alt?'on':''}" onclick="show(${i},${j},true)">${j?'Alternate '+j:'Main'}</button>`).join('')+'</div>':'';
  const w=d.s>=43?'<div class="warn">Altissimo fingerings vary. Check with your teacher.</div>':'';
- document.getElementById('info').innerHTML=`<div class="big">${d.name}</div><div class="sub">Written ${d.written}. Sounds as ${d.concert}.</div><div class="chips">${chips}</div>${tabs}${w}`;
+ document.getElementById('info').innerHTML=`<div class="big">${d.name}</div><div class="sub">Written ${d.written}. Sounds as ${d.concert}.</div><button class="play" onclick="playCur()">&#9654; Play note</button><div class="chips">${chips}</div>${tabs}${w}`;
  setReport();
+ if(soundOn&&!quiet)playCur();
 }
 const E=[];N.forEach((n,i)=>{const [l,o,a]=n;if(a===''){E.push({i,l,o,a})}else{const t=L.indexOf(l);E.push({i,l:a==='#'?l:L[(t+6)%7],o,a:'#'},{i,l:a==='b'?l:L[(t+1)%7],o,a:'b'})}});
 const wrap=document.getElementById('staves'),per=11;
@@ -256,8 +264,8 @@ for(let st=0;st<F.length;st+=per){
  });
  wrap.insertAdjacentHTML('beforeend',s+'</svg></div>');
 }
-if(cur!==null)show(cur,alt)}
-function setMode(m){mode=m;document.querySelectorAll('#mode button').forEach(b=>b.classList.toggle('on',b.dataset.m===m));draw()}
+if(cur!==null)show(cur,alt,true)}
+function setMode(m){mode=m;document.querySelectorAll('#mode button[data-m]').forEach(b=>b.classList.toggle('on',b.dataset.m===m));draw()}
 draw();
 
 // ---- ADS ----
