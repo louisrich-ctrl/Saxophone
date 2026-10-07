@@ -1,7 +1,7 @@
 // Builds SEO pages from the fingering data in index.html.
 // Usage: node tools/build.mjs [BASE_URL]
 //   BASE_URL defaults to https://louisrich-ctrl.github.io/Saxophone
-//   After you buy the domain run: node tools/build.mjs https://altosaxfingerings.com
+//   After you buy the domain run: node tools/build.mjs https://saxophonefingeringchart.com
 import fs from 'node:fs';
 import path from 'node:path';
 const BASE=(process.argv[2]||'https://louisrich-ctrl.github.io/Saxophone').replace(/\/$/,'');
@@ -97,7 +97,7 @@ ${fingBlocks}
 <p><a class="btn" href="../../">Open the interactive fingering chart</a></p>
 <h2>About this fingering</h2>
 <p>This is the standard fingering for written ${d.written} on an E♭ alto saxophone. In the diagram a filled circle is a key you press and an open circle is one you leave up. The small shapes around the main holes are the octave, palm, pinky, side and bis keys.</p>
-<p class="small">Fingerings can differ slightly between saxophone models, and altissimo notes vary most. If something looks wrong, <a href="mailto:hello@altosaxfingerings.com?subject=${encodeURIComponent('Alto sax fingering correction: '+nm.full+' ('+d.written+')')}">tell us</a> and we will check it.</p>
+<p class="small">Fingerings can differ slightly between saxophone models, and altissimo notes vary most. If something looks wrong, <a href="mailto:hello@saxophonefingeringchart.com?subject=${encodeURIComponent('Alto sax fingering correction: '+nm.full+' ('+d.written+')')}">tell us</a> and we will check it.</p>
 <div class="nav"><span>${prev?`<a href="../${prev.nm.slug}/">&larr; ${prev.nm.full} (${prev.d.written})</a>`:''}</span><span>${next?`<a href="../${next.nm.slug}/">${next.nm.full} (${next.d.written}) &rarr;</a>`:''}</span></div>
 </main>
 <script src="../../sound.js"></script>
