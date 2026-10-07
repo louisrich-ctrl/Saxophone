@@ -43,13 +43,14 @@ svg{display:block;width:100%;height:auto}
 .about{margin-top:28px;font:16px/1.55 Georgia,serif;color:var(--ink)}.about h2{font-size:20px;margin:22px 0 6px}.about h3{font:600 15px system-ui,sans-serif;margin:14px 0 4px;color:var(--mute)}.about p{margin:6px 0}
 .notelinks{display:flex;flex-wrap:wrap;gap:6px}.notelinks a{border:1px solid var(--bd);border-radius:14px;padding:4px 10px;color:var(--ink);text-decoration:none;font:15px system-ui,sans-serif}.notelinks a:hover{background:#f1f4f7}.notelinks small{color:var(--mute);margin-left:1px}
 .hero{background:#10243a;border-bottom:4px solid #d9a441}
-.hero-in{display:grid;max-width:1000px;margin:0 auto}
+.hero-in{display:grid;max-width:1000px;margin:0 auto;position:relative}
+.dedic{position:absolute;right:16px;bottom:12px;z-index:2;color:#fff;font:italic 700 13px/1.3 Georgia,serif;text-shadow:0 1px 4px rgba(0,0,0,.8)}
 .hero-photo{grid-area:1/1;height:230px;background:url(assets/banner.jpg) center 40%/cover no-repeat #10243a;position:relative;-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 9%,#000 91%,transparent 100%);mask-image:linear-gradient(90deg,transparent 0,#000 9%,#000 91%,transparent 100%)}
 .hero-photo::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(16,36,58,.94) 0%,rgba(16,36,58,.78) 24%,rgba(16,36,58,0) 46%),linear-gradient(0deg,rgba(16,36,58,.55) 0%,rgba(16,36,58,0) 40%)}
 .hero-t{grid-area:1/1;align-self:center;z-index:1;padding:0 24px;max-width:300px;color:#fff}
 .hero h1{font-family:Georgia,serif;font-size:28px;line-height:1.12;margin:0 0 8px;color:#fff;text-shadow:0 1px 6px rgba(0,0,0,.5)}
 .hero p{margin:0;font:15px/1.4 system-ui,sans-serif;color:#d6dfe9}
-@media (max-width:700px){.hero-photo{height:170px;background-position:center 52%;-webkit-mask-image:none;mask-image:none}.hero-photo::after{background:linear-gradient(0deg,rgba(16,36,58,.35) 0%,rgba(16,36,58,0) 50%)}.hero-t{grid-area:2/1;align-self:start;padding:14px 16px 16px;max-width:none}.hero h1{font-size:24px}}
+@media (max-width:700px){.hero-photo{height:170px;background-position:center 52%;-webkit-mask-image:none;mask-image:none}.hero-photo::after{background:linear-gradient(0deg,rgba(16,36,58,.35) 0%,rgba(16,36,58,0) 50%)}.hero-t{grid-area:2/1;align-self:start;padding:14px 16px 16px;max-width:none}.hero h1{font-size:24px}.dedic{bottom:auto;top:142px;right:12px;font-size:12px}}
 .ad{display:flex;align-items:center;justify-content:center;text-align:center;color:var(--mute);font:12px system-ui,sans-serif;border:1px dashed var(--bd);border-radius:6px;overflow:hidden}
 .ad a{display:flex;width:100%;height:100%;align-items:center;justify-content:center;color:inherit;text-decoration:none}
 .ad a:hover .adtxt{text-decoration:underline}
@@ -74,6 +75,7 @@ svg{display:block;width:100%;height:auto}
 <header class="hero">
  <div class="hero-in">
   <div class="hero-photo" role="img" aria-label="A saxophonist silhouetted against a sunset, playing a saxophone"></div>
+  <div class="dedic">This site is dedicated to Xavier D.</div>
   <div class="hero-t"><h1>Saxophone Fingering Chart</h1><p>Tap a note. See the fingering.</p></div>
  </div>
 </header>
@@ -84,7 +86,6 @@ svg{display:block;width:100%;height:auto}
 <div class="tabs" id="mode" style="margin-bottom:12px"><button class="on" data-m="n" onclick="setMode('n')">Normal notes</button><button data-m="#" onclick="setMode('#')">Sharps ♯</button><button data-m="b" onclick="setMode('b')">Flats ♭</button><button id="snd" class="on" onclick="toggleSound()">Sound: on</button></div>
 <div id="staves"></div>
 <p class="key" style="margin-top:14px">Think a fingering is wrong? <a id="report" href="#">Tell us</a>. Corrections from teachers and players are welcome.</p>
-<p class="key" style="margin-top:10px;text-align:center;font-style:italic;font-weight:700">This site is dedicated to Xavier D.</p>
 <!--NOTES-START-->
 <section class="about">
 <h2>Saxophone fingering chart: alto, soprano and tenor</h2>
