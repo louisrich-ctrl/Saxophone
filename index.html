@@ -42,12 +42,14 @@ svg{display:block;width:100%;height:auto}
 .play:focus-visible{outline:3px solid #d9a441;outline-offset:2px}
 .about{margin-top:28px;font:16px/1.55 Georgia,serif;color:var(--ink)}.about h2{font-size:20px;margin:22px 0 6px}.about h3{font:600 15px system-ui,sans-serif;margin:14px 0 4px;color:var(--mute)}.about p{margin:6px 0}
 .notelinks{display:flex;flex-wrap:wrap;gap:6px}.notelinks a{border:1px solid var(--bd);border-radius:14px;padding:4px 10px;color:var(--ink);text-decoration:none;font:15px system-ui,sans-serif}.notelinks a:hover{background:#f1f4f7}.notelinks small{color:var(--mute);margin-left:1px}
-.hero{min-height:150px;background:#10243a;color:#fff;display:flex;align-items:center;justify-content:center;gap:28px;padding:18px 20px calc(18px) ;border-bottom:4px solid #d9a441}
-.hero-t{max-width:340px}
-.hero h1{font-family:Georgia,serif;font-size:30px;line-height:1.1;margin:0 0 6px;color:#fff}
-.hero p{margin:0;font:16px/1.4 system-ui,sans-serif;color:#cfd8e3}
-.sax{width:118px;height:auto;flex:0 0 auto}
-@media (max-width:420px){.hero{gap:14px;padding:14px 16px}.hero h1{font-size:24px}.sax{width:70px}}
+.hero{background:#10243a;border-bottom:4px solid #d9a441}
+.hero-in{display:grid;max-width:1000px;margin:0 auto}
+.hero-photo{grid-area:1/1;height:230px;background:url(assets/banner.jpg) center 46%/cover no-repeat #10243a;position:relative;-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 9%,#000 91%,transparent 100%);mask-image:linear-gradient(90deg,transparent 0,#000 9%,#000 91%,transparent 100%)}
+.hero-photo::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(16,36,58,.94) 0%,rgba(16,36,58,.78) 24%,rgba(16,36,58,0) 46%),linear-gradient(0deg,rgba(16,36,58,.55) 0%,rgba(16,36,58,0) 40%)}
+.hero-t{grid-area:1/1;align-self:center;z-index:1;padding:0 24px;max-width:300px;color:#fff}
+.hero h1{font-family:Georgia,serif;font-size:28px;line-height:1.12;margin:0 0 8px;color:#fff;text-shadow:0 1px 6px rgba(0,0,0,.5)}
+.hero p{margin:0;font:15px/1.4 system-ui,sans-serif;color:#d6dfe9}
+@media (max-width:700px){.hero-photo{height:170px;background-position:center 52%;-webkit-mask-image:none;mask-image:none}.hero-photo::after{background:linear-gradient(0deg,rgba(16,36,58,.35) 0%,rgba(16,36,58,0) 50%)}.hero-t{grid-area:2/1;align-self:start;padding:14px 16px 16px;max-width:none}.hero h1{font-size:24px}}
 .ad{display:flex;align-items:center;justify-content:center;text-align:center;color:var(--mute);font:12px system-ui,sans-serif;border:1px dashed var(--bd);border-radius:6px;overflow:hidden}
 .ad a{display:flex;width:100%;height:100%;align-items:center;justify-content:center;color:inherit;text-decoration:none}
 .ad a:hover .adtxt{text-decoration:underline}
@@ -55,7 +57,7 @@ svg{display:block;width:100%;height:auto}
 .adtxt b{display:block;font-size:13px;color:var(--ink);margin-bottom:2px}
 .ad ins{display:block;width:100%;height:100%}
 .ad-top{width:100%;height:90px;margin:0 0 12px}
-.rail{display:none;position:fixed;top:190px;width:160px;height:600px}
+.rail{display:none;position:fixed;top:254px;width:160px;height:600px}
 @media (min-width:1060px){
  .rail{display:flex}
  .rail-l{left:calc(50% - 320px - 190px)}
@@ -70,34 +72,10 @@ svg{display:block;width:100%;height:auto}
 </head>
 <body>
 <header class="hero">
- <div class="hero-t"><h1>Alto Sax Fingerings</h1><p>Tap a note. See the fingering.</p></div>
- <svg class="sax" viewBox="0 0 220 300" aria-hidden="true" focusable="false">
- <g fill="none" stroke="#d9a441" stroke-linecap="round" stroke-linejoin="round">
-  <!-- mouthpiece and neck -->
-  <path d="M38 22 L66 40" stroke-width="9"/>
-  <path d="M66 40 C96 46 112 60 110 88" stroke-width="7"/>
-  <!-- body tube, tapering down -->
-  <path d="M102 88 L88 214" stroke-width="4"/>
-  <path d="M118 88 L112 214" stroke-width="3"/>
-  <path d="M102 88 L118 88" stroke-width="3"/>
-  <!-- bow -->
-  <path d="M88 214 C84 268 168 280 176 222" stroke-width="3"/>
-  <path d="M112 214 C113 244 146 246 148 224" stroke-width="3"/>
-  <!-- bell -->
-  <path d="M176 222 C180 196 188 170 196 150" stroke-width="3"/>
-  <path d="M148 224 C150 206 154 188 158 170" stroke-width="3"/>
-  <ellipse cx="177" cy="160" rx="23" ry="9" transform="rotate(-26 177 160)" stroke-width="3"/>
- </g>
- <!-- keys -->
- <g fill="#d9a441">
-  <circle cx="106" cy="112" r="5"/><circle cx="104" cy="132" r="5"/><circle cx="102" cy="152" r="5"/>
-  <circle cx="100" cy="176" r="5"/><circle cx="98" cy="194" r="5"/><circle cx="96" cy="210" r="4.2"/>
-  <rect x="121" y="104" width="12" height="6" rx="3"/><rect x="120" y="124" width="12" height="6" rx="3"/>
-  <rect x="118" y="146" width="12" height="6" rx="3"/><rect x="117" y="168" width="12" height="6" rx="3"/>
-  <circle cx="132" cy="196" r="4"/>
-  <circle cx="64" cy="58" r="3"/>
- </g>
-</svg>
+ <div class="hero-in">
+  <div class="hero-photo" role="img" aria-label="A saxophonist in a dark hoodie and sunglasses playing an alto saxophone"></div>
+  <div class="hero-t"><h1>Alto Sax Fingerings</h1><p>Tap a note. See the fingering.</p></div>
+ </div>
 </header>
 <main>
 <div class="ad ad-top" data-slot="top"><a href="#" class="adlink"></a></div>
