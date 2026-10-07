@@ -1,4 +1,4 @@
-// Synthesised alto-sax-style tone (Web Audio). Not a recording: the pitch is exact, the timbre is an approximation.
+// Synthesised saxophone-style tone (Web Audio). Not a recording: the pitch is exact, the timbre is an approximation.
 (function(){
  var ctx=null,cur=null;
  function build(ac,dest,f,t0,dur){

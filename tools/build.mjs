@@ -12,8 +12,11 @@ let html=fs.readFileSync(idxPath,'utf8');
 // ---- load the single source of truth (data + diagram code) from index.html ----
 const js=html.match(/<script>([\s\S]*)<\/script>/)[1];
 const a=js.indexOf('const L='),b=js.indexOf('let cur=null');
-const lib=new Function(js.slice(a,b)+';return {L,N,info,dia,CHIP,Y,fOf};')();
-const {L,N,info,dia,CHIP,Y,fOf}=lib;
+const lib=new Function(js.slice(a,b)+';function setI(k){inst=k}return {L,N,info,dia,CHIP,Y,fOf,INSTR,setI};')();
+const {L,N,info,dia,CHIP,Y,fOf,INSTR,setI}=lib;
+const IK=Object.keys(INSTR);
+// concert pitch and frequency for every instrument
+const conc=n=>IK.map(k=>{setI(k);const r={k,I:INSTR[k],concert:info(n).concert,hz:fOf(n)};setI('alto');return r});
 
 // ---- helpers ----
 const FING={1:'index finger',2:'middle finger',3:'ring finger'};
@@ -76,9 +79,10 @@ const outDir=path.join(ROOT,'notes');
 fs.rmSync(outDir,{recursive:true,force:true});
 notes.forEach((o,k)=>{
  const {nm,f,d,n}=o,prev=notes[k-1],next=notes[k+1];
- const title=`Alto Sax ${nm.full} Fingering (Written ${d.written}) | Alto Sax Fingerings`;
+ const cc=conc(n);
+ const title=`Sax ${nm.full} Fingering (Written ${d.written}): Alto, Soprano, Tenor | Saxophone Fingering Chart`;
  const main=f[0];
- const desc=`How to play ${nm.both} (written ${d.written}) on alto sax: ${brief(main)}. Diagram, alternate fingerings and concert pitch (sounds as ${d.concert}).`;
+ const desc=`How to play ${nm.both} (written ${d.written}) on alto, soprano and tenor sax: ${brief(main)}. Diagram, alternate fingerings and the pitch each saxophone sounds.`;
  const url=`${BASE}/notes/${nm.slug}/`;
  const fingBlocks=f.map((x,j)=>`<div class="row"><div class="dia">${dia(x)}</div><div class="fing"><h3>${j?'Alternate fingering '+j:(f.length>1?'Main fingering':'Fingering')}</h3><p>${describe(x)}</p></div></div>`).join('\n');
  const page=`<!doctype html>
@@ -88,28 +92,28 @@ notes.forEach((o,k)=>{
 <link rel="canonical" href="${url}">
 <meta property="og:title" content="${esc(title)}"><meta property="og:description" content="${esc(desc)}"><meta property="og:type" content="website"><meta property="og:url" content="${url}">
 <style>${CSS}</style></head><body>
-<header class="bar"><a href="../../">Alto Sax Fingerings</a></header>
+<header class="bar"><a href="../../">Saxophone Fingering Chart</a></header>
 <main>
-<h1>Alto sax ${nm.full} fingering</h1>
-<p class="sub">Written ${d.written}. Sounds as ${d.concert} on an E♭ alto saxophone. ${register(main)[0].toUpperCase()+register(main).slice(1)}.</p>
-<div class="row"><div class="stf">${staff(n)}</div><div class="fing"><p><button class="play" id="play" type="button">&#9654; Hear this note</button></p><p>${nm.acc?`${nm.both} is the same fingering whichever way it is spelled. `:''}${describe(main)}</p></div></div>
+<h1>Sax ${nm.full} fingering</h1>
+<p class="sub">Written ${d.written}, the same fingering on alto, soprano and tenor saxophone. ${register(main)[0].toUpperCase()+register(main).slice(1)}.</p>
+<div class="row"><div class="stf">${staff(n)}</div><div class="fing"><p>${cc.map(c=>`<button class="play" data-hz="${c.hz.toFixed(3)}" type="button">&#9654; ${c.I.name}</button>`).join(' ')}</p><p class="small">${cc.map(c=>`${c.I.name} sounds ${c.concert}`).join('. ')}.</p><p>${nm.acc?`${nm.both} is the same fingering whichever way it is spelled. `:''}${describe(main)}</p></div></div>
 ${fingBlocks}
 <p><a class="btn" href="../../">Open the interactive fingering chart</a></p>
 <h2>About this fingering</h2>
-<p>This is the standard fingering for written ${d.written} on an E♭ alto saxophone. In the diagram a filled circle is a key you press and an open circle is one you leave up. The small shapes around the main holes are the octave, palm, pinky, side and bis keys.</p>
-<p class="small">Fingerings can differ slightly between saxophone models, and altissimo notes vary most. If something looks wrong, <a href="mailto:hello@saxophonefingeringchart.com?subject=${encodeURIComponent('Alto sax fingering correction: '+nm.full+' ('+d.written+')')}">tell us</a> and we will check it.</p>
+<p>This is the standard fingering for written ${d.written} on alto, soprano and tenor saxophone. All three use the same keys, but they sound at different pitches: ${cc.map(c=>`${c.I.name.toLowerCase()} (${c.I.pitch} instrument) sounds ${c.concert}`).join(', ')}. In the diagram a filled circle is a key you press and an open circle is one you leave up. The small shapes around the main holes are the octave, palm, pinky, side and bis keys.</p>
+<p class="small">Fingerings can differ slightly between saxophone models, and altissimo notes vary most. If something looks wrong, <a href="mailto:hello@saxophonefingeringchart.com?subject=${encodeURIComponent('Sax fingering correction: '+nm.full+' ('+d.written+')')}">tell us</a> and we will check it.</p>
 <div class="nav"><span>${prev?`<a href="../${prev.nm.slug}/">&larr; ${prev.nm.full} (${prev.d.written})</a>`:''}</span><span>${next?`<a href="../${next.nm.slug}/">${next.nm.full} (${next.d.written}) &rarr;</a>`:''}</span></div>
 </main>
 <script src="../../sound.js"></script>
-<script>document.getElementById('play').addEventListener('click',function(){if(window.SaxSound)SaxSound.play(${fOf(n).toFixed(3)})});if(window.SaxSound)SaxSound.prepare([${fOf(n).toFixed(3)}]);</script>
+<script>var hz=[${cc.map(c=>c.hz.toFixed(3)).join(',')}];document.querySelectorAll('.play').forEach(function(b){b.addEventListener('click',function(){if(window.SaxSound)SaxSound.play(parseFloat(b.dataset.hz))})});if(window.SaxSound)SaxSound.prepare(hz);</script>
 </body></html>`;
  fs.mkdirSync(path.join(outDir,nm.slug),{recursive:true});
  fs.writeFileSync(path.join(outDir,nm.slug,'index.html'),page);
 });
 
 // ---- homepage: SEO head + visible text + links to every note ----
-const hTitle='Alto Sax Fingering Chart: tap any note | Alto Sax Fingerings';
-const hDesc='Free interactive alto sax fingering chart. Tap any note on the staff to see its name and fingering, with sharps and flats shown separately. Low B♭ to high F.';
+const hTitle='Saxophone Fingering Chart: Alto, Soprano and Tenor | Tap any note';
+const hDesc='Free interactive saxophone fingering chart for alto, soprano and tenor sax. Tap any note on the staff to see its name and fingering, with sharps and flats shown separately. Low B♭ to high F.';
 html=html.replace(/<title>[\s\S]*?<\/title>/,`<title>${esc(hTitle)}</title>`);
 const head=`<!--SEO-HEAD-START-->
 <meta name="description" content="${esc(hDesc)}">
@@ -122,12 +126,13 @@ const groups=[['Low register (no octave key)',o=>o.f[0][0]===0],['Middle registe
 const links=groups.map(([t,fn])=>`<h3>${t}</h3><p class="notelinks">`+notes.filter(fn).map(o=>`<a href="notes/${o.nm.slug}/">${o.nm.short}${o.nm.acc?'':''}<small>${o.d.written.replace(/^[A-G][♯♭]?/,'')}</small></a>`).join(' ')+'</p>').join('\n');
 const text=`<!--NOTES-START-->
 <section class="about">
-<h2>Alto sax fingering chart</h2>
-<p>This interactive alto saxophone fingering chart covers every note from low B♭ to high F. Choose normal notes, sharps or flats, tap a note on the staff, and the chart shows its name, its written and concert pitch, and the keys to press. Tap a note and you also hear it, played at the pitch an alto saxophone sounds. The tone is synthesised, so the pitch is exact but it is not a recording. Where a note has alternate fingerings, such as F♯, B♭ and C, you can switch between them.</p>
+<h2>Saxophone fingering chart: alto, soprano and tenor</h2>
+<p>This interactive saxophone fingering chart covers every note from low B♭ to high F on alto, soprano and tenor saxophone. Pick your instrument, choose normal notes, sharps or flats, tap a note on the staff, and the chart shows its name, its written and concert pitch, and the keys to press. Tap a note and you also hear it, played at the pitch your chosen saxophone sounds. The tone is synthesised, so the pitch is exact but it is not a recording. Where a note has alternate fingerings, such as F♯, B♭ and C, you can switch between them.</p>
 <h2>How to read the fingering diagram</h2>
 <p>A filled circle is a hole or key you press, and an open circle is one you leave up. The left hand plays the top three holes and the octave key, and the right hand plays the bottom three. The small shapes around them are the palm keys, the left and right pinky keys, the side keys and the bis key. Sharps are shown in red and flats in blue. A sharp and its matching flat, such as C♯ and D♭, use the same fingering.</p>
 <h2>Written pitch and concert pitch</h2>
-<p>Alto saxophone is an E♭ instrument. The notes on this chart are the written notes you read in your music. They sound a major sixth lower than written, so a written C sounds as an E♭.</p>
+<p>Alto saxophone is an E♭ instrument, and soprano and tenor are B♭ instruments. The notes on this chart are the written notes you read in your music, and the fingering for a written note is the same on all three. What changes is the sounding pitch. Alto sounds a major sixth lower than written, so a written C sounds as an E♭. Soprano sounds a major second lower, so a written C sounds as a B♭. Tenor sounds a major ninth lower, which is a B♭ an octave below the soprano.</p>
+<p>Some details differ between instruments. Many sopranos and some altos have no low B♭ key, and altissimo fingerings (above high F) are the least standardised and vary between players and instruments.</p>
 <h2>Fingerings by note</h2>
 ${links}
 </section>
