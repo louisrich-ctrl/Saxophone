@@ -127,12 +127,11 @@ const links=groups.map(([t,fn])=>`<h3>${t}</h3><p class="notelinks">`+notes.filt
 const text=`<!--NOTES-START-->
 <section class="about">
 <h2>Saxophone fingering chart: alto, soprano and tenor</h2>
-<p>This interactive saxophone fingering chart covers every note from low B♭ to high F on alto, soprano and tenor saxophone. Pick your instrument, choose normal notes, sharps or flats, tap a note on the staff, and the chart shows its name, its written and concert pitch, and the keys to press. Tap a note and you also hear it, played at the pitch your chosen saxophone sounds. The tone is synthesised, so the pitch is exact but it is not a recording. Where a note has alternate fingerings, such as F♯, B♭ and C, you can switch between them.</p>
-<h2>How to read the fingering diagram</h2>
-<p>A filled circle is a hole or key you press, and an open circle is one you leave up. The left hand plays the top three holes and the octave key, and the right hand plays the bottom three. The small shapes around them are the palm keys, the left and right pinky keys, the side keys and the bis key. Sharps are shown in red and flats in blue. A sharp and its matching flat, such as C♯ and D♭, use the same fingering.</p>
-<h2>Written pitch and concert pitch</h2>
-<p>Alto saxophone is an E♭ instrument, and soprano and tenor are B♭ instruments. The notes on this chart are the written notes you read in your music, and the fingering for a written note is the same on all three. What changes is the sounding pitch. Alto sounds a major sixth lower than written, so a written C sounds as an E♭. Soprano sounds a major second lower, so a written C sounds as a B♭. Tenor sounds a major ninth lower, which is a B♭ an octave below the soprano.</p>
-<p>Some details differ between instruments. Many sopranos and some altos have no low B♭ key, and altissimo fingerings (above high F) are the least standardised and vary between players and instruments.</p>
+<p>Tap any note to see its fingering and hear it. Choose alto, soprano or tenor, then normal notes, sharps or flats. The notes are written pitch, and the fingering is the same on all three saxophones.</p>
+<h2>Reading the diagram</h2>
+<p>A filled circle is a key you press and an open circle is one you leave up. Sharps are red and flats are blue. A sharp and its matching flat use the same fingering.</p>
+<h2>Written and concert pitch</h2>
+<p>Alto (E♭) sounds a major sixth lower than written. Soprano and tenor (B♭) sound a major second and a major ninth lower.</p>
 <h2>Fingerings by note</h2>
 ${links}
 </section>

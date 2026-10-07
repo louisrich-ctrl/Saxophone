@@ -80,7 +80,6 @@ svg{display:block;width:100%;height:auto}
 <main>
 <div class="ad ad-top" data-slot="top"><a href="#" class="adlink"></a></div>
 <p class="lead">Pick a note type, then tap a note to see its name and fingering.</p>
-<p class="key">Filled = pressed, open = up. Small boxes and circles around the holes are the octave, palm, pinky, side and bis keys. <span class="red">Sharps ♯ are red</span>, <span class="blue">flats ♭ are blue</span>. <span id="instnote">Fingerings are the same on alto, soprano and tenor. Written pitch for E♭ alto sax; it sounds a major sixth lower.</span> No sound? Check your volume and that your phone is not on silent.</p>
 <div class="tabs" id="inst" style="margin-bottom:10px"><button class="on" data-i="alto" onclick="setInst('alto')">Alto sax</button><button data-i="soprano" onclick="setInst('soprano')">Soprano sax</button><button data-i="tenor" onclick="setInst('tenor')">Tenor sax</button></div>
 <div class="tabs" id="mode" style="margin-bottom:12px"><button class="on" data-m="n" onclick="setMode('n')">Normal notes</button><button data-m="#" onclick="setMode('#')">Sharps ♯</button><button data-m="b" onclick="setMode('b')">Flats ♭</button><button id="snd" class="on" onclick="toggleSound()">Sound: on</button></div>
 <div id="staves"></div>
@@ -89,12 +88,11 @@ svg{display:block;width:100%;height:auto}
 <!--NOTES-START-->
 <section class="about">
 <h2>Saxophone fingering chart: alto, soprano and tenor</h2>
-<p>This interactive saxophone fingering chart covers every note from low B♭ to high F on alto, soprano and tenor saxophone. Pick your instrument, choose normal notes, sharps or flats, tap a note on the staff, and the chart shows its name, its written and concert pitch, and the keys to press. Tap a note and you also hear it, played at the pitch your chosen saxophone sounds. The tone is synthesised, so the pitch is exact but it is not a recording. Where a note has alternate fingerings, such as F♯, B♭ and C, you can switch between them.</p>
-<h2>How to read the fingering diagram</h2>
-<p>A filled circle is a hole or key you press, and an open circle is one you leave up. The left hand plays the top three holes and the octave key, and the right hand plays the bottom three. The small shapes around them are the palm keys, the left and right pinky keys, the side keys and the bis key. Sharps are shown in red and flats in blue. A sharp and its matching flat, such as C♯ and D♭, use the same fingering.</p>
-<h2>Written pitch and concert pitch</h2>
-<p>Alto saxophone is an E♭ instrument, and soprano and tenor are B♭ instruments. The notes on this chart are the written notes you read in your music, and the fingering for a written note is the same on all three. What changes is the sounding pitch. Alto sounds a major sixth lower than written, so a written C sounds as an E♭. Soprano sounds a major second lower, so a written C sounds as a B♭. Tenor sounds a major ninth lower, which is a B♭ an octave below the soprano.</p>
-<p>Some details differ between instruments. Many sopranos and some altos have no low B♭ key, and altissimo fingerings (above high F) are the least standardised and vary between players and instruments.</p>
+<p>Tap any note to see its fingering and hear it. Choose alto, soprano or tenor, then normal notes, sharps or flats. The notes are written pitch, and the fingering is the same on all three saxophones.</p>
+<h2>Reading the diagram</h2>
+<p>A filled circle is a key you press and an open circle is one you leave up. Sharps are red and flats are blue. A sharp and its matching flat use the same fingering.</p>
+<h2>Written and concert pitch</h2>
+<p>Alto (E♭) sounds a major sixth lower than written. Soprano and tenor (B♭) sound a major second and a major ninth lower.</p>
 <h2>Fingerings by note</h2>
 <h3>Low register (no octave key)</h3><p class="notelinks"><a href="notes/b-flat-3/">B♭<small>3</small></a> <a href="notes/b-3/">B<small>3</small></a> <a href="notes/c-4/">C<small>4</small></a> <a href="notes/c-sharp-4/">C♯<small>4</small></a> <a href="notes/d-4/">D<small>4</small></a> <a href="notes/e-flat-4/">E♭<small>4</small></a> <a href="notes/e-4/">E<small>4</small></a> <a href="notes/f-4/">F<small>4</small></a> <a href="notes/f-sharp-4/">F♯<small>4</small></a> <a href="notes/g-4/">G<small>4</small></a> <a href="notes/g-sharp-4/">G♯<small>4</small></a> <a href="notes/a-4/">A<small>4</small></a> <a href="notes/b-flat-4/">B♭<small>4</small></a> <a href="notes/b-4/">B<small>4</small></a> <a href="notes/c-5/">C<small>5</small></a> <a href="notes/c-sharp-5/">C♯<small>5</small></a></p>
 <h3>Middle register (octave key)</h3><p class="notelinks"><a href="notes/d-5/">D<small>5</small></a> <a href="notes/e-flat-5/">E♭<small>5</small></a> <a href="notes/e-5/">E<small>5</small></a> <a href="notes/f-5/">F<small>5</small></a> <a href="notes/f-sharp-5/">F♯<small>5</small></a> <a href="notes/g-5/">G<small>5</small></a> <a href="notes/g-sharp-5/">G♯<small>5</small></a> <a href="notes/a-5/">A<small>5</small></a> <a href="notes/b-flat-5/">B♭<small>5</small></a> <a href="notes/b-5/">B<small>5</small></a> <a href="notes/c-6/">C<small>6</small></a> <a href="notes/c-sharp-6/">C♯<small>6</small></a></p>
@@ -249,8 +247,7 @@ for(let st=0;st<F.length;st+=per){
  wrap.insertAdjacentHTML('beforeend',s+'</svg></div>');
 }
 if(cur!==null)show(cur,alt,true)}
-function setInst(k){inst=k;document.querySelectorAll('#inst button').forEach(b=>b.classList.toggle('on',b.dataset.i===k));
- const I=INSTR[k];document.getElementById('instnote').innerHTML='Fingerings are the same on alto, soprano and tenor. Written pitch for '+I.pitch+' '+I.name.toLowerCase()+' sax; it sounds '+I.desc+' lower.';
+function setInst(k){inst=k;document.querySelectorAll('#inst button').forEach(b=>b.classList.toggle('on',b.dataset.i===k)); 
  if(window.SaxSound)SaxSound.prepare(N.map(n=>fOf(n)));setReport();if(cur!==null)show(cur,alt,true)}
 function setMode(m){mode=m;document.querySelectorAll('#mode button[data-m]').forEach(b=>b.classList.toggle('on',b.dataset.m===m));draw()}
 draw();
