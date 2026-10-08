@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://louisrich-ctrl.github.io/Saxophone/sitemap.xml
+Sitemap: https://saxophonefingeringchart.com/sitemap.xml
