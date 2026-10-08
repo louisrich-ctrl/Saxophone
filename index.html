@@ -58,11 +58,13 @@ svg{display:block;width:100%;height:auto}
 .adtxt b{display:block;font-size:13px;color:var(--ink);margin-bottom:2px}
 .ad ins{display:block;width:100%;height:100%}
 .ad-top{width:100%;height:90px;margin:0 0 12px}
+.qcard{flex-direction:column;border-left:3px solid #d9a441;padding:4px 0 4px 14px;transition:opacity .5s}.qcard.fade{opacity:0}.qmark{font:700 44px/0.8 Georgia,serif;color:#d9a441}.qt{margin:6px 0 10px;font:italic 17px/1.5 Georgia,serif;color:var(--ink)}.qa{margin:0;font:13px/1.4 system-ui,sans-serif;color:var(--mute)}
 .rail{display:none;position:fixed;top:254px;width:160px;height:600px}
 @media (min-width:1060px){
  .rail{display:flex}
  .rail-l{left:calc(50% - 320px - 190px)}
  .rail-r{left:calc(50% + 320px + 30px)}
+ .qcard{height:auto;max-height:600px;align-self:flex-start}
 }
 </style>
 <!--SEO-HEAD-START-->
@@ -103,12 +105,13 @@ svg{display:block;width:100%;height:auto}
 <p id="privacy-note" class="key" hidden style="margin-top:14px">Visits are counted with Cloudflare Web Analytics. It uses no cookies and collects no personal information.</p>
 </main>
 <div class="ad rail rail-l" data-slot="left"><a href="#" class="adlink"></a></div>
-<div class="ad rail rail-r" data-slot="right"><a href="#" class="adlink"></a></div>
+<aside class="rail rail-r qcard" id="quote" aria-live="off"><div class="qmark">&ldquo;</div><p class="qt" id="qt"></p><p class="qa" id="qa"></p></aside>
 <div id="panel"><div id="in">
 <div id="dia"></div>
 <div id="info"><div class="empty">Tap a note above.</div></div>
 </div></div>
 <script src="sound.js"></script>
+<script src="quotes.js"></script>
 <script>
 const L=['C','D','E','F','G','A','B'],M=[0,2,4,5,7,9,11];
 const FL=['C','D♭','D','E♭','E','F','G♭','G','A♭','A','B♭','B'];
@@ -259,6 +262,17 @@ draw();
 // 3. In AdSense, create three display ad units and paste each unit's slot number.
 // Leave client empty to keep the grey placeholders.
 const ADS={client:'',slots:{top:'',left:'',right:''}};
+
+// ---- QUOTES (right-hand panel): random start on every visit, then one new quote every 20 seconds ----
+(function(){
+ const Q=window.QUOTES||[],box=document.getElementById('quote');if(!box||!Q.length)return;
+ const t=document.getElementById('qt'),a=document.getElementById('qa');
+ let i=Math.floor(Math.random()*Q.length),paused=false;
+ const set=()=>{t.textContent=Q[i][0];a.textContent='\u2014 '+Q[i][1]};
+ set();
+ box.addEventListener('mouseenter',()=>paused=true);box.addEventListener('mouseleave',()=>paused=false);
+ setInterval(()=>{if(paused||document.hidden)return;box.classList.add('fade');setTimeout(()=>{i=(i+1)%Q.length;set();box.classList.remove('fade')},500)},20000);
+})();
 // ---- ERROR REPORTS ----
 const FEEDBACK='mailto:hello@saxophonefingeringchart.com';
 function setReport(){
