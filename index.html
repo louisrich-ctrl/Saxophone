@@ -59,12 +59,13 @@ svg{display:block;width:100%;height:auto}
 .ad ins{display:block;width:100%;height:100%}
 .ad-top{width:100%;height:90px;margin:0 0 12px}
 .qcard{flex-direction:column;border-left:3px solid #d9a441;padding:4px 0 4px 14px;transition:opacity .5s}.qcard.fade{opacity:0}.qmark{font:700 44px/0.8 Georgia,serif;color:#d9a441}.qt{margin:6px 0 10px;font:italic 17px/1.5 Georgia,serif;color:var(--ink)}.qa{margin:0;font:13px/1.4 system-ui,sans-serif;color:var(--mute)}
+.pcard{flex-direction:column;height:auto;max-height:600px;align-self:flex-start;border:1px solid var(--bd);border-radius:8px;padding:8px 8px 10px;background:#fff}.pcard .pl{font:600 10px system-ui,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--mute);margin-bottom:6px}.pcard a{display:block;text-decoration:none;color:var(--ink)}.pcard img{display:block;width:100%;height:auto;border-radius:4px;background:#f1f3f5}.pcard .pn{display:block;font:600 14px/1.3 system-ui,sans-serif;margin:8px 0 2px}.pcard .pp{display:block;font:700 17px system-ui,sans-serif}.pcard .pp small{font:12px system-ui,sans-serif;color:var(--mute);font-weight:400}.pcard .pb{display:block;margin-top:8px;text-align:center;background:#10243a;color:#fff;font:600 14px system-ui,sans-serif;padding:8px;border-radius:18px}.pcard a:hover .pb{background:#1b3a5c}
 .rail{display:none;position:fixed;top:254px;width:160px;height:600px}
 @media (min-width:1060px){
  .rail{display:flex}
  .rail-l{left:calc(50% - 320px - 190px)}
  .rail-r{left:calc(50% + 320px + 30px)}
- .qcard{height:auto;max-height:600px;align-self:flex-start}
+ .qcard,.pcard{height:auto;max-height:600px;align-self:flex-start}
 }
 </style>
 <!--SEO-HEAD-START-->
@@ -104,6 +105,7 @@ svg{display:block;width:100%;height:auto}
 <!--NOTES-END-->
 <p id="privacy-note" class="key" hidden style="margin-top:14px">Visits are counted with Cloudflare Web Analytics. It uses no cookies and collects no personal information.</p>
 </main>
+<aside class="rail rail-l pcard" id="sax-ad"><span class="pl">Sponsored</span><a href="mailto:ads@saxophonefingeringchart.com?subject=Enquiry%3A%20alto%20saxophone%20(A%24600)&amp;body=Hi%2C%20I%27m%20interested%20in%20the%20antique-finish%20alto%20saxophone%20(A%24600).%20Please%20send%20me%20more%20details." rel="sponsored"><img src="assets/sponsors/alto-sax-antique.jpg" alt="Alto saxophone with an antique finish" width="160" height="327"><b class="pn">Alto saxophone, antique finish</b><span class="pp">A$600 <small>(about US$417)</small></span><span class="pb">Enquire</span></a></aside>
 <aside class="rail rail-r qcard" id="quote" aria-live="off"><div class="qmark">&ldquo;</div><p class="qt" id="qt"></p><p class="qa" id="qa"></p></aside>
 <div id="panel"><div id="in">
 <div id="dia"></div>
