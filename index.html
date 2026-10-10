@@ -182,16 +182,18 @@ function dia(f){
  const fl=(on)=>on?`fill="${I}" stroke="${I}"`:`fill="none" stroke="${Mu}"`;
  const t=(x,y,txt,sz,anchor,col)=>`<text x="${x}" y="${y}" font-size="${sz}" text-anchor="${anchor||'middle'}" font-family="system-ui" fill="${col||Mu}">${txt}</text>`;
  let s='<svg viewBox="0 0 130 228" aria-label="Fingering diagram">';
+ // faint body tube so the keys read as sitting on a saxophone
+ s+=`<rect x="40" y="24" width="40" height="192" rx="18" fill="none" stroke="var(--bd)" stroke-width="1.5"/>`;
  // octave key
  s+=t(16,12,'oct',9)+`<rect x="7" y="18" width="18" height="28" rx="9" stroke-width="2" ${oc?`fill="${I}" stroke="${I}"`:`fill="none" stroke="${I}"`}/>`;
  // front F
  s+=`<circle cx="60" cy="14" r="4" stroke-width="1.5" ${fl(has('frontF'))}/>`;
- // palm keys
+ // palm keys: three angled, overlapping ovals stacked up the side of the upper bow
  [['palmD','D'],['palmEb','E♭'],['palmF','F']].forEach(([k,l],j)=>{
-  const y=16+j*13;
-  s+=`<rect x="86" y="${y}" width="20" height="10" rx="5" stroke-width="1.5" ${fl(has(k))}/>`+t(112,y+8,l,8,'start');
+  const cx=96-j*0,cy=20+j*12;
+  s+=`<ellipse cx="${cx}" cy="${cy}" rx="11" ry="5.5" transform="rotate(-18 ${cx} ${cy})" stroke-width="1.5" ${fl(has(k))}/>`+t(111,cy+3,l,8,'start');
  });
- s+=t(96,12,'palm',8);
+ s+=t(96,8,'palm',8);
  // bis key
  s+=`<circle cx="42" cy="51" r="4" stroke-width="1.5" ${fl(has('bis'))}/>`;
  // finger holes
@@ -199,20 +201,20 @@ function dia(f){
  [1,2,3].forEach((k,j)=>s+=hole(k,36+j*30,lh.includes(k)));
  [1,2,3].forEach((k,j)=>s+=hole(k,140+j*30,rh.includes(k)));
  s+=t(122,70,'L',11)+t(122,174,'R',11);
- // left pinky table keys (G#, C#, B, Bb)
- [['tbG#','G♯'],['tbC#','C♯'],['tbB','B'],['tbBb','B♭']].forEach(([k,l],j)=>{
-  const y=100+j*9;
-  s+=`<rect x="84" y="${y}" width="14" height="9" stroke-width="1" ${fl(has(k))}/>`+t(101,y+7,l,7,'start');
+ // left pinky table keys (G#, C#, B, Bb): stacked paddles of increasing length
+ [['tbG#','G♯',12],['tbC#','C♯',15],['tbB','B',18],['tbBb','B♭',21]].forEach(([k,l,w],j)=>{
+  const y=98+j*11;
+  s+=`<rect x="82" y="${y}" width="${w}" height="9" rx="4.5" stroke-width="1.2" ${fl(has(k))}/>`+t(82+w+3,y+7,l,7,'start');
  });
- // right-hand side keys (E, C, Bb, F#)
+ // right-hand side keys (E, C, Bb, F#): angled ovals beside the upper right-hand holes
  [['sideE','E'],['sideC','C'],['sideBb','B♭'],['sideF#','F♯']].forEach(([k,l],j)=>{
-  const y=146+j*12;
-  s+=`<rect x="28" y="${y}" width="10" height="10" stroke-width="1" ${fl(has(k))}/>`+t(25,y+8,l,7,'end');
+  const cx=33,cy=148+j*12;
+  s+=`<ellipse cx="${cx}" cy="${cy}" rx="8" ry="4.5" transform="rotate(-25 ${cx} ${cy})" stroke-width="1.2" ${fl(has(k))}/>`+t(21,cy+3,l,7,'end');
  });
- // right-hand pinky keys (low E♭, low C)
+ // right-hand pinky keys (low E♭, low C): broad ovals at the foot of the tube
  [['rpEb','E♭'],['rpC','C']].forEach(([k,l],j)=>{
-  const y=196+j*13;
-  s+=`<rect x="84" y="${y}" width="14" height="10" rx="3" stroke-width="1" ${fl(has(k))}/>`+t(101,y+8,l,7,'start');
+  const cx=93,cy=201+j*14;
+  s+=`<ellipse cx="${cx}" cy="${cy}" rx="10" ry="6" stroke-width="1.2" ${fl(has(k))}/>`+t(106,cy+3,l,7,'start');
  });
  return s+'</svg>';
 }
