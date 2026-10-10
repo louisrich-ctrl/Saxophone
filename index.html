@@ -201,20 +201,21 @@ function dia(f){
  [1,2,3].forEach((k,j)=>s+=hole(k,36+j*30,lh.includes(k)));
  [1,2,3].forEach((k,j)=>s+=hole(k,140+j*30,rh.includes(k)));
  s+=t(122,70,'L',11)+t(122,174,'R',11);
- // left pinky table keys (G#, C#, B, Bb): stacked paddles of increasing length
- [['tbG#','G♯',12],['tbC#','C♯',15],['tbB','B',18],['tbBb','B♭',21]].forEach(([k,l,w],j)=>{
-  const y=98+j*11;
-  s+=`<rect x="82" y="${y}" width="${w}" height="9" rx="4.5" stroke-width="1.2" ${fl(has(k))}/>`+t(82+w+3,y+7,l,7,'start');
+ // left pinky table keys (G#, C#, B, Bb): broad curved plates, each with a raised lip along the bottom edge
+ [['tbG#','G♯'],['tbC#','C♯'],['tbB','B'],['tbBb','B♭']].forEach(([k,l],j)=>{
+  const y=95+j*11.5,on=has(k);
+  s+=`<rect x="82" y="${y}" width="22" height="10" rx="4.5" stroke-width="1.2" ${fl(on)}/><line x1="85" x2="101" y1="${y+8}" y2="${y+8}" stroke="${on?'var(--bg)':Mu}" stroke-width="1.4" stroke-linecap="round"/>`+t(107,y+8,l,7,'start');
  });
- // right-hand side keys (E, C, Bb, F#): angled ovals beside the upper right-hand holes
+ // right-hand side keys (E, C, Bb, F#): silver teardrops, tip up, angled, in a staggered column beside the tube
+ const tear=(cx,cy,on)=>`<path d="M0,-9 C4,-4 7,0 7,3.5 A7,7 0 0 1 -7,3.5 C-7,0 -4,-4 0,-9Z" transform="translate(${cx} ${cy}) rotate(-18) scale(.82)" stroke-width="1.5" ${fl(on)}/>`;
  [['sideE','E'],['sideC','C'],['sideBb','B♭'],['sideF#','F♯']].forEach(([k,l],j)=>{
-  const cx=33,cy=148+j*12;
-  s+=`<ellipse cx="${cx}" cy="${cy}" rx="8" ry="4.5" transform="rotate(-25 ${cx} ${cy})" stroke-width="1.2" ${fl(has(k))}/>`+t(21,cy+3,l,7,'end');
+  const cx=31+(j%2?-3:2),cy=150+j*14;
+  s+=tear(cx,cy,has(k))+t(17,cy+3,l,7,'end');
  });
- // right-hand pinky keys (low E♭, low C): broad ovals at the foot of the tube
+ // right-hand pinky keys (low E♭, low C): broad plates with a black felt stripe
  [['rpEb','E♭'],['rpC','C']].forEach(([k,l],j)=>{
-  const cx=93,cy=201+j*14;
-  s+=`<ellipse cx="${cx}" cy="${cy}" rx="10" ry="6" stroke-width="1.2" ${fl(has(k))}/>`+t(106,cy+3,l,7,'start');
+  const y=195+j*14,on=has(k);
+  s+=`<rect x="82" y="${y}" width="24" height="12" rx="5" stroke-width="1.2" ${fl(on)}/><line x1="88" x2="100" y1="${y+6}" y2="${y+6}" stroke="${on?'var(--bg)':Mu}" stroke-width="3" stroke-linecap="round" opacity=".55"/>`+t(110,y+9,l,7,'start');
  });
  return s+'</svg>';
 }
