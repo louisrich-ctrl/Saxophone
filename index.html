@@ -106,7 +106,6 @@ svg{display:block;width:100%;height:auto}
 <!--NOTES-END-->
 <p id="privacy-note" class="key" hidden style="margin-top:14px">Visits are counted with Cloudflare Web Analytics. It uses no cookies and collects no personal information.</p>
 </main>
-<aside class="rail rail-l pcard" id="sax-ad"><span class="pl">Sponsored</span><a href="mailto:ads@saxophonefingeringchart.com?subject=Enquiry%3A%20alto%20saxophone%20(A%24600)&amp;body=Hi%2C%20I%27m%20interested%20in%20the%20antique-finish%20alto%20saxophone%20(A%24600).%20Please%20send%20me%20more%20details." rel="sponsored"><img src="assets/sponsors/alto-sax-antique.jpg" alt="Alto saxophone with an antique finish" width="160" height="327"><b class="pn">Alto saxophone, antique finish</b><span class="pp">A$600 <small>(about US$417)</small></span><span class="pb">Enquire</span></a></aside>
 <aside class="rail rail-r qcard" id="quote" aria-live="off"><div class="qmark">&ldquo;</div><p class="qt" id="qt"></p><p class="qa" id="qa"></p></aside>
 <div id="panel"><div id="in">
 <div id="dia"></div>
@@ -315,12 +314,12 @@ const ANALYTICS={cfToken:''};
 // top = 728x90 banner, left/right = 160x600 tower. href = their website. alt = their name.
 const CONTACT='mailto:ads@saxophonefingeringchart.com?subject=Advertising%20on%20Saxophone%20Fingering%20Chart';
 // Each slot takes ONE sponsor (exclusive) or a LIST of sponsors (shared, they take turns).
-// Exclusive:  top:{img:'banner.png',href:'https://shop.com',alt:'Shop name'},
+// Exclusive:  top:[],
 // Shared:     top:[{img:'a.png',href:'https://a.com',alt:'A'},{img:'b.png',href:'https://b.com',alt:'B'}],
 // Leave a slot as [] to show "Advertise here". Shared sponsors rotate every ROTATE_SECONDS.
 const ROTATE_SECONDS=12;
 const SPONSORS={
- top:{img:'assets/sponsors/online-sax-academy-728x90.png',href:'https://www.newonlinesaxacademy.com/',alt:'Online Sax Academy'},
+ top:[],
  left:[],
  right:[]
 };
@@ -330,7 +329,7 @@ document.querySelectorAll('.ad[data-slot]').forEach(box=>{
  const list=sponsorsFor(box.dataset.slot);
  const show=sp=>{a.href=sp.href;a.target='_blank';a.rel='sponsored noopener';
   a.innerHTML='';box.classList.add('filled');const im=new Image();im.src=sp.img;im.alt=sp.alt||'Sponsor';a.appendChild(im)};
- if(!list.length){a.href=CONTACT;a.innerHTML='<span class="adtxt"><b>Advertise here</b>Reach saxophone players. Click to enquire.</span>';return}
+ if(!list.length){box.style.display='none';return}
  let i=Math.floor(Math.random()*list.length);show(list[i]);
  if(list.length>1){
   let paused=false;
