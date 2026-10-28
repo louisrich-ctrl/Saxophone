@@ -68,6 +68,13 @@ svg{display:block;width:100%;height:auto}
  .rail-r{left:calc(50% + 320px + 30px)}
  .qcard,.pcard{height:auto;max-height:600px;align-self:flex-start}
 }
+.phbtn{margin:8px 0 0 8px;font:inherit;font-size:13px;border:1px solid var(--bd);background:#fff;color:var(--ink);border-radius:14px;padding:6px 12px;min-height:34px;cursor:pointer}
+#photoRail{display:none;flex-direction:column;cursor:zoom-in}#photoRail .pl{font:600 10px system-ui,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--mute);margin-bottom:6px}
+#photoRail svg,#phoBig svg{display:block;width:100%;height:auto}
+#phOv{position:fixed;inset:0;z-index:60;background:rgba(10,18,26,.78);display:none;align-items:center;justify-content:center;padding:12px}#phOv.open{display:flex}
+.phbox{position:relative;background:#f4f4f2;border-radius:10px;max-height:94vh;overflow:auto}.phbox svg{height:90vh;max-height:90vh;width:auto;max-width:92vw;display:block}
+.phx{position:absolute;top:6px;right:8px;z-index:2;font:600 22px/1 system-ui;border:0;background:rgba(255,255,255,.9);border-radius:50%;width:34px;height:34px;cursor:pointer;color:var(--ink)}
+@media (min-width:1280px){#photoRail.on{display:flex;left:calc(50% - 320px - 30px - 270px);width:270px;height:auto;top:254px}}
 </style>
 <!--SEO-HEAD-START-->
 <meta name="description" content="Free interactive saxophone fingering chart for alto, soprano and tenor sax. Tap any note on the staff to see its name and fingering, with sharps and flats shown separately. Low B♭ to high F.">
@@ -107,6 +114,8 @@ svg{display:block;width:100%;height:auto}
 <p id="privacy-note" class="key" hidden style="margin-top:14px">Visits are counted with Cloudflare Web Analytics. It uses no cookies and collects no personal information.</p>
 </main>
 <aside class="rail rail-r qcard" id="quote" aria-live="off"><div class="qmark">&ldquo;</div><p class="qt" id="qt"></p><p class="qa" id="qa"></p></aside>
+<aside class="rail" id="photoRail" onclick="openPhoto()" title="Tap to enlarge"><div class="pl">On a real alto</div><div id="phoSmall"></div></aside>
+<div id="phOv" onclick="closePhoto()"><div class="phbox" onclick="event.stopPropagation()"><button class="phx" onclick="closePhoto()" aria-label="Close">&times;</button><div id="phoBig"></div></div></div>
 <div id="panel"><div id="in">
 <div id="dia"></div>
 <div id="info"><div class="empty">Tap a note above.</div></div>
@@ -229,6 +238,44 @@ function dia(f){
 let cur=null,alt=0;
 let soundOn=true;
 function playCur(){if(cur!==null&&window.SaxSound)SaxSound.play(fOf(N[cur]))}
+
+// ---- photo of a real alto with the pressed keys lit in pink (alto only) ----
+// key positions are in the coordinates of a 1500x2000 photo; the shown crop starts at 40,30
+const PH={x:1500/473,y:2000/643};
+const HOT={oct:[190,148,6,16],frontF:[257,143,8,6.5],bis:[257,173,4.5,4],lh1:[257,158,7.5,6.5],lh2:[254,190,8,7],lh3:[266,207,10,8.5],
+ palmD:[282,165,4.5,12],palmEb:[277,193,4.5,12],palmF:[289,194,4.5,12],rh1:[202,390,10,10],rh2:[203,431,11,10],rh3:[188,468,10,10],
+ sideE:[167,335,4.5,10],sideC:[164,362,4.5,10],sideBb:[160,391,4.5,10],'sideF#':[170,446,4.5,9],rpEb:[148,486,9,6.5],rpC:[157,494,9,6.5]};
+function photoSvg(f,id){
+ const [oc,lh,rh,kx]=f,K=(kx||'').split(','),has=k=>K.includes(k),Pk='#e0457b',IK='#1d2a33',GR='#33414b';
+ const on={oct:!!oc,frontF:has('frontF'),bis:has('bis'),lh1:lh.includes(1),lh2:lh.includes(2),lh3:lh.includes(3),palmD:has('palmD'),palmEb:has('palmEb'),palmF:has('palmF'),
+  rh1:rh.includes(1),rh2:rh.includes(2),rh3:rh.includes(3),sideE:has('sideE'),sideC:has('sideC'),sideBb:has('sideBb'),'sideF#':has('sideF#'),rpEb:has('rpEb'),rpC:has('rpC')};
+ let s=`<svg viewBox="40 30 1240 1960" role="img" aria-label="Alto saxophone with the pressed keys in pink" xmlns="http://www.w3.org/2000/svg" font-family="system-ui"><image href="assets/alto-sax.jpg" x="40" y="30" width="1240" height="1960"/>`;
+ for(const k in HOT){if(!on[k])continue;const [x,y,rx,ry]=HOT[k];s+=`<ellipse cx="${x*PH.x}" cy="${y*PH.y}" rx="${rx*PH.x}" ry="${ry*PH.y}" fill="${Pk}" fill-opacity=".85" stroke="#fff" stroke-width="5"/>`}
+ const tk=(cx,cy,rx,ry,rot,k)=>`<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" transform="rotate(${rot} ${cx} ${cy})" fill="${has(k)?Pk:'#fff'}" stroke="${GR}" stroke-width="4"/>`;
+ s+=`<defs><marker id="ar${id}" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="${GR}"/></marker></defs><path d="M1000,712 L875,745" stroke="${GR}" stroke-width="4" fill="none" marker-end="url(#ar${id})"/>`;
+ s+=tk(1000,640,38,20,-12,'tbG#')+tk(978,688,24,18,0,'tbC#')+tk(1024,690,24,18,0,'tbB');
+ s+=`<path d="M958,729 h90 a8,8 0 0 1 8,8 v3 a28,28 0 0 1 -28,28 h-50 a28,28 0 0 1 -28,-28 v-3 a8,8 0 0 1 8,-8 z" fill="${has('tbBb')?Pk:'#fff'}" stroke="${GR}" stroke-width="4"/>`;
+ const co=(x1,y1,x2,y2,t,a)=>`<path d="M${x1},${y1} L${x2},${y2}" stroke="${GR}" stroke-width="3" fill="none"/><text x="${x2+(a==='end'?-8:8)}" y="${y2+10}" text-anchor="${a}" font-size="34" font-weight="600" fill="${IK}">${t}</text>`;
+ const T=k=>[HOT[k][0]*PH.x,HOT[k][1]*PH.y];let p;
+ p=T('oct');s+=co(p[0]-20,p[1],300,p[1]-40,'Octave key','end');
+ p=T('palmD');s+=co(p[0]+20,p[1]-10,1010,p[1]-120,'Palm keys','start');
+ p=T('sideC');s+=co(p[0]-20,p[1],300,p[1],'Side keys','end');
+ p=T('rpEb');s+=co(p[0]-30,p[1]+10,300,p[1]+90,'Low E\u266D and C','end');
+ s+=`<text x="1085" y="590" font-size="34" font-weight="600" text-anchor="end" fill="${IK}">Table keys</text>`;
+ s+=`<circle cx="90" cy="1930" r="20" fill="${Pk}" stroke="#fff" stroke-width="4"/><text x="120" y="1942" font-size="32" fill="${IK}">pressed</text>`;
+ return s+'</svg>';
+}
+function updatePhoto(f){
+ const rail=document.getElementById('photoRail');if(!rail)return;
+ const alto=inst==='alto';rail.classList.toggle('on',alto);
+ if(!alto){document.getElementById('phOv').classList.remove('open');return}
+ document.getElementById('phoSmall').innerHTML=photoSvg(f,'s');
+ document.getElementById('phoBig').innerHTML=photoSvg(f,'b');
+}
+function openPhoto(){if(inst==='alto')document.getElementById('phOv').classList.add('open')}
+function closePhoto(){document.getElementById('phOv').classList.remove('open')}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closePhoto()});
+updatePhoto([0,'','','']);
 function toggleSound(){soundOn=!soundOn;const b=document.getElementById('snd');b.textContent='Sound: '+(soundOn?'on':'off');b.classList.toggle('on',soundOn)}
 function show(i,k,quiet){
  cur=i;alt=k||0;
@@ -238,8 +285,9 @@ function show(i,k,quiet){
  const chips=(f[3]||'').split(',').filter(Boolean).map(k=>`<span class="chip">${CHIP[k]}</span>`).join('')+(f[0]?'<span class="chip">Octave key</span>':'');
  const tabs=fs.length>1?'<div class="tabs">'+fs.map((_,j)=>`<button class="${j===alt?'on':''}" onclick="show(${i},${j},true)">${j?'Alternate '+j:'Main'}</button>`).join('')+'</div>':'';
  const w=d.s>=43?'<div class="warn">Altissimo fingerings vary. Check with your teacher.</div>':'';
- document.getElementById('info').innerHTML=`<div class="big">${d.name}</div><div class="sub">Written ${d.written}. Sounds as ${d.concert} on ${INSTR[inst].name.toLowerCase()} sax.</div><button class="play" onclick="playCur()">&#9654; Play note</button><div class="chips">${chips}</div>${tabs}${w}`;
+ document.getElementById('info').innerHTML=`<div class="big">${d.name}</div><div class="sub">Written ${d.written}. Sounds as ${d.concert} on ${INSTR[inst].name.toLowerCase()} sax.</div><button class="play" onclick="playCur()">&#9654; Play note</button>${inst==='alto'?'<button class="phbtn" onclick="openPhoto()">See it on a real alto</button>':''}<div class="chips">${chips}</div>${tabs}${w}`;
  setReport();
+ updatePhoto(f);
  if(soundOn&&!quiet)playCur();
 }
 const E=[];N.forEach((n,i)=>{const [l,o,a]=n;if(a===''){E.push({i,l,o,a})}else{const t=L.indexOf(l);E.push({i,l:a==='#'?l:L[(t+6)%7],o,a:'#'},{i,l:a==='b'?l:L[(t+1)%7],o,a:'b'})}});
@@ -263,7 +311,7 @@ for(let st=0;st<F.length;st+=per){
 }
 if(cur!==null)show(cur,alt,true)}
 function setInst(k){inst=k;document.querySelectorAll('#inst button').forEach(b=>b.classList.toggle('on',b.dataset.i===k)); 
- if(window.SaxSound)SaxSound.prepare(N.map(n=>fOf(n)));setReport();if(cur!==null)show(cur,alt,true)}
+ if(window.SaxSound)SaxSound.prepare(N.map(n=>fOf(n)));setReport();if(cur!==null)show(cur,alt,true);else updatePhoto([0,'','',''])}
 function setMode(m){mode=m;document.querySelectorAll('#mode button[data-m]').forEach(b=>b.classList.toggle('on',b.dataset.m===m));draw()}
 draw();
 
