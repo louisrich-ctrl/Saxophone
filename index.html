@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Saxophone Fingering Chart: Alto, Soprano and Tenor | Tap any note</title>
 <style>
-:root{--bg:#ffffff;--ink:#1d2a33;--mute:#6b7780;--line:#3a4650;--sel:#b8461f;--card:#ffffff;--bd:#d8dce0;--red:#d0202f;--blue:#1f5fd0;
+:root{--pink:#e0457b;--bg:#ffffff;--ink:#1d2a33;--mute:#6b7780;--line:#3a4650;--sel:#b8461f;--card:#ffffff;--bd:#d8dce0;--red:#d0202f;--blue:#1f5fd0;
 box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);}
 *{box-sizing:border-box}
 html{color-scheme:light;scroll-padding-top:env(safe-area-inset-top,0px)}
@@ -21,7 +21,7 @@ svg{display:block;width:100%;height:auto}
 .ring{fill:transparent;stroke:transparent}
 .hit{--c:var(--ink)}.hit.sh{--c:var(--red)}.hit.fl{--c:var(--blue)}
 .head{fill:var(--c)}
-.sel .ring{fill:none;stroke:var(--c);stroke-width:2}
+.sel .ring{fill:none;stroke:var(--pink);stroke-width:2}.sel .head{fill:var(--pink)}
 .red{color:var(--red)}.blue{color:var(--blue)}
 #panel{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:2px solid var(--ink);padding:10px 14px calc(10px + env(safe-area-inset-bottom,0px));font-family:system-ui,sans-serif}
 #in{max-width:640px;margin:0 auto;display:flex;gap:16px;align-items:center;min-height:210px}
@@ -179,7 +179,7 @@ function dia(f){
  const [oc,lh,rh,kx]=f,K=(kx||'').split(',');
  const has=k=>K.includes(k);
  const I='var(--ink)',Mu='var(--mute)';
- const fl=(on)=>on?`fill="${I}" stroke="${I}"`:`fill="none" stroke="${Mu}"`;
+ const fl=(on)=>on?`fill="var(--pink)" stroke="var(--pink)"`:`fill="none" stroke="${Mu}"`;
  const t=(x,y,txt,sz,anchor,col)=>`<text x="${x}" y="${y}" font-size="${sz}" text-anchor="${anchor||'middle'}" font-family="system-ui" fill="${col||Mu}">${txt}</text>`;
  const tear=(cx,cy,rot,sc,on)=>{const r=rot*Math.PI/180,tx=cx+Math.sin(r)*13*sc,ty=cy-Math.cos(r)*13*sc;
   return `<path d="M0,-13 C5,-8 9,-2 9,4 A9,8.5 0 0 1 -9,4 C-9,-2 -5,-8 0,-13Z" transform="translate(${cx} ${cy}) rotate(${rot}) scale(${sc})" stroke-width="1.5" ${fl(on)}/>`
@@ -188,7 +188,7 @@ function dia(f){
  // faint body tube so the keys read as sitting on a saxophone
  s+=`<rect x="40" y="24" width="40" height="204" rx="18" fill="none" stroke="var(--bd)" stroke-width="1.5"/>`;
  // octave key
- s+=t(16,12,'oct',9)+`<rect x="7" y="18" width="18" height="28" rx="9" stroke-width="2" ${oc?`fill="${I}" stroke="${I}"`:`fill="none" stroke="${I}"`}/>`;
+ s+=t(16,12,'oct',9)+`<rect x="7" y="18" width="18" height="28" rx="9" stroke-width="2" ${oc?`fill="var(--pink)" stroke="var(--pink)"`:`fill="none" stroke="${I}"`}/>`;
  // front F
  s+=`<circle cx="60" cy="14" r="4" stroke-width="1.5" ${fl(has('frontF'))}/>`;
  // palm keys, laid out as in the photo: D on its own above, then E♭ and F side by side on the same row, all tips up and leaning right
@@ -199,7 +199,7 @@ function dia(f){
  // bis key
  s+=`<circle cx="42" cy="51" r="4" stroke-width="1.5" ${fl(has('bis'))}/>`;
  // finger holes
- const hole=(k,cy,on)=>`<circle cx="60" cy="${cy}" r="12" stroke-width="2" ${on?`fill="${I}" stroke="${I}"`:`fill="none" stroke="${I}"`}/>`+t(60,cy+4,k,11,'middle',on?'var(--bg)':Mu);
+ const hole=(k,cy,on)=>`<circle cx="60" cy="${cy}" r="12" stroke-width="2" ${on?`fill="var(--pink)" stroke="var(--pink)"`:`fill="none" stroke="${I}"`}/>`+t(60,cy+4,k,11,'middle',on?'var(--bg)':Mu);
  [1,2,3].forEach((k,j)=>s+=hole(k,36+j*30,lh.includes(k)));
  [1,2,3].forEach((k,j)=>s+=hole(k,140+j*30,rh.includes(k)));
  s+=t(124,62,'L',11)+t(122,174,'R',11);
