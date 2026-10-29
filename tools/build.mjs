@@ -148,6 +148,7 @@ const guideExtra=`<h2>Scales and chords on the saxophone</h2>
 <p>Start with <a href="beginners/">your first six notes</a> (B, A, G, F, E and D), or print the <a href="print/">one-page fingering chart</a>.</p>`;
 const text=`<!--NOTES-START-->
 <section class="about">
+<details class="more"><summary>How to use this chart, alternate fingerings and range</summary>
 <h2>Saxophone fingering chart: alto, soprano and tenor</h2>
 <p>Tap any note to see its fingering and hear it. Choose alto, soprano or tenor, then normal notes, sharps or flats. The notes are written pitch, and the fingering is the same on all three saxophones.</p>
 <h2>Reading the diagram</h2>
@@ -155,6 +156,7 @@ const text=`<!--NOTES-START-->
 <h2>Written and concert pitch</h2>
 <p>Alto (E♭) sounds a major sixth lower than written. Soprano and tenor (B♭) sound a major second and a major ninth lower.</p>
 ${guideExtra}
+</details>
 <h2>Fingerings by note</h2>
 ${links}
 </section>
@@ -162,7 +164,7 @@ ${links}
 if(html.includes('<!--NOTES-START-->'))html=html.replace(/<!--NOTES-START-->[\s\S]*?<!--NOTES-END-->/,text);
 else html=html.replace('<p id="privacy-note"',text+'\n<p id="privacy-note"');
 if(!html.includes('.about{')){
- html=html.replace('.empty{color:var(--mute);font-size:16px}','.empty{color:var(--mute);font-size:16px}\n.about{margin-top:28px;font:16px/1.55 Georgia,serif;color:var(--ink)}.about h2{font-size:20px;margin:22px 0 6px}.about h3{font:600 15px system-ui,sans-serif;margin:14px 0 4px;color:var(--mute)}.about p{margin:6px 0}\n.notelinks{display:flex;flex-wrap:wrap;gap:6px}.notelinks a{border:1px solid var(--bd);border-radius:14px;padding:4px 10px;color:var(--ink);text-decoration:none;font:15px system-ui,sans-serif}.notelinks a:hover{background:#f1f4f7}.notelinks small{color:var(--mute);margin-left:1px}');
+ html=html.replace('.empty{color:var(--mute);font-size:16px}','.empty{color:var(--mute);font-size:16px}\n.about{margin-top:28px;font:16px/1.55 Georgia,serif;color:var(--ink)}.about h2{font-size:20px;margin:22px 0 6px}.about details.more{margin:6px 0 4px}.about summary{cursor:pointer;font:600 15px system-ui,sans-serif;color:#1a4f9c;padding:6px 0}.about h3{font:600 15px system-ui,sans-serif;margin:14px 0 4px;color:var(--mute)}.about p{margin:6px 0}\n.notelinks{display:flex;flex-wrap:wrap;gap:6px}.notelinks a{border:1px solid var(--bd);border-radius:14px;padding:4px 10px;color:var(--ink);text-decoration:none;font:15px system-ui,sans-serif}.notelinks a:hover{background:#f1f4f7}.notelinks small{color:var(--mute);margin-left:1px}');
 }
 fs.writeFileSync(idxPath,html);
 
