@@ -31,6 +31,8 @@ svg{display:block;width:100%;height:auto}
 .ch-n{border:1px solid var(--ink);border-radius:10px;background:transparent;color:var(--ink);font:inherit;padding:6px 12px;min-width:56px;text-align:center;cursor:pointer}
 .ch-n b{display:block;font-family:Georgia,serif;font-size:20px}.ch-n small{color:var(--mute);font-size:11px}
 .ch-n.on{background:var(--pink);border-color:var(--pink);color:#fff}.ch-n.on small{color:#fff}
+.cs{display:block;width:100%;max-width:470px;height:auto;margin:2px 0 10px}.cs-n{cursor:pointer}.cs-n .head{fill:var(--ink)}.cs-n .acc{fill:var(--ink)}.cs-n.on .head,.cs-n.on .acc{fill:var(--pink)}.cs-n.on .ring{stroke:var(--pink);stroke-width:2;fill:none}.cs-n .ring{fill:transparent;stroke:transparent}
+.qz-row{display:flex;gap:18px;align-items:center;flex-wrap:wrap}.qz-dia svg{width:110px;height:auto;display:block}.ch-n.good{background:var(--pink);border-color:var(--pink);color:#fff}.ch-n.good small{color:#fff}.ch-n.bad{opacity:.45}.foot2{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center}.lnk{background:none;border:0;padding:0;font:inherit;color:#1a4f9c;text-decoration:underline;cursor:pointer}
 .ch-play{font:inherit;font-size:14px;border:0;border-radius:18px;background:var(--ink);color:var(--bg);padding:8px 16px;cursor:pointer}
 #panel{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:2px solid var(--ink);padding:10px 14px calc(10px + env(safe-area-inset-bottom,0px));font-family:system-ui,sans-serif}
 #in{max-width:700px;margin:0 auto;display:flex;gap:16px;align-items:center;min-height:210px}
@@ -85,7 +87,7 @@ svg{display:block;width:100%;height:auto}
 <!--SEO-HEAD-START-->
 <meta name="description" content="Free interactive saxophone fingering chart for alto, soprano and tenor sax. Tap any note on the staff to see its name and fingering, with sharps and flats shown separately. Low B♭ to high F.">
 <link rel="canonical" href="https://saxophonefingeringchart.com/">
-<meta property="og:title" content="Saxophone Fingering Chart: Alto, Soprano and Tenor | Tap any note"><meta property="og:description" content="Free interactive saxophone fingering chart for alto, soprano and tenor sax. Tap any note on the staff to see its name and fingering, with sharps and flats shown separately. Low B♭ to high F."><meta property="og:type" content="website"><meta property="og:url" content="https://saxophonefingeringchart.com/">
+<meta property="og:title" content="Saxophone Fingering Chart: Alto, Soprano and Tenor | Tap any note"><meta property="og:description" content="Free interactive saxophone fingering chart for alto, soprano and tenor sax. Tap any note on the staff to see its name and fingering, with sharps and flats shown separately. Low B♭ to high F."><meta property="og:type" content="website"><meta property="og:url" content="https://saxophonefingeringchart.com/"><meta property="og:image" content="https://saxophonefingeringchart.com/assets/og-image.jpg"><meta name="twitter:card" content="summary_large_image"><meta name="theme-color" content="#10243a"><link rel="manifest" href="https://saxophonefingeringchart.com/manifest.webmanifest"><link rel="apple-touch-icon" href="https://saxophonefingeringchart.com/assets/icon-192.png">
 <script data-goatcounter="https://louisdatoy.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 <!--SEO-HEAD-END-->
 </head>
@@ -111,6 +113,11 @@ svg{display:block;width:100%;height:auto}
 <div class="tabs" id="chQual" style="margin-top:6px"></div>
 <div id="chOut" class="ch-out"></div>
 </section>
+<section class="chords" id="quiz">
+<h2 class="ch-h">Practice quiz</h2>
+<p class="key" style="margin:0 0 8px">Which note is this fingering? Pick the answer.</p>
+<div class="qz-row"><div id="qzDia" class="qz-dia"></div><div><div id="qzOpts" class="ch-notes"></div><div id="qzMsg" class="ch-sub" aria-live="polite"></div><button class="ch-play" id="qzNext" onclick="qzNew()" hidden>Next note</button><div class="ch-sub" id="qzScore"></div></div></div>
+</section>
 <p class="key" style="margin-top:14px">Think a fingering is wrong? <a id="report" href="#">Tell us</a>. Corrections from teachers and players are welcome.</p>
 <!--NOTES-START-->
 <section class="about">
@@ -120,6 +127,18 @@ svg{display:block;width:100%;height:auto}
 <p>A filled circle is a key you press and an open circle is one you leave up. Sharps are red and flats are blue. A sharp and its matching flat use the same fingering.</p>
 <h2>Written and concert pitch</h2>
 <p>Alto (E♭) sounds a major sixth lower than written. Soprano and tenor (B♭) sound a major second and a major ninth lower.</p>
+<h2>Scales and chords on the saxophone</h2>
+<p>Use the Scales and chords tool above the guide to see any major, minor, pentatonic, blues or chromatic scale, and common chord arpeggios, written out for alto, soprano or tenor. Tap a note to see its fingering, or press play to hear the scale or arpeggio. Key names can be shown as written pitch (your sheet music) or concert pitch.</p>
+<h2>Practice quiz</h2>
+<p>Test yourself with the quiz: it shows a fingering and you pick the note. It is a quick way to learn the notes by sight.</p>
+<h2>Alternate fingerings and trills</h2>
+<p>Some notes have more than one fingering. The alternates below are common for trills and fast passages, where a different key makes the move easier. Fingerings can vary between saxophone models, so check with your teacher.</p>
+<ul><li><strong>F♯ (written F♯4):</strong> left hand 1-2-3, right hand 1 and Side F♯ key.</li><li><strong>B♭ (written B♭4):</strong> left hand 1 and right hand 1; or left hand 1 and Bis key; or left hand 1 and right hand 2.</li><li><strong>C (written C5):</strong> left hand 1 and Side C key.</li><li><strong>F♯ (written F♯5):</strong> octave key, left hand 1-2-3, right hand 1 and Side F♯ key.</li><li><strong>B♭ (written B♭5):</strong> octave key, left hand 1 and right hand 1; or octave key, left hand 1 and Bis key; or octave key, left hand 1 and right hand 2.</li><li><strong>C (written C6):</strong> octave key, left hand 1 and Side C key.</li><li><strong>F (written F6):</strong> octave key, left hand 2 and Front F key.</li></ul>
+<h2>Range of each saxophone</h2>
+<p>This chart covers low B♭ to high F. Higher notes (altissimo) are possible but their fingerings vary a lot between players and instruments.</p>
+<table class="rng"><thead><tr><th></th><th>Written range on this chart</th><th>Sounding (concert) range</th></tr></thead><tbody><tr><th>Alto</th><td>B♭3 to F6</td><td>D♭3 to A♭5</td></tr><tr><th>Soprano</th><td>B♭3 to F6</td><td>A♭3 to E♭6</td></tr><tr><th>Tenor</th><td>B♭3 to F6</td><td>A♭2 to E♭5</td></tr></tbody></table>
+<h2>New to saxophone?</h2>
+<p>Start with <a href="beginners/">your first six notes</a> (B, A, G, F, E and D), or print the <a href="print/">one-page fingering chart</a>.</p>
 <h2>Fingerings by note</h2>
 <h3>Low register (no octave key)</h3><p class="notelinks"><a href="notes/b-flat-3/">B♭<small>3</small></a> <a href="notes/b-3/">B<small>3</small></a> <a href="notes/c-4/">C<small>4</small></a> <a href="notes/c-sharp-4/">C♯<small>4</small></a> <a href="notes/d-4/">D<small>4</small></a> <a href="notes/e-flat-4/">E♭<small>4</small></a> <a href="notes/e-4/">E<small>4</small></a> <a href="notes/f-4/">F<small>4</small></a> <a href="notes/f-sharp-4/">F♯<small>4</small></a> <a href="notes/g-4/">G<small>4</small></a> <a href="notes/g-sharp-4/">G♯<small>4</small></a> <a href="notes/a-4/">A<small>4</small></a> <a href="notes/b-flat-4/">B♭<small>4</small></a> <a href="notes/b-4/">B<small>4</small></a> <a href="notes/c-5/">C<small>5</small></a> <a href="notes/c-sharp-5/">C♯<small>5</small></a></p>
 <h3>Middle register (octave key)</h3><p class="notelinks"><a href="notes/d-5/">D<small>5</small></a> <a href="notes/e-flat-5/">E♭<small>5</small></a> <a href="notes/e-5/">E<small>5</small></a> <a href="notes/f-5/">F<small>5</small></a> <a href="notes/f-sharp-5/">F♯<small>5</small></a> <a href="notes/g-5/">G<small>5</small></a> <a href="notes/g-sharp-5/">G♯<small>5</small></a> <a href="notes/a-5/">A<small>5</small></a> <a href="notes/b-flat-5/">B♭<small>5</small></a> <a href="notes/b-5/">B<small>5</small></a> <a href="notes/c-6/">C<small>6</small></a> <a href="notes/c-sharp-6/">C♯<small>6</small></a></p>
@@ -127,6 +146,7 @@ svg{display:block;width:100%;height:auto}
 </section>
 <!--NOTES-END-->
 <p id="privacy-note" class="key" style="margin-top:14px">Visits are counted with GoatCounter, a privacy-friendly counter. It uses no cookies and collects no personal information.</p>
+<p class="key foot2" style="margin-top:6px"><a href="beginners/">Beginners: first notes</a><a href="print/">Printable chart</a><a href="privacy/">Privacy and contact</a><button class="lnk" onclick="shareSite()">Share this chart</button><button class="lnk" onclick="addHome()">Add to home screen</button><span id="shMsg" aria-live="polite"></span></p>
 </main>
 <aside class="rail rail-r qcard" id="quote" aria-live="off"><div class="qmark">&ldquo;</div><p class="qt" id="qt"></p><p class="qa" id="qa"></p></aside>
 <div id="panel"><div id="in">
@@ -385,6 +405,26 @@ function chRun(){
  return out;
 }
 function chKeyName(pc){return KN[pc]}
+function chStaff(run){
+ const W=60+run.length*30,sp=[];let g='';
+ [60,70,80,90,100].forEach(y=>g+=`<line x1="4" x2="${W-4}" y1="${y}" y2="${y}" stroke="var(--line)" stroke-width="1"/>`);
+ g+=`<text x="8" y="106" font-size="66" fill="var(--ink)" font-family="'Noto Music','Apple Symbols','Segoe UI Symbol',serif">𝄞</text>`;
+ run.forEach((x,k)=>{
+  const st=x.o*7+L.indexOf(x.name[0]),y=Y(st),cx=64+k*30,acc=x.name.slice(1);let led='';
+  for(let q=40;q<=st;q+=2)led+=`<line x1="${cx-11}" x2="${cx+11}" y1="${Y(q)}" y2="${Y(q)}" stroke="var(--line)"/>`;
+  for(let q=28;q>=st;q-=2)led+=`<line x1="${cx-11}" x2="${cx+11}" y1="${Y(q)}" y2="${Y(q)}" stroke="var(--line)"/>`;
+  g+=`<g class="cs-n" data-k="${k}" onclick="chTap(${k})" role="button" aria-label="${x.name} ${x.o}">${led}<circle class="ring" cx="${cx}" cy="${y}" r="14"/><ellipse class="head" cx="${cx}" cy="${y}" rx="7" ry="5" transform="rotate(-18 ${cx} ${y})"/>${acc?`<text class="acc" x="${cx-15}" y="${y+5}" font-size="16" text-anchor="middle">${acc}</text>`:''}</g>`;
+ });
+ const ys=run.map(x=>Y(x.o*7+L.indexOf(x.name[0]))),y0=Math.min(45,Math.min(...ys)-18),y1=Math.max(112,Math.max(...ys)+18);
+ return `<svg class="cs" viewBox="0 ${y0} ${W} ${y1-y0}" aria-label="The notes on the staff">${g}</svg>`;
+}
+function chMark(k){document.querySelectorAll('.cs-n').forEach(e=>e.classList.toggle('on',+e.dataset.k===k));document.querySelectorAll('#chOut .ch-n').forEach((b,j)=>b.classList.toggle('on',j===k))}
+function chTap(k){
+ const x=chRun()[k];if(!x)return;
+ const m=x.name.length===1?'n':x.name.includes('♯')?'#':'b';
+ if(mode!==m)setMode(m);
+ show(x.i,0,false);chMark(k);
+}
 function renderChords(){
  const r=document.getElementById('chRoot');if(!r)return;
  const set=chSet();if(chType>=set.length)chType=0;
@@ -398,19 +438,55 @@ function renderChords(){
  const title=chTab==='s'?`${key} ${nm.toLowerCase()} scale`:`${key}${nm}`;
  const sub=chNm==='c'?`Concert ${key}${chTab==='s'?'':''} on ${ins} sax is written ${KN[wpc]}. `:'';
  document.getElementById('chOut').innerHTML=`<div class="ch-name">${title}</div><div class="ch-sub">${sub}Tap a note to see its fingering.</div>
- <div class="ch-notes">${run.map(x=>`<button class="ch-n" onclick="show(${x.i},0,false)"><b>${x.name}</b><small>${x.o}</small></button>`).join('')}</div>
+ ${chStaff(run)}
+ <div class="ch-notes">${run.map((x,k)=>`<button class="ch-n" onclick="chTap(${k})"><b>${x.name}</b><small>${x.o}</small></button>`).join('')}</div>
  <button class="ch-play" onclick="playChord()">&#9654; Play ${chTab==='s'?'scale':'arpeggio'}</button>`;
 }
 function playChord(){
  const run=chRun(),seq=chTab==='s'?run.concat(run.slice(0,-1).reverse()):run,tok=++chPlay,pos=seq.map((_,k)=>k<run.length?k:2*run.length-2-k);
  seq.forEach((x,k)=>setTimeout(()=>{if(tok!==chPlay)return;
-  document.querySelectorAll('.ch-n').forEach((b,j)=>b.classList.toggle('on',j===pos[k]));
+  chMark(pos[k]);
   show(x.i,0,true);if(soundOn&&window.SaxSound)SaxSound.play(fOf(N[x.i]));
-  if(k===seq.length-1)setTimeout(()=>{if(tok===chPlay)document.querySelectorAll('.ch-n').forEach(b=>b.classList.remove('on'))},700);
+  if(k===seq.length-1)setTimeout(()=>{if(tok===chPlay)chMark(-1)},700);
  },k*(chTab==='s'?450:650)));
 }
 const _setInst=setInst;setInst=function(k){_setInst(k);renderChords()};
 renderChords();
+// ---- PRACTICE QUIZ ----
+let qz={n:-1,right:0,tot:0,streak:0,done:false};
+function qzPool(){return N.map((n,i)=>i).filter(i=>!/palm/.test(N[i][3][0][3]||''))}
+function qzNew(){
+ const pool=qzPool();let a;do{a=pool[Math.floor(Math.random()*pool.length)]}while(a===qz.n&&pool.length>1);
+ const opts=[a];while(opts.length<4){const c=pool[Math.floor(Math.random()*pool.length)];if(!opts.includes(c))opts.push(c)}
+ opts.sort(()=>Math.random()-.5);qz.n=a;qz.done=false;
+ document.getElementById('qzDia').innerHTML=dia(N[a][3][0]);
+ document.getElementById('qzOpts').innerHTML=opts.map(i=>`<button class="ch-n" data-i="${i}" onclick="qzPick(${i})"><b>${info(N[i]).name}</b><small>written ${info(N[i]).written}</small></button>`).join('');
+ document.getElementById('qzMsg').textContent='';document.getElementById('qzNext').hidden=true;qzScore();
+}
+function qzScore(){document.getElementById('qzScore').textContent=qz.tot?`Score: ${qz.right} of ${qz.tot}. Streak: ${qz.streak}.`:''}
+function qzPick(i){
+ if(qz.done)return;qz.done=true;qz.tot++;const ok=i===qz.n;if(ok){qz.right++;qz.streak++}else qz.streak=0;
+ document.querySelectorAll('#qzOpts .ch-n').forEach(b=>{const v=+b.dataset.i;b.classList.toggle('good',v===qz.n);if(v!==qz.n)b.classList.add('bad')});
+ document.getElementById('qzMsg').textContent=ok?'Correct!':'Not quite. It is '+info(N[qz.n]).name+'.';
+ document.getElementById('qzNext').hidden=false;qzScore();
+ if(soundOn&&window.SaxSound)SaxSound.play(fOf(N[qz.n]));
+}
+qzNew();
+// ---- SHARE AND INSTALL ----
+function shareSite(){
+ const d={title:'Saxophone Fingering Chart',text:'Free interactive fingering chart for alto, soprano and tenor sax.',url:location.origin+'/'};
+ if(navigator.share){navigator.share(d).catch(()=>{});return}
+ const m=document.getElementById('shMsg');
+ (navigator.clipboard?navigator.clipboard.writeText(d.url):Promise.reject()).then(()=>{m.textContent='Link copied.'}).catch(()=>{m.textContent=d.url});
+}
+let deferredInstall=null;
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstall=e});
+function addHome(){
+ const m=document.getElementById('shMsg');
+ if(deferredInstall){deferredInstall.prompt();deferredInstall=null;return}
+ m.textContent=/iPhone|iPad|iPod/.test(navigator.userAgent)?'On iPhone or iPad: tap Share, then Add to Home Screen.':'In your browser menu, choose Install app or Add to Home screen.';
+}
+if('serviceWorker' in navigator&&location.protocol==='https:')navigator.serviceWorker.register('sw.js').catch(()=>{});
 // ---- DIRECT SPONSORS ----
 // Sell a slot to a sax shop or teacher, then fill it in here. Leave img empty to show "Advertise here".
 // top = 728x90 banner, left/right = 160x600 tower. href = their website. alt = their name.

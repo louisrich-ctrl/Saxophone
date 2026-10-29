@@ -58,6 +58,9 @@ function staff(n){
  return s+'</svg>';
 }
 const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
+const HEADX=`<meta property="og:image" content="${BASE}/assets/og-image.jpg"><meta name="twitter:card" content="summary_large_image"><meta name="theme-color" content="#10243a"><link rel="manifest" href="${BASE}/manifest.webmanifest"><link rel="apple-touch-icon" href="${BASE}/assets/icon-192.png">`;
+const GC='<script data-goatcounter="https://louisdatoy.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>';
+const FOOT=(p)=>`<p class="small foot"><a href="${p}">Saxophone fingering chart</a> &middot; <a href="${p}beginners/">Beginners: first notes</a> &middot; <a href="${p}print/">Printable chart</a> &middot; <a href="${p}privacy/">Privacy and contact</a></p>`;
 const today=new Date().toISOString().slice(0,10);
 const notes=N.map((n,i)=>({n,i,nm:nameOf(n),f:n[3],d:info(n)}));
 
@@ -90,7 +93,7 @@ notes.forEach((o,k)=>{
 <title>${esc(title)}</title>
 <meta name="description" content="${esc(desc)}">
 <link rel="canonical" href="${url}">
-<meta property="og:title" content="${esc(title)}"><meta property="og:description" content="${esc(desc)}"><meta property="og:type" content="website"><meta property="og:url" content="${url}">
+<meta property="og:title" content="${esc(title)}"><meta property="og:description" content="${esc(desc)}"><meta property="og:type" content="website"><meta property="og:url" content="${url}">${HEADX}
 <style>${CSS}</style><script data-goatcounter="https://louisdatoy.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script></head><body>
 <header class="bar"><a href="../../">Saxophone Fingering Chart</a></header>
 <main>
@@ -102,6 +105,7 @@ ${fingBlocks}
 <h2>About this fingering</h2>
 <p>This is the standard fingering for written ${d.written} on alto, soprano and tenor saxophone. All three use the same keys, but they sound at different pitches: ${cc.map(c=>`${c.I.name.toLowerCase()} (${c.I.pitch} instrument) sounds ${c.concert}`).join(', ')}. In the diagram a filled circle is a key you press and an open circle is one you leave up. The small shapes around the main holes are the octave, palm, pinky, side and bis keys.</p>
 <p class="small">Fingerings can differ slightly between saxophone models, and altissimo notes vary most. If something looks wrong, <a href="mailto:hello@saxophonefingeringchart.com?subject=${encodeURIComponent('Sax fingering correction: '+nm.full+' ('+d.written+')')}">tell us</a> and we will check it.</p>
+${FOOT("../../")}
 <div class="nav"><span>${prev?`<a href="../${prev.nm.slug}/">&larr; ${prev.nm.full} (${prev.d.written})</a>`:''}</span><span>${next?`<a href="../${next.nm.slug}/">${next.nm.full} (${next.d.written}) &rarr;</a>`:''}</span></div>
 </main>
 <script src="../../sound.js"></script>
@@ -118,13 +122,30 @@ html=html.replace(/<title>[\s\S]*?<\/title>/,`<title>${esc(hTitle)}</title>`);
 const head=`<!--SEO-HEAD-START-->
 <meta name="description" content="${esc(hDesc)}">
 <link rel="canonical" href="${BASE}/">
-<meta property="og:title" content="${esc(hTitle)}"><meta property="og:description" content="${esc(hDesc)}"><meta property="og:type" content="website"><meta property="og:url" content="${BASE}/">
+<meta property="og:title" content="${esc(hTitle)}"><meta property="og:description" content="${esc(hDesc)}"><meta property="og:type" content="website"><meta property="og:url" content="${BASE}/">${HEADX}
 <script data-goatcounter="https://louisdatoy.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 <!--SEO-HEAD-END-->`;
 if(html.includes('<!--SEO-HEAD-START-->'))html=html.replace(/<!--SEO-HEAD-START-->[\s\S]*?<!--SEO-HEAD-END-->/,head);
 else html=html.replace('</head>',head+'\n</head>');
 const groups=[['Low register (no octave key)',o=>o.f[0][0]===0],['Middle register (octave key)',o=>o.f[0][0]===1&&!hasPalm(o.f[0])],['High register (palm keys)',o=>hasPalm(o.f[0])]];
 const links=groups.map(([t,fn])=>`<h3>${t}</h3><p class="notelinks">`+notes.filter(fn).map(o=>`<a href="notes/${o.nm.slug}/">${o.nm.short}${o.nm.acc?'':''}<small>${o.d.written.replace(/^[A-G][♯♭]?/,'')}</small></a>`).join(' ')+'</p>').join('\n');
+
+// ---- extra guide sections ----
+const nmByW=w=>notes.find(o=>o.d.written===w);
+const alts=notes.filter(o=>o.f.length>1).map(o=>`<li><strong>${o.nm.short} (written ${o.d.written}):</strong> ${o.f.slice(1).map(x=>brief(x)).join('; or ')}.</li>`).join('');
+const rangeRows=IK.map(k=>{setI(k);const lo=info(notes[0].n),hi=info(notes[notes.length-1].n);const r=`<tr><th>${INSTR[k].name}</th><td>${lo.written} to ${hi.written}</td><td>${lo.concert} to ${hi.concert}</td></tr>`;setI('alto');return r}).join('');
+const guideExtra=`<h2>Scales and chords on the saxophone</h2>
+<p>Use the Scales and chords tool above the guide to see any major, minor, pentatonic, blues or chromatic scale, and common chord arpeggios, written out for alto, soprano or tenor. Tap a note to see its fingering, or press play to hear the scale or arpeggio. Key names can be shown as written pitch (your sheet music) or concert pitch.</p>
+<h2>Practice quiz</h2>
+<p>Test yourself with the quiz: it shows a fingering and you pick the note. It is a quick way to learn the notes by sight.</p>
+<h2>Alternate fingerings and trills</h2>
+<p>Some notes have more than one fingering. The alternates below are common for trills and fast passages, where a different key makes the move easier. Fingerings can vary between saxophone models, so check with your teacher.</p>
+<ul>${alts}</ul>
+<h2>Range of each saxophone</h2>
+<p>This chart covers low B♭ to high F. Higher notes (altissimo) are possible but their fingerings vary a lot between players and instruments.</p>
+<table class="rng"><thead><tr><th></th><th>Written range on this chart</th><th>Sounding (concert) range</th></tr></thead><tbody>${rangeRows}</tbody></table>
+<h2>New to saxophone?</h2>
+<p>Start with <a href="beginners/">your first six notes</a> (B, A, G, F, E and D), or print the <a href="print/">one-page fingering chart</a>.</p>`;
 const text=`<!--NOTES-START-->
 <section class="about">
 <h2>Saxophone fingering chart: alto, soprano and tenor</h2>
@@ -133,6 +154,7 @@ const text=`<!--NOTES-START-->
 <p>A filled circle is a key you press and an open circle is one you leave up. Sharps are red and flats are blue. A sharp and its matching flat use the same fingering.</p>
 <h2>Written and concert pitch</h2>
 <p>Alto (E♭) sounds a major sixth lower than written. Soprano and tenor (B♭) sound a major second and a major ninth lower.</p>
+${guideExtra}
 <h2>Fingerings by note</h2>
 ${links}
 </section>
@@ -144,8 +166,62 @@ if(!html.includes('.about{')){
 }
 fs.writeFileSync(idxPath,html);
 
+
+// ---- standalone pages: beginners, privacy and contact, printable chart ----
+const PCSS=CSS+`.rng{border-collapse:collapse;font:15px system-ui,sans-serif;margin:8px 0}.rng th,.rng td{border:1px solid var(--bd);padding:6px 10px;text-align:left}.foot{margin-top:28px;border-top:1px solid var(--bd);padding-top:12px}
+.six{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin:12px 0}.six .card{text-align:center}.six svg{width:100px;height:auto}.six h3{margin:4px 0;font-size:20px}`;
+function shell(title,desc,rel,body,extra){
+ const url=`${BASE}/${rel}`,p=rel?'../':'';
+ return `<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${esc(title)}</title>
+<meta name="description" content="${esc(desc)}">
+<link rel="canonical" href="${url}">
+<meta property="og:title" content="${esc(title)}"><meta property="og:description" content="${esc(desc)}"><meta property="og:type" content="website"><meta property="og:url" content="${url}">${HEADX}
+<style>${PCSS}${extra||''}</style>${GC}</head><body>
+<header class="bar"><a href="${p||'./'}">Saxophone Fingering Chart</a></header>
+<main>${body}${FOOT(p||'./')}</main></body></html>`;
+}
+const wr=(d,k)=>{fs.mkdirSync(path.join(ROOT,d),{recursive:true});fs.writeFileSync(path.join(ROOT,d,'index.html'),k)};
+// beginners
+const six=['B4','A4','G4','F4','E4','D4'].map(w=>nmByW(w)).filter(Boolean);
+wr('beginners',shell('Your First Six Notes on Alto Saxophone: B A G F E D | Saxophone Fingering Chart','Learn your first six notes on alto, tenor or soprano sax: B, A, G, F, E and D. Simple fingering diagrams and tips for getting a clear sound.','beginners/',
+`<h1>Your first six notes on saxophone</h1>
+<p class="sub">B, A, G, F, E and D, played in order. The same fingerings work on alto, soprano and tenor.</p>
+<h2>Before you play</h2>
+<p>Hold the saxophone with the neck strap taking the weight, so your hands can stay relaxed. Rest your fingers lightly on the pearl keys and keep your thumbs on the thumb rests. Take a slow, deep breath and blow warm air, as if fogging a mirror, rather than blowing hard.</p>
+<p class="small">A teacher can help most with the mouthpiece and reed. If your sound is squeaky or airy, ask a teacher to check your set-up.</p>
+<h2>The six notes</h2>
+<p>Start with B, using one finger, and add one finger at a time. Press each key fully and keep the other fingers close to the keys.</p>
+<div class="six">${six.map(o=>`<div class="card"><h3>${o.nm.short}</h3><a href="../notes/${o.nm.slug}/">${dia(o.f[0])}</a><div class="small">${brief(o.f[0])}</div></div>`).join('')}</div>
+<h2>Practice ideas</h2>
+<p>Play each note for four slow counts, then play down from B to D and back up. Aim for a steady, clear sound before you go faster. A few minutes a day works better than one long session.</p>
+<p><a class="btn" href="../">Open the interactive fingering chart</a> <a class="btn" href="../print/">Printable chart</a></p>`));
+// privacy and contact
+wr('privacy',shell('Privacy and Contact | Saxophone Fingering Chart','How Saxophone Fingering Chart handles visitor data, advertising and links, and how to contact us.','privacy/',
+`<h1>Privacy and contact</h1>
+<h2>Visitor data</h2>
+<p>This site counts visits with GoatCounter, a privacy-friendly counter. It uses no cookies and does not collect your name, email or other personal information. The chart works in your browser and nothing you tap is sent to us.</p>
+<h2>Advertising and links</h2>
+<p>Some banners on this site are paid or sponsored placements, and some links may be affiliate or referral links. If you sign up with a sponsor through one of these links, the site may earn a commission at no extra cost to you. Sponsors are shown for information only, and we do not control their sites or their privacy practices.</p>
+<h2>Accuracy</h2>
+<p>Fingerings can differ between saxophone models, and altissimo fingerings vary most. This site is a general guide and is not a substitute for a teacher.</p>
+<h2>Contact</h2>
+<p>Corrections and feedback: <a href="mailto:hello@saxophonefingeringchart.com">hello@saxophonefingeringchart.com</a><br>Advertising: <a href="mailto:ads@saxophonefingeringchart.com">ads@saxophonefingeringchart.com</a></p>`));
+// printable chart
+const pcards=notes.map(o=>`<div class="pc"><b>${o.nm.short}<small>${o.d.written.replace(/^[A-G][♯♭]?/,'')}</small></b>${dia(o.f[0])}</div>`).join('');
+wr('print',shell('Printable Saxophone Fingering Chart: Alto, Soprano, Tenor','Print a one-page saxophone fingering chart for alto, soprano and tenor sax, low B♭ to high F. Free to print.','print/',
+`<h1>Printable saxophone fingering chart</h1>
+<p class="sub">Written pitch, low B♭ to high F. The fingerings are the same on alto, soprano and tenor. Filled circles are keys to press.</p>
+<p class="np"><button class="play" onclick="window.print()">Print this page</button> <a class="btn" href="../assets/saxophone-fingering-chart.pdf">Download the PDF</a></p>
+<div class="pgrid">${pcards}</div>
+<p class="small">Free to print for your own practice or teaching. From saxophonefingeringchart.com.</p>`,
+`:root{--pink:#1d2a33;--bg:#fff}.pgrid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px 6px;margin:14px 0}.pc{text-align:center;break-inside:avoid}.pc b{display:block;font:700 15px Georgia,serif}.pc small{font-size:10px;font-weight:400}.pc svg{width:100%;max-width:86px;height:auto}
+@media (max-width:600px){.pgrid{grid-template-columns:repeat(3,1fr)}}
+@media print{header.bar,.np,.foot{display:none}main{max-width:none;padding:0}.pgrid{grid-template-columns:repeat(6,1fr)}body{font-size:12px}h1{font-size:20px}}`));
+
 // ---- sitemap + robots ----
-const urls=[`${BASE}/`,...notes.map(o=>`${BASE}/notes/${o.nm.slug}/`)];
+const urls=[`${BASE}/`,`${BASE}/beginners/`,`${BASE}/print/`,`${BASE}/privacy/`,...notes.map(o=>`${BASE}/notes/${o.nm.slug}/`)];
 fs.writeFileSync(path.join(ROOT,'sitemap.xml'),`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`+urls.map(u=>`<url><loc>${u}</loc><lastmod>${today}</lastmod></url>`).join('\n')+`\n</urlset>\n`);
 fs.writeFileSync(path.join(ROOT,'robots.txt'),`User-agent: *\nAllow: /\n\nSitemap: ${BASE}/sitemap.xml\n`);
 console.log('built',notes.length,'note pages; base',BASE);
