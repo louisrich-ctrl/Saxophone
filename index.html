@@ -32,6 +32,7 @@ svg{display:block;width:100%;height:auto}
 .ch-n b{display:block;font-family:Georgia,serif;font-size:20px}.ch-n small{color:var(--mute);font-size:11px}
 .ch-n.on{background:var(--pink);border-color:var(--pink);color:#fff}.ch-n.on small{color:#fff}
 .cs{display:block;width:100%;max-width:470px;height:auto;margin:2px 0 10px}.cs-n{cursor:pointer}.cs-n .head{fill:var(--ink)}.cs-n .acc{fill:var(--ink)}.cs-n.on .head,.cs-n.on .acc{fill:var(--pink)}.cs-n.on .ring{stroke:var(--pink);stroke-width:2;fill:none}.cs-n .ring{fill:transparent;stroke:transparent}
+#quiz{transition:border-color .2s,box-shadow .2s}#quiz.ok{border:2px solid #1e9e4a;box-shadow:0 0 0 3px rgba(30,158,74,.15)}#quiz.no{border:2px solid #d0202f;box-shadow:0 0 0 3px rgba(208,32,47,.15)}#qzMsg.ok{color:#1e7d3d;font-weight:700;font-size:16px}#qzMsg.no{color:#c01c28;font-weight:700;font-size:16px}
 .qz-row{display:flex;gap:18px;align-items:center;flex-wrap:wrap}.qz-dia svg{width:110px;height:auto;display:block}.ch-n.good{background:var(--pink);border-color:var(--pink);color:#fff}.ch-n.good small{color:#fff}.ch-n.bad{opacity:.45}.foot2{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center}.lnk{background:none;border:0;padding:0;font:inherit;color:#1a4f9c;text-decoration:underline;cursor:pointer}
 .ch-play{font:inherit;font-size:14px;border:0;border-radius:18px;background:var(--ink);color:var(--bg);padding:8px 16px;cursor:pointer}
 #panel{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:2px solid var(--ink);padding:10px 14px calc(10px + env(safe-area-inset-bottom,0px));font-family:system-ui,sans-serif}
@@ -461,13 +462,13 @@ function qzNew(){
  opts.sort(()=>Math.random()-.5);qz.n=a;qz.done=false;
  document.getElementById('qzDia').innerHTML=dia(N[a][3][0]);
  document.getElementById('qzOpts').innerHTML=opts.map(i=>`<button class="ch-n" data-i="${i}" onclick="qzPick(${i})"><b>${info(N[i]).name}</b><small>written ${info(N[i]).written}</small></button>`).join('');
- document.getElementById('qzMsg').textContent='';document.getElementById('qzNext').hidden=true;qzScore();
+ document.getElementById('qzMsg').textContent='';document.getElementById('qzMsg').className='ch-sub';document.getElementById('quiz').classList.remove('ok','no');document.getElementById('qzNext').hidden=true;qzScore();
 }
 function qzScore(){document.getElementById('qzScore').textContent=qz.tot?`Score: ${qz.right} of ${qz.tot}. Streak: ${qz.streak}.`:''}
 function qzPick(i){
  if(qz.done)return;qz.done=true;qz.tot++;const ok=i===qz.n;if(ok){qz.right++;qz.streak++}else qz.streak=0;
  document.querySelectorAll('#qzOpts .ch-n').forEach(b=>{const v=+b.dataset.i;b.classList.toggle('good',v===qz.n);if(v!==qz.n)b.classList.add('bad')});
- document.getElementById('qzMsg').textContent=ok?'Correct!':'Not quite. It is '+info(N[qz.n]).name+'.';
+ const qm=document.getElementById('qzMsg');qm.textContent=ok?'\u2713 Correct!':'\u2717 Not correct. It is '+info(N[qz.n]).name+'.';qm.className='ch-sub '+(ok?'ok':'no');const qb=document.getElementById('quiz');qb.classList.remove('ok','no');qb.classList.add(ok?'ok':'no');
  document.getElementById('qzNext').hidden=false;qzScore();
  if(soundOn&&window.SaxSound)SaxSound.play(fOf(N[qz.n]));
 }
