@@ -91,7 +91,7 @@ notes.forEach((o,k)=>{
 <meta name="description" content="${esc(desc)}">
 <link rel="canonical" href="${url}">
 <meta property="og:title" content="${esc(title)}"><meta property="og:description" content="${esc(desc)}"><meta property="og:type" content="website"><meta property="og:url" content="${url}">
-<style>${CSS}</style></head><body>
+<style>${CSS}</style><script data-goatcounter="https://louisdatoy.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script></head><body>
 <header class="bar"><a href="../../">Saxophone Fingering Chart</a></header>
 <main>
 <h1>Sax ${nm.full} fingering</h1>
@@ -119,6 +119,7 @@ const head=`<!--SEO-HEAD-START-->
 <meta name="description" content="${esc(hDesc)}">
 <link rel="canonical" href="${BASE}/">
 <meta property="og:title" content="${esc(hTitle)}"><meta property="og:description" content="${esc(hDesc)}"><meta property="og:type" content="website"><meta property="og:url" content="${BASE}/">
+<script data-goatcounter="https://louisdatoy.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 <!--SEO-HEAD-END-->`;
 if(html.includes('<!--SEO-HEAD-START-->'))html=html.replace(/<!--SEO-HEAD-START-->[\s\S]*?<!--SEO-HEAD-END-->/,head);
 else html=html.replace('</head>',head+'\n</head>');

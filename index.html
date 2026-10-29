@@ -77,6 +77,7 @@ svg{display:block;width:100%;height:auto}
 <meta name="description" content="Free interactive saxophone fingering chart for alto, soprano and tenor sax. Tap any note on the staff to see its name and fingering, with sharps and flats shown separately. Low B♭ to high F.">
 <link rel="canonical" href="https://saxophonefingeringchart.com/">
 <meta property="og:title" content="Saxophone Fingering Chart: Alto, Soprano and Tenor | Tap any note"><meta property="og:description" content="Free interactive saxophone fingering chart for alto, soprano and tenor sax. Tap any note on the staff to see its name and fingering, with sharps and flats shown separately. Low B♭ to high F."><meta property="og:type" content="website"><meta property="og:url" content="https://saxophonefingeringchart.com/">
+<script data-goatcounter="https://louisdatoy.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 <!--SEO-HEAD-END-->
 </head>
 <body>
@@ -107,7 +108,7 @@ svg{display:block;width:100%;height:auto}
 <h3>High register (palm keys)</h3><p class="notelinks"><a href="notes/d-6/">D<small>6</small></a> <a href="notes/e-flat-6/">E♭<small>6</small></a> <a href="notes/e-6/">E<small>6</small></a> <a href="notes/f-6/">F<small>6</small></a></p>
 </section>
 <!--NOTES-END-->
-<p id="privacy-note" class="key" hidden style="margin-top:14px">Visits are counted with Cloudflare Web Analytics. It uses no cookies and collects no personal information.</p>
+<p id="privacy-note" class="key" style="margin-top:14px">Visits are counted with GoatCounter, a privacy-friendly counter. It uses no cookies and collects no personal information.</p>
 </main>
 <aside class="rail rail-r qcard" id="quote" aria-live="off"><div class="qmark">&ldquo;</div><p class="qt" id="qt"></p><p class="qa" id="qa"></p></aside>
 <div id="panel"><div id="in">
@@ -344,21 +345,6 @@ function setReport(){
 }
 setReport();
 if(window.SaxSound)SaxSound.prepare(N.map(fOf));
-// ---- VISITOR COUNTER (Cloudflare Web Analytics: free, no cookies, no personal data) ----
-// 1. Sign in at https://dash.cloudflare.com, open Analytics & Logs, then Web Analytics, then Add a site.
-// 2. Enter your site address, choose "Manual setup", and copy the token from the snippet
-//    (the long code after "token":).
-// 3. Paste it below. Visits show in your Cloudflare dashboard within a few minutes.
-const ANALYTICS={cfToken:''};
-(function(){
- if(!ANALYTICS.cfToken)return;
- const sc=document.createElement('script');sc.defer=true;
- sc.src='https://static.cloudflareinsights.com/beacon.min.js';
- sc.setAttribute('data-cf-beacon',JSON.stringify({token:ANALYTICS.cfToken}));
- document.head.appendChild(sc);
- const f=document.getElementById('privacy-note');
- if(f)f.hidden=false;
-})();
 // ---- DIRECT SPONSORS ----
 // Sell a slot to a sax shop or teacher, then fill it in here. Leave img empty to show "Advertise here".
 // top = 728x90 banner, left/right = 160x600 tower. href = their website. alt = their name.
