@@ -23,6 +23,15 @@ svg{display:block;width:100%;height:auto}
 .head{fill:var(--c)}
 .sel .ring{fill:none;stroke:var(--pink);stroke-width:2}.sel .head{fill:var(--pink)}
 .red{color:var(--red)}.blue{color:var(--blue)}
+.chords{margin:18px 0 6px;padding:14px;border:1px solid var(--bd);border-radius:10px;background:var(--card)}
+.ch-h{font-family:Georgia,serif;font-size:20px;margin:0 0 6px}
+.ch-out{margin-top:12px}.ch-name{font-family:Georgia,serif;font-size:22px;font-weight:700}
+.ch-sub{color:var(--mute);font-size:13px;margin:2px 0 10px}
+.ch-notes{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+.ch-n{border:1px solid var(--ink);border-radius:10px;background:transparent;color:var(--ink);font:inherit;padding:6px 12px;min-width:56px;text-align:center;cursor:pointer}
+.ch-n b{display:block;font-family:Georgia,serif;font-size:20px}.ch-n small{color:var(--mute);font-size:11px}
+.ch-n.on{background:var(--pink);border-color:var(--pink);color:#fff}.ch-n.on small{color:#fff}
+.ch-play{font:inherit;font-size:14px;border:0;border-radius:18px;background:var(--ink);color:var(--bg);padding:8px 16px;cursor:pointer}
 #panel{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:2px solid var(--ink);padding:10px 14px calc(10px + env(safe-area-inset-bottom,0px));font-family:system-ui,sans-serif}
 #in{max-width:700px;margin:0 auto;display:flex;gap:16px;align-items:center;min-height:210px}
 #dia{flex:0 0 auto}
@@ -93,6 +102,15 @@ svg{display:block;width:100%;height:auto}
 <div class="tabs" id="inst" style="margin-bottom:10px"><button class="on" data-i="alto" onclick="setInst('alto')">Alto sax</button><button data-i="soprano" onclick="setInst('soprano')">Soprano sax</button><button data-i="tenor" onclick="setInst('tenor')">Tenor sax</button></div>
 <div class="tabs" id="mode" style="margin-bottom:12px"><button class="on" data-m="n" onclick="setMode('n')">Normal notes</button><button data-m="#" onclick="setMode('#')">Sharps ♯</button><button data-m="b" onclick="setMode('b')">Flats ♭</button><button id="snd" class="on" onclick="toggleSound()">Sound: on</button></div>
 <div id="staves"></div>
+<section class="chords" id="chords">
+<h2 class="ch-h">Scales and chords</h2>
+<div class="tabs" id="chTab"></div>
+<p class="key" id="chHelp" style="margin:8px 0"></p>
+<div class="tabs" id="chNames"></div>
+<div class="tabs" id="chRoot" style="margin-top:6px"></div>
+<div class="tabs" id="chQual" style="margin-top:6px"></div>
+<div id="chOut" class="ch-out"></div>
+</section>
 <p class="key" style="margin-top:14px">Think a fingering is wrong? <a id="report" href="#">Tell us</a>. Corrections from teachers and players are welcome.</p>
 <!--NOTES-START-->
 <section class="about">
@@ -345,6 +363,54 @@ function setReport(){
 }
 setReport();
 if(window.SaxSound)SaxSound.prepare(N.map(fOf));
+// ---- SCALES AND CHORDS ----
+const SCALES=[['Major',[0,2,4,5,7,9,11,12],[0,1,2,3,4,5,6,7]],['Natural minor',[0,2,3,5,7,8,10,12],[0,1,2,3,4,5,6,7]],['Harmonic minor',[0,2,3,5,7,8,11,12],[0,1,2,3,4,5,6,7]],['Melodic minor',[0,2,3,5,7,9,11,12],[0,1,2,3,4,5,6,7]],['Major pentatonic',[0,2,4,7,9,12],[0,1,2,4,5,7]],['Minor pentatonic',[0,3,5,7,10,12],[0,2,3,4,6,7]],['Blues',[0,3,5,6,7,10,12],[0,2,3,4,4,6,7]],['Chromatic',[0,1,2,3,4,5,6,7,8,9,10,11,12],null]];
+const CHORDS=[['maj7',[0,4,7,11,12],[0,2,4,6,7]],['m7',[0,3,7,10,12],[0,2,4,6,7]],['7',[0,4,7,10,12],[0,2,4,6,7]],['m7♭5',[0,3,6,10,12],[0,2,4,6,7]],['dim7',[0,3,6,9,12],[0,2,4,6,7]],['Major',[0,4,7,12],[0,2,4,7]],['Minor',[0,3,7,12],[0,2,4,7]]];
+const KEYPC=[['C',0],['D',-1],['D',0],['E',-1],['E',0],['F',0],['F',1],['G',0],['A',-1],['A',0],['B',-1],['B',0]];
+const KN=KEYPC.map(([l,a])=>l+(a<0?'♭':a>0?'♯':''));
+let chTab='s',chNm='w',chRoot=0,chType=0,chPlay=0;
+const nMidi=n=>12*(n[1]+1)+M[L.indexOf(n[0])]+(n[2]==='#'?1:n[2]==='b'?-1:0);
+const nName=n=>n[0]+(n[2]==='#'?'♯':n[2]==='b'?'♭':'');
+const ACC={'-2':'♭♭','-1':'♭','0':'','1':'♯','2':'♯♯'};
+function chSet(){return chTab==='s'?SCALES:CHORDS}
+function chWrittenPc(){return ((chNm==='w'?chRoot:chRoot-INSTR[inst].shift)%12+12)%12}
+function chRun(){
+ const set=chSet(),[nm,iv,steps]=set[Math.min(chType,set.length-1)],sh=INSTR[inst].shift,wpc=chWrittenPc();
+ const lo=Math.min(...N.map(nMidi));let base=lo;while(((base-wpc)%12+12)%12!==0)base++;
+ const [rl,ra]=KEYPC[wpc],out=[];
+ iv.forEach((d,k)=>{const i=N.findIndex(n=>nMidi(n)===base+d);if(i<0)return;
+  let name=nName(N[i]);
+  if(steps){const let_=L[(L.indexOf(rl)+steps[k])%7],pc=((wpc+d)%12+12)%12,nat=M[L.indexOf(let_)];let df=((pc-nat)%12+12)%12;if(df>6)df-=12;name=let_+(ACC[df]??name.slice(1))}
+  out.push({i,name,o:N[i][1]})});
+ return out;
+}
+function chKeyName(pc){return KN[pc]}
+function renderChords(){
+ const r=document.getElementById('chRoot');if(!r)return;
+ const set=chSet();if(chType>=set.length)chType=0;
+ document.getElementById('chTab').innerHTML=[['s','Scales'],['c','Chords']].map(([k,l])=>`<button class="${chTab===k?'on':''}" onclick="chTab='${k}';chType=0;renderChords()">${l}</button>`).join('');
+ document.getElementById('chNames').innerHTML=[['w','Written pitch (your sheet music)'],['c','Concert pitch']].map(([k,l])=>`<button class="${chNm===k?'on':''}" onclick="chNm='${k}';renderChords()">${l}</button>`).join('');
+ r.innerHTML=KN.map((n,i)=>`<button class="${i===chRoot?'on':''}" onclick="chRoot=${i};renderChords()">${n}</button>`).join('');
+ document.getElementById('chQual').innerHTML=set.map((q,i)=>`<button class="${i===chType?'on':''}" onclick="chType=${i};renderChords()">${q[0]}</button>`).join('');
+ const ins=INSTR[inst].name.toLowerCase(),wpc=chWrittenPc(),run=chRun(),nm=set[chType][0];
+ const key=KN[chRoot];
+ document.getElementById('chHelp').textContent=chNm==='w'?`Key names are as written on your ${ins} sax music.`:`Key names are concert pitch, so your ${ins} sax plays them transposed.`;
+ const title=chTab==='s'?`${key} ${nm.toLowerCase()} scale`:`${key}${nm}`;
+ const sub=chNm==='c'?`Concert ${key}${chTab==='s'?'':''} on ${ins} sax is written ${KN[wpc]}. `:'';
+ document.getElementById('chOut').innerHTML=`<div class="ch-name">${title}</div><div class="ch-sub">${sub}Tap a note to see its fingering.</div>
+ <div class="ch-notes">${run.map(x=>`<button class="ch-n" onclick="show(${x.i},0,false)"><b>${x.name}</b><small>${x.o}</small></button>`).join('')}</div>
+ <button class="ch-play" onclick="playChord()">&#9654; Play ${chTab==='s'?'scale':'arpeggio'}</button>`;
+}
+function playChord(){
+ const run=chRun(),seq=chTab==='s'?run.concat(run.slice(0,-1).reverse()):run,tok=++chPlay,pos=seq.map((_,k)=>k<run.length?k:2*run.length-2-k);
+ seq.forEach((x,k)=>setTimeout(()=>{if(tok!==chPlay)return;
+  document.querySelectorAll('.ch-n').forEach((b,j)=>b.classList.toggle('on',j===pos[k]));
+  show(x.i,0,true);if(soundOn&&window.SaxSound)SaxSound.play(fOf(N[x.i]));
+  if(k===seq.length-1)setTimeout(()=>{if(tok===chPlay)document.querySelectorAll('.ch-n').forEach(b=>b.classList.remove('on'))},700);
+ },k*(chTab==='s'?450:650)));
+}
+const _setInst=setInst;setInst=function(k){_setInst(k);renderChords()};
+renderChords();
 // ---- DIRECT SPONSORS ----
 // Sell a slot to a sax shop or teacher, then fill it in here. Leave img empty to show "Advertise here".
 // top = 728x90 banner, left/right = 160x600 tower. href = their website. alt = their name.
