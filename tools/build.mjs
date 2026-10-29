@@ -12,8 +12,8 @@ let html=fs.readFileSync(idxPath,'utf8');
 // ---- load the single source of truth (data + diagram code) from index.html ----
 const js=html.match(/<script>([\s\S]*)<\/script>/)[1];
 const a=js.indexOf('const L='),b=js.indexOf('let cur=null');
-const lib=new Function(js.slice(a,b)+';function setI(k){inst=k}return {L,N,info,dia,CHIP,Y,fOf,INSTR,setI};')();
-const {L,N,info,dia,CHIP,Y,fOf,INSTR,setI}=lib;
+const lib=new Function(js.slice(a,b)+';function setI(k){inst=k}return {L,N,info,dia,CHIP,Y,fOf,INSTR,setI,SONGS,songRun};')();
+const {L,N,info,dia,CHIP,Y,fOf,INSTR,setI,SONGS,songRun}=lib;
 const IK=Object.keys(INSTR);
 // concert pitch and frequency for every instrument
 const conc=n=>IK.map(k=>{setI(k);const r={k,I:INSTR[k],concert:info(n).concert,hz:fOf(n)};setI('alto');return r});
@@ -60,7 +60,7 @@ function staff(n){
 const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
 const HEADX=`<meta property="og:image" content="${BASE}/assets/og-image.jpg"><meta name="twitter:card" content="summary_large_image"><meta name="theme-color" content="#10243a"><link rel="manifest" href="${BASE}/manifest.webmanifest"><link rel="apple-touch-icon" href="${BASE}/assets/icon-192.png">`;
 const GC='<script data-goatcounter="https://louisdatoy.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>';
-const FOOT=(p)=>`<p class="small foot"><a href="${p}">Saxophone fingering chart</a> &middot; <a href="${p}beginners/">Beginners: first notes</a> &middot; <a href="${p}print/">Printable chart</a> &middot; <a href="${p}privacy/">Privacy and contact</a></p>`;
+const FOOT=(p)=>`<p class="small foot"><a href="${p}">Saxophone fingering chart</a> &middot; <a href="${p}beginners/">Beginners: first notes</a> &middot; <a href="${p}songs/">Simple songs</a> &middot; <a href="${p}print/">Printable chart</a> &middot; <a href="${p}privacy/">Privacy and contact</a></p>`;
 const today=new Date().toISOString().slice(0,10);
 const notes=N.map((n,i)=>({n,i,nm:nameOf(n),f:n[3],d:info(n)}));
 
@@ -173,7 +173,7 @@ fs.writeFileSync(idxPath,html);
 const PCSS=CSS+`.rng{border-collapse:collapse;font:15px system-ui,sans-serif;margin:8px 0}.rng th,.rng td{border:1px solid var(--bd);padding:6px 10px;text-align:left}.foot{margin-top:28px;border-top:1px solid var(--bd);padding-top:12px}
 .six{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin:12px 0}.six .card{text-align:center}.six svg{width:100px;height:auto}.six h3{margin:4px 0;font-size:20px}`;
 function shell(title,desc,rel,body,extra){
- const url=`${BASE}/${rel}`,p=rel?'../':'';
+ const url=`${BASE}/${rel}`,p='../'.repeat(rel.split('/').filter(Boolean).length);
  return `<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${esc(title)}</title>
@@ -222,8 +222,57 @@ wr('print',shell('Printable Saxophone Fingering Chart: Alto, Soprano, Tenor','Pr
 @media (max-width:600px){.pgrid{grid-template-columns:repeat(3,1fr)}}
 @media print{header.bar,.np,.foot{display:none}main{max-width:none;padding:0}.pgrid{grid-template-columns:repeat(6,1fr)}body{font-size:12px}h1{font-size:20px}}`));
 
+
+// ---- songs: index and one page per song ----
+const songNotesFor=s=>songRun(s);
+const uniq=run=>[...new Set(run.map(x=>x.i))].sort((a,b)=>a-b);
+function songStaffSvg(run){
+ const per=10;let out='';
+ for(let st=0;st<run.length;st+=per){
+  const part=run.slice(st,st+per),W=60+part.length*30;let g='';
+  [60,70,80,90,100].forEach(y=>g+=`<line x1="4" x2="${W-4}" y1="${y}" y2="${y}" stroke="#3a4650"/>`);
+  g+=`<text x="8" y="106" font-size="66" fill="#1d2a33" font-family="'Noto Music','Apple Symbols','Segoe UI Symbol',serif">𝄞</text>`;
+  part.forEach((x,j)=>{const sp=x.o*7+L.indexOf(x.name[0]),y=Y(sp),cx=64+j*30,acc=x.name.slice(1);
+   for(let q=40;q<=sp;q+=2)g+=`<line x1="${cx-11}" x2="${cx+11}" y1="${Y(q)}" y2="${Y(q)}" stroke="#3a4650"/>`;
+   for(let q=28;q>=sp;q-=2)g+=`<line x1="${cx-11}" x2="${cx+11}" y1="${Y(q)}" y2="${Y(q)}" stroke="#3a4650"/>`;
+   g+=`<ellipse cx="${cx}" cy="${y}" rx="7" ry="5" transform="rotate(-18 ${cx} ${y})" fill="#1d2a33"/>${acc?`<text x="${cx-15}" y="${y+5}" font-size="16" text-anchor="middle" fill="#1d2a33">${acc}</text>`:''}`});
+  const ys=part.map(x=>Y(x.o*7+L.indexOf(x.name[0]))),y0=Math.min(45,Math.min(...ys)-18),y1=Math.max(112,Math.max(...ys)+18);
+  out+=`<svg viewBox="0 ${y0} ${W} ${y1-y0}" style="display:block;width:${W/360*100}%;max-width:${W/360*520}px;height:auto" role="img" aria-label="Notes ${st+1} to ${st+part.length}">${g}</svg>`;
+ }
+ return out;
+}
+const SCSS=`:root{--pink:#e0457b;--bg:#fff}.sgl{list-style:none;padding:0;margin:12px 0}.sgl li{margin:8px 0}.sgl a{font:600 18px Georgia,serif}.lvl{color:var(--mute);font:14px system-ui,sans-serif}
+.seq{font:600 17px/1.9 system-ui,sans-serif;letter-spacing:.02em}.six{grid-template-columns:repeat(auto-fill,minmax(120px,1fr))}.six svg{width:80px}`;
+wr('songs',shell('Simple Saxophone Songs: Happy Birthday, Twinkle Twinkle and More | Saxophone Fingering Chart','Easy songs to play on alto, soprano or tenor saxophone, with the notes, fingerings and a play-along. Happy Birthday, Twinkle Twinkle Little Star, Ode to Joy and more.','songs/',
+`<h1>Simple saxophone songs</h1>
+<p class="sub">Traditional tunes with the notes and fingering for each one. The notes are written pitch, so they work on alto, soprano and tenor.</p>
+<ul class="sgl">${SONGS.map(s=>`<li><a href="${s.slug}/">${s.title}</a><br><span class="lvl">${s.level}</span></li>`).join('')}</ul>
+<p><a class="btn" href="../">Open the interactive fingering chart</a></p>`,SCSS));
+SONGS.forEach(s=>{
+ const run=songRun(s),us=uniq(run),total=run.length;
+ const seq=run.map(x=>x.name).join(' ');
+ const hz=IK.map(k=>{setI(k);const r={k,I:INSTR[k],f:run.map(x=>fOf(N[x.i]).toFixed(2))};setI('alto');return r});
+ const bs=run.map(x=>x.b);
+ const title=`${s.title} on Saxophone: Notes and Fingering (Alto, Tenor, Soprano)`;
+ const desc=`How to play ${s.title} on alto, tenor or soprano saxophone. The notes, a fingering diagram for each one and a play-along. ${s.level}.`;
+ const body=`<h1>${s.title} on saxophone</h1>
+<p class="sub">${s.level}. Written pitch, so the same notes work on alto, soprano and tenor saxophone.</p>
+<p>${hz.map(h=>`<button class="play" data-i="${h.k}" type="button">&#9654; Play on ${h.I.name.toLowerCase()}</button>`).join(' ')}</p>
+<h2>The notes</h2>
+${songStaffSvg(run)}
+<p class="seq">${seq}</p>
+<p class="small">Notes in order, ${total} in all. The rhythm is simplified: hold the notes marked with longer beats in the chart.</p>
+<h2>Fingerings for the notes in this song</h2>
+<div class="six">${us.map(i=>{const o=notes[i];return `<div class="card"><h3>${o.nm.short}<small>${o.d.written.replace(/^[A-G][♯♭]?/,'')}</small></h3><a href="../../notes/${o.nm.slug}/">${dia(o.f[0])}</a><div class="small">${brief(o.f[0])}</div></div>`}).join('')}</div>
+<p><a class="btn" href="../../">Open the interactive fingering chart</a> <a class="btn" href="../">More songs</a></p>
+<p class="small">This is a traditional tune in the public domain. Check the notes with your teacher, and listen to a recording to hear the rhythm.</p>
+<script src="../../sound.js"></script>
+<script>var D=${JSON.stringify(Object.fromEntries(hz.map(h=>[h.k,h.f.map(Number)])))},B=${JSON.stringify(bs)},T=0;document.querySelectorAll('.play').forEach(function(b){b.addEventListener('click',function(){var f=D[b.dataset.i],t=0;T++;var my=T;f.forEach(function(h,k){var at=t;t+=B[k]*470;setTimeout(function(){if(my===T&&window.SaxSound)SaxSound.play(h)},at)})})});</script>`;
+ wr('songs/'+s.slug,shell(title,desc,`songs/${s.slug}/`,body,SCSS).replace(/href="\.\.\/"/g,'href="../"'));
+});
+
 // ---- sitemap + robots ----
-const urls=[`${BASE}/`,`${BASE}/beginners/`,`${BASE}/print/`,`${BASE}/privacy/`,...notes.map(o=>`${BASE}/notes/${o.nm.slug}/`)];
+const urls=[`${BASE}/`,`${BASE}/beginners/`,`${BASE}/songs/`,...SONGS.map(s=>`${BASE}/songs/${s.slug}/`),`${BASE}/print/`,`${BASE}/privacy/`,...notes.map(o=>`${BASE}/notes/${o.nm.slug}/`)];
 fs.writeFileSync(path.join(ROOT,'sitemap.xml'),`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`+urls.map(u=>`<url><loc>${u}</loc><lastmod>${today}</lastmod></url>`).join('\n')+`\n</urlset>\n`);
 fs.writeFileSync(path.join(ROOT,'robots.txt'),`User-agent: *\nAllow: /\n\nSitemap: ${BASE}/sitemap.xml\n`);
 console.log('built',notes.length,'note pages; base',BASE);

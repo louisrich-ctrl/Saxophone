@@ -35,6 +35,7 @@ svg{display:block;width:100%;height:auto}
 #quiz{transition:border-color .2s,box-shadow .2s}#quiz.ok{border:2px solid #1e9e4a;box-shadow:0 0 0 3px rgba(30,158,74,.15)}#quiz.no{border:2px solid #d0202f;box-shadow:0 0 0 3px rgba(208,32,47,.15)}#qzMsg.ok{color:#1e7d3d;font-weight:700;font-size:16px}#qzMsg.no{color:#c01c28;font-weight:700;font-size:16px}
 .about details.more{margin:6px 0 4px}.about summary{cursor:pointer;font:600 15px system-ui,sans-serif;color:#1a4f9c;padding:6px 0}
 .fold>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px}.fold>summary::-webkit-details-marker{display:none}.ch-sum{font-family:Georgia,serif;font-size:26px;font-weight:700;line-height:1.2;padding:6px 0}.ch-sum::after{content:"+";font:400 30px/1 system-ui,sans-serif;color:var(--mute)}.fold[open]>.ch-sum::after{content:"\2212"}.fold[open]>summary{margin-bottom:8px}
+.sg-s{cursor:pointer}.sg-s .head,.sg-s .acc{fill:var(--ink)}.sg-s.on .head,.sg-s.on .acc{fill:var(--pink)}.sg-s .ring{fill:transparent;stroke:transparent}.sg-s.on .ring{stroke:var(--pink);stroke-width:2;fill:none}.sg-row{display:block;width:100%;max-width:520px;height:auto;margin:0 0 4px}
 .qz-row{display:flex;gap:18px;align-items:center;flex-wrap:wrap}.qz-dia svg{width:110px;height:auto;display:block}.ch-n.good{background:var(--pink);border-color:var(--pink);color:#fff}.ch-n.good small{color:#fff}.ch-n.bad{opacity:.45}.foot2{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center}.lnk{background:none;border:0;padding:0;font:inherit;color:#1a4f9c;text-decoration:underline;cursor:pointer}
 .ch-play{font:inherit;font-size:14px;border:0;border-radius:18px;background:var(--ink);color:var(--bg);padding:8px 16px;cursor:pointer}
 #panel{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:2px solid var(--ink);padding:10px 14px calc(10px + env(safe-area-inset-bottom,0px));font-family:system-ui,sans-serif}
@@ -115,6 +116,11 @@ svg{display:block;width:100%;height:auto}
 <div class="tabs" id="chQual" style="margin-top:6px"></div>
 <div id="chOut" class="ch-out"></div>
 </details></section>
+<section class="chords" id="songs"><details class="fold"><summary class="ch-sum">Simple songs</summary>
+<p class="key" style="margin:0 0 8px">Pick a song, then tap a note to see its fingering, or press play. These are traditional tunes in written pitch, so the same notes work on alto, soprano and tenor.</p>
+<div class="tabs" id="sgTabs"></div>
+<div id="sgOut" class="ch-out"></div>
+</details></section>
 <section class="chords" id="quiz"><details class="fold"><summary class="ch-sum">Practice quiz</summary>
 <p class="key" style="margin:0 0 8px">Which note is this fingering? Pick the answer.</p>
 <div class="qz-row"><div id="qzDia" class="qz-dia"></div><div><div id="qzOpts" class="ch-notes"></div><div id="qzMsg" class="ch-sub" aria-live="polite"></div><button class="ch-play" id="qzNext" onclick="qzNew()" hidden>Next note</button><div class="ch-sub" id="qzScore"></div></div></div>
@@ -149,7 +155,7 @@ svg{display:block;width:100%;height:auto}
 </section>
 <!--NOTES-END-->
 <p id="privacy-note" class="key" style="margin-top:14px">Visits are counted with GoatCounter, a privacy-friendly counter. It uses no cookies and collects no personal information.</p>
-<p class="key foot2" style="margin-top:6px"><a href="beginners/">Beginners: first notes</a><a href="print/">Printable chart</a><a href="privacy/">Privacy and contact</a><button class="lnk" onclick="shareSite()">Share this chart</button><button class="lnk" onclick="addHome()">Add to home screen</button><span id="shMsg" aria-live="polite"></span></p>
+<p class="key foot2" style="margin-top:6px"><a href="beginners/">Beginners: first notes</a><a href="songs/">Simple songs</a><a href="print/">Printable chart</a><a href="privacy/">Privacy and contact</a><button class="lnk" onclick="shareSite()">Share this chart</button><button class="lnk" onclick="addHome()">Add to home screen</button><span id="shMsg" aria-live="polite"></span></p>
 </main>
 <aside class="rail rail-r qcard" id="quote" aria-live="off"><div class="qmark">&ldquo;</div><p class="qt" id="qt"></p><p class="qa" id="qa"></p></aside>
 <div id="panel"><div id="in">
@@ -201,6 +207,16 @@ const N=[
 ['F',6,'',[[1,'','','palmD,palmEb,palmF,sideE'],[1,'2','','frontF']]]
 ];
 const CHIP={rpC:'R pinky: low C key',rpEb:'R pinky: low E♭ key',tbBb:'L pinky: B♭ key',tbB:'L pinky: B key','tbC#':'L pinky: C♯ key','tbG#':'L pinky: G♯ key',sideBb:'Side B♭ key',sideC:'Side C key',sideE:'Side E key','sideF#':'Side F♯ key',bis:'Bis key (small key between 1 and 2)',frontF:'Front F key',palmD:'Palm D key',palmEb:'Palm E♭ key',palmF:'Palm F key'};
+
+// Simple public-domain songs, in written pitch (same fingerings on alto, soprano and tenor). "Note:beats", # = sharp, b = flat.
+const SONGS=[
+ {slug:'hot-cross-buns',title:'Hot Cross Buns',level:'Easiest: just B, A and G',m:'B4:1 A4:1 G4:2 B4:1 A4:1 G4:2 G4:.5 G4:.5 G4:.5 G4:.5 A4:.5 A4:.5 A4:.5 A4:.5 B4:1 A4:1 G4:2'},
+ {slug:'mary-had-a-little-lamb',title:'Mary Had a Little Lamb',level:'Easy: B, A, G and a high D',m:'B4:1 A4:1 G4:1 A4:1 B4:1 B4:1 B4:2 A4:1 A4:1 A4:2 B4:1 D5:1 D5:2 B4:1 A4:1 G4:1 A4:1 B4:1 B4:1 B4:1 B4:1 A4:1 A4:1 B4:1 A4:1 G4:4'},
+ {slug:'twinkle-twinkle-little-star',title:'Twinkle Twinkle Little Star',level:'Easy: uses the octave key',m:'G4:1 G4:1 D5:1 D5:1 E5:1 E5:1 D5:2 C5:1 C5:1 B4:1 B4:1 A4:1 A4:1 G4:2 D5:1 D5:1 C5:1 C5:1 B4:1 B4:1 A4:2 D5:1 D5:1 C5:1 C5:1 B4:1 B4:1 A4:2 G4:1 G4:1 D5:1 D5:1 E5:1 E5:1 D5:2 C5:1 C5:1 B4:1 B4:1 A4:1 A4:1 G4:2'},
+ {slug:'happy-birthday',title:'Happy Birthday',level:'Medium: low D up to high D',m:'D4:.75 D4:.25 E4:1 D4:1 G4:1 F#4:2 D4:.75 D4:.25 E4:1 D4:1 A4:1 G4:2 D4:.75 D4:.25 D5:1 B4:1 G4:1 F#4:1 E4:1 C5:.75 C5:.25 B4:1 G4:1 A4:1 G4:2'},
+ {slug:'ode-to-joy',title:'Ode to Joy',level:'Easy: B, A, G, C and a high D',m:'B4:1 B4:1 C5:1 D5:1 D5:1 C5:1 B4:1 A4:1 G4:1 G4:1 A4:1 B4:1 B4:1.5 A4:.5 A4:2 B4:1 B4:1 C5:1 D5:1 D5:1 C5:1 B4:1 A4:1 G4:1 G4:1 A4:1 B4:1 A4:1.5 G4:.5 G4:2'}
+];
+function songRun(s){return s.m.split(' ').map(t=>{const [nm,b]=t.split(':'),l=nm[0],o=+nm.slice(-1),a=nm.length>2?nm[1]:'',i=N.findIndex(n=>n[0]===l&&n[1]===o&&n[2]===a);return{i,name:l+(a==='#'?'♯':a==='b'?'♭':''),o,b:+b}})}
 const Y=(s)=>100-(s-30)*5;
 let mode='n';
 function sp(n){let [l,o,a]=n;
@@ -455,6 +471,40 @@ function playChord(){
 }
 const _setInst=setInst;setInst=function(k){_setInst(k);renderChords()};
 renderChords();
+// ---- SIMPLE SONGS ----
+let sgI=0,sgPlay=0;
+function songStaffRows(run){
+ const per=10,rows=[];
+ for(let st=0;st<run.length;st+=per){
+  const part=run.slice(st,st+per),W=60+part.length*30;let g='';
+  [60,70,80,90,100].forEach(y=>g+=`<line x1="4" x2="${W-4}" y1="${y}" y2="${y}" stroke="var(--line)" stroke-width="1"/>`);
+  g+=`<text x="8" y="106" font-size="66" fill="var(--ink)" font-family="'Noto Music','Apple Symbols','Segoe UI Symbol',serif">\u{1D11E}</text>`;
+  part.forEach((x,j)=>{
+   const k=st+j,sp=x.o*7+L.indexOf(x.name[0]),y=Y(sp),cx=64+j*30,acc=x.name.slice(1);let led='';
+   for(let q=40;q<=sp;q+=2)led+=`<line x1="${cx-11}" x2="${cx+11}" y1="${Y(q)}" y2="${Y(q)}" stroke="var(--line)"/>`;
+   for(let q=28;q>=sp;q-=2)led+=`<line x1="${cx-11}" x2="${cx+11}" y1="${Y(q)}" y2="${Y(q)}" stroke="var(--line)"/>`;
+   g+=`<g class="sg-s" data-k="${k}" onclick="sgTap(${k})" role="button" aria-label="${x.name} ${x.o}">${led}<circle class="ring" cx="${cx}" cy="${y}" r="14"/><ellipse class="head" cx="${cx}" cy="${y}" rx="7" ry="5" transform="rotate(-18 ${cx} ${y})"/>${acc?`<text class="acc" x="${cx-15}" y="${y+5}" font-size="16" text-anchor="middle">${acc}</text>`:''}</g>`;
+  });
+  const ys=part.map(x=>Y(x.o*7+L.indexOf(x.name[0]))),y0=Math.min(45,Math.min(...ys)-18),y1=Math.max(112,Math.max(...ys)+18);
+  rows.push(`<svg class="sg-row" style="width:${W/360*100}%" viewBox="0 ${y0} ${W} ${y1-y0}" aria-label="Notes ${st+1} to ${st+part.length}">${g}</svg>`);
+ }
+ return rows.join('');
+}
+function sgMark(k){document.querySelectorAll('#sgOut .sg-s').forEach(e=>e.classList.toggle('on',+e.dataset.k===k))}
+function sgTap(k){const x=songRun(SONGS[sgI])[k];sgPlay++;show(x.i,0,false);sgMark(k)}
+function renderSongs(){
+ const t=document.getElementById('sgTabs');if(!t)return;
+ t.innerHTML=SONGS.map((s,i)=>`<button class="${i===sgI?'on':''}" onclick="sgI=${i};sgPlay++;renderSongs()">${s.title}</button>`).join('');
+ const s=SONGS[sgI],run=songRun(s);
+ document.getElementById('sgOut').innerHTML=`<div class="ch-name">${s.title}</div><div class="ch-sub">${s.level}. Tap a note to see its fingering.</div>${songStaffRows(run)}<button class="ch-play" onclick="playSong()">&#9654; Play song</button> <button class="ch-play" style="background:transparent;color:var(--ink);border:1px solid var(--ink)" onclick="sgPlay++;sgMark(-1)">Stop</button>`;
+}
+function playSong(){
+ const run=songRun(SONGS[sgI]),tok=++sgPlay;let t=0;
+ run.forEach((x,k)=>{const at=t;t+=x.b*470;
+  setTimeout(()=>{if(tok!==sgPlay)return;sgMark(k);show(x.i,0,true);if(soundOn&&window.SaxSound)SaxSound.play(fOf(N[x.i]))},at)});
+ setTimeout(()=>{if(tok===sgPlay)sgMark(-1)},t+400);
+}
+renderSongs();
 // ---- PRACTICE QUIZ ----
 let qz={n:-1,right:0,tot:0,streak:0,done:false};
 function qzPool(){return N.map((n,i)=>i).filter(i=>!/palm/.test(N[i][3][0][3]||''))}
