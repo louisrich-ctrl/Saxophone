@@ -34,6 +34,7 @@ svg{display:block;width:100%;height:auto}
 .cs{display:block;width:100%;max-width:470px;height:auto;margin:2px 0 10px}.cs-n{cursor:pointer}.cs-n .head{fill:var(--ink)}.cs-n .acc{fill:var(--ink)}.cs-n.on .head,.cs-n.on .acc{fill:var(--pink)}.cs-n.on .ring{stroke:var(--pink);stroke-width:2;fill:none}.cs-n .ring{fill:transparent;stroke:transparent}
 #quiz{transition:border-color .2s,box-shadow .2s}#quiz.ok{border:2px solid #1e9e4a;box-shadow:0 0 0 3px rgba(30,158,74,.15)}#quiz.no{border:2px solid #d0202f;box-shadow:0 0 0 3px rgba(208,32,47,.15)}#qzMsg.ok{color:#1e7d3d;font-weight:700;font-size:16px}#qzMsg.no{color:#c01c28;font-weight:700;font-size:16px}
 .about details.more{margin:6px 0 4px}.about summary{cursor:pointer;font:600 15px system-ui,sans-serif;color:#1a4f9c;padding:6px 0}
+.fold>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px}.fold>summary::-webkit-details-marker{display:none}.ch-sum{font-family:Georgia,serif;font-size:26px;font-weight:700;line-height:1.2;padding:6px 0}.ch-sum::after{content:"+";font:400 30px/1 system-ui,sans-serif;color:var(--mute)}.fold[open]>.ch-sum::after{content:"\2212"}.fold[open]>summary{margin-bottom:8px}
 .qz-row{display:flex;gap:18px;align-items:center;flex-wrap:wrap}.qz-dia svg{width:110px;height:auto;display:block}.ch-n.good{background:var(--pink);border-color:var(--pink);color:#fff}.ch-n.good small{color:#fff}.ch-n.bad{opacity:.45}.foot2{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center}.lnk{background:none;border:0;padding:0;font:inherit;color:#1a4f9c;text-decoration:underline;cursor:pointer}
 .ch-play{font:inherit;font-size:14px;border:0;border-radius:18px;background:var(--ink);color:var(--bg);padding:8px 16px;cursor:pointer}
 #panel{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:2px solid var(--ink);padding:10px 14px calc(10px + env(safe-area-inset-bottom,0px));font-family:system-ui,sans-serif}
@@ -106,20 +107,18 @@ svg{display:block;width:100%;height:auto}
 <div class="tabs" id="inst" style="margin-bottom:10px"><button class="on" data-i="alto" onclick="setInst('alto')">Alto sax</button><button data-i="soprano" onclick="setInst('soprano')">Soprano sax</button><button data-i="tenor" onclick="setInst('tenor')">Tenor sax</button></div>
 <div class="tabs" id="mode" style="margin-bottom:12px"><button class="on" data-m="n" onclick="setMode('n')">Normal notes</button><button data-m="#" onclick="setMode('#')">Sharps ♯</button><button data-m="b" onclick="setMode('b')">Flats ♭</button><button id="snd" class="on" onclick="toggleSound()">Sound: on</button></div>
 <div id="staves"></div>
-<section class="chords" id="chords">
-<h2 class="ch-h">Scales and chords</h2>
+<section class="chords" id="chords"><details class="fold"><summary class="ch-sum">Scales and chords</summary>
 <div class="tabs" id="chTab"></div>
 <p class="key" id="chHelp" style="margin:8px 0"></p>
 <div class="tabs" id="chNames"></div>
 <div class="tabs" id="chRoot" style="margin-top:6px"></div>
 <div class="tabs" id="chQual" style="margin-top:6px"></div>
 <div id="chOut" class="ch-out"></div>
-</section>
-<section class="chords" id="quiz">
-<h2 class="ch-h">Practice quiz</h2>
+</details></section>
+<section class="chords" id="quiz"><details class="fold"><summary class="ch-sum">Practice quiz</summary>
 <p class="key" style="margin:0 0 8px">Which note is this fingering? Pick the answer.</p>
 <div class="qz-row"><div id="qzDia" class="qz-dia"></div><div><div id="qzOpts" class="ch-notes"></div><div id="qzMsg" class="ch-sub" aria-live="polite"></div><button class="ch-play" id="qzNext" onclick="qzNew()" hidden>Next note</button><div class="ch-sub" id="qzScore"></div></div></div>
-</section>
+</details></section>
 <p class="key" style="margin-top:14px">Think a fingering is wrong? <a id="report" href="#">Tell us</a>. Corrections from teachers and players are welcome.</p>
 <!--NOTES-START-->
 <section class="about">
