@@ -24,9 +24,13 @@ svg{display:block;width:100%;height:auto}
 .sel .ring{fill:none;stroke:var(--pink);stroke-width:2}.sel .head{fill:var(--pink)}
 .red{color:var(--red)}.blue{color:var(--blue)}
 #panel{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:2px solid var(--ink);padding:10px 14px calc(10px + env(safe-area-inset-bottom,0px));font-family:system-ui,sans-serif}
-#in{max-width:640px;margin:0 auto;display:flex;gap:16px;align-items:center;min-height:210px}
-#dia{flex:0 0 120px}
+#in{max-width:700px;margin:0 auto;display:flex;gap:16px;align-items:center;min-height:210px}
+#dia{flex:0 0 auto}
 #dia svg{width:120px}
+#dia svg.combo{width:345px;max-width:46vw}
+.phwrap{display:flex;gap:10px;align-items:flex-start}
+#dia .phwrap svg.phsax{width:158px;height:auto}
+#dia .phwrap svg:not(.phsax){width:96px}
 #info{flex:1;min-width:0}
 .big{font-family:Georgia,serif;font-size:34px;font-weight:700;line-height:1.1}
 .sub{color:var(--mute);font-size:13px;margin:4px 0 8px}
@@ -230,11 +234,58 @@ let cur=null,alt=0;
 let soundOn=true;
 function playCur(){if(cur!==null&&window.SaxSound)SaxSound.play(fOf(N[cur]))}
 function toggleSound(){soundOn=!soundOn;const b=document.getElementById('snd');b.textContent='Sound: '+(soundOn?'on':'off');b.classList.toggle('on',soundOn)}
+
+// Real alto photo with pressed keys in pink. Hotspots are in the photo's own pixel space (viewBox 148 73 509 1012).
+const HOT={frontF:[404,272,12,10],bis:[427,463,8,8],lh1:[426,438,15,13],lh2:[433,488,15,13],lh3:[447,513,14,11],
+ palmD:[432,392,10,15],palmEb:[452,420,6,15],palmF:[463,468,6,14],
+ rh1:[413,786,15,14],rh2:[409,841,17,15],rh3:[405,886,16,14],
+ sideE:[332,706,8,22],sideC:[333,750,8,16],sideBb:[332,784,8,16],'sideF#':[363,809,9,25],
+ rpEb:[350,905,17,8],rpC:[350,928,17,8]};
+function diaPhoto(f){
+ const [oc,lh,rh,kx]=f,K=(kx||'').split(',');
+ const on={frontF:K.includes('frontF'),bis:K.includes('bis'),palmD:K.includes('palmD'),palmEb:K.includes('palmEb'),palmF:K.includes('palmF'),
+  sideE:K.includes('sideE'),sideC:K.includes('sideC'),sideBb:K.includes('sideBb'),'sideF#':K.includes('sideF#'),rpEb:K.includes('rpEb'),rpC:K.includes('rpC'),
+  lh1:lh.includes(1),lh2:lh.includes(2),lh3:lh.includes(3),rh1:rh.includes(1),rh2:rh.includes(2),rh3:rh.includes(3)};
+ let o='';
+ Object.keys(HOT).forEach(k=>{if(on[k]){const [x,y,rx,ry]=HOT[k];o+=`<ellipse cx="${x}" cy="${y}" rx="${rx}" ry="${ry}" fill="var(--pink)" fill-opacity=".85" stroke="#fff" stroke-width="2.5"/>`}});
+ // keys hidden on the back or side of the horn, drawn as a small diagram
+ const fl=b=>b?'fill="var(--pink)" stroke="var(--pink)"':'fill="none" stroke="var(--mute)"';
+ const t=(x,y,txt,a)=>`<text x="${x}" y="${y}" font-size="8" text-anchor="${a||'start'}" font-family="system-ui" fill="var(--mute)">${txt}</text>`;
+ const g=K.includes('tbG#'),c=K.includes('tbC#'),b=K.includes('tbB'),bf=K.includes('tbBb');
+ let h='<svg viewBox="0 0 96 150" aria-label="Keys on the back and side of the saxophone">';
+ h+=t(48,9,'Not visible from the front','middle');
+ h+=t(4,26,'Octave key (thumb)')+`<rect x="4" y="30" width="16" height="26" rx="8" stroke-width="2" ${oc?'fill="var(--pink)" stroke="var(--pink)"':'fill="none" stroke="var(--ink)"'}/>`;
+ h+=t(4,72,'Left pinky keys')
+ +`<ellipse cx="34" cy="84" rx="14" ry="6" transform="rotate(-10 34 84)" stroke-width="1.4" ${fl(g)}/>`+t(52,87,'G♯')
+ +`<rect x="8" y="96" width="14" height="14" rx="3" stroke-width="1.4" ${fl(c)}/>`+t(8,120,'C♯')
+ +`<rect x="26" y="92" width="14" height="14" rx="3" stroke-width="1.4" ${fl(b)}/>`+t(44,103,'B')
+ +`<path d="M8,126 h30 a2,2 0 0 1 2,2 v1 a8,8 0 0 1 -8,8 h-16 a8,8 0 0 1 -8,-8 z" stroke-width="1.4" ${fl(bf)}/>`+t(46,135,'B♭');
+ h+='</svg>';
+ return `<div class="phwrap"><svg class="phsax" viewBox="148 73 509 1012" aria-label="Alto saxophone with pressed keys"><image href="assets/alto-photo.png" x="148" y="73" width="509" height="1012"/>${o}</svg>${h}</div>`;
+}
+
+// Diagram on the left, real photo on the right, pink lines from each pressed key in the diagram to the same key on the horn.
+const ANC={frontF:[60,14],bis:[42,51],lh1:[60,36],lh2:[60,66],lh3:[60,96],rh1:[60,140],rh2:[60,170],rh3:[60,200],
+ palmD:[97,26],palmEb:[89,62],palmF:[107,65],sideE:[30,137],sideC:[30,156],sideBb:[30,175],'sideF#':[35,201],rpEb:[16,222],rpC:[16,236]};
+function diaCombo(f){
+ const [oc,lh,rh,kx]=f,K=(kx||'').split(',');
+ const on={frontF:K.includes('frontF'),bis:K.includes('bis'),palmD:K.includes('palmD'),palmEb:K.includes('palmEb'),palmF:K.includes('palmF'),
+  sideE:K.includes('sideE'),sideC:K.includes('sideC'),sideBb:K.includes('sideBb'),'sideF#':K.includes('sideF#'),rpEb:K.includes('rpEb'),rpC:K.includes('rpC'),
+  lh1:lh.includes(1),lh2:lh.includes(2),lh3:lh.includes(3),rh1:rh.includes(1),rh2:rh.includes(2),rh3:rh.includes(3)};
+ const dk=300/246,pk=300/1012,px=190;
+ let ln='',dots='';
+ Object.keys(HOT).forEach(k=>{if(on[k]&&ANC[k]){
+  const [hx,hy,rx,ry]=HOT[k],X=px+(hx-148)*pk,Y=(hy-73)*pk,[ax,ay]=ANC[k];
+  ln+=`<line x1="${ax*dk}" y1="${ay*dk}" x2="${X}" y2="${Y}" stroke="var(--pink)" stroke-width="1.3" stroke-opacity=".85"/>`;
+  dots+=`<ellipse cx="${X}" cy="${Y}" rx="${Math.max(rx*pk,3)}" ry="${Math.max(ry*pk,3)}" fill="var(--pink)" stroke="#fff" stroke-width="1"/>`;}});
+ const d=`<g transform="scale(${dk})">`+dia(f).replace(/fill="none" stroke="(var\(--mute\)|var\(--ink\))"/g,'fill="var(--card)" stroke="$1"').replace(/^<svg[^>]*>/,'').replace(/<\/svg>$/,'')+'</g>';
+ return `<svg class="combo" viewBox="0 0 345 300" aria-label="Fingering diagram with matching keys on a photo of an alto saxophone"><image href="assets/alto-photo.png" x="${px}" y="0" width="${509*pk}" height="300"/>${ln}${d}${dots}</svg>`;
+}
 function show(i,k,quiet){
  cur=i;alt=k||0;
  const n=N[i],d=info(n),fs=n[3],f=fs[alt];
  document.querySelectorAll('.hit').forEach(g=>g.classList.toggle('sel',+g.dataset.i===i));
- document.getElementById('dia').innerHTML=dia(f);
+ document.getElementById('dia').innerHTML=inst==='alto'?diaCombo(f):dia(f);
  const chips=(f[3]||'').split(',').filter(Boolean).map(k=>`<span class="chip">${CHIP[k]}</span>`).join('')+(f[0]?'<span class="chip">Octave key</span>':'');
  const tabs=fs.length>1?'<div class="tabs">'+fs.map((_,j)=>`<button class="${j===alt?'on':''}" onclick="show(${i},${j},true)">${j?'Alternate '+j:'Main'}</button>`).join('')+'</div>':'';
  const w=d.s>=43?'<div class="warn">Altissimo fingerings vary. Check with your teacher.</div>':'';
