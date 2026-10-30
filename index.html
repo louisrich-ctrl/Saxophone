@@ -39,6 +39,7 @@ svg{display:block;width:100%;height:auto}
 .support{margin:22px 0 6px;padding:14px 16px;border:1px solid var(--bd);border-radius:10px;background:var(--card);font:15px/1.4 system-ui,sans-serif}.sup-b{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 6px}.sup-b a,.sc-b a{background:#10243a;color:#fff;text-decoration:none;font-weight:600;padding:8px 18px;border-radius:20px}.sup-b a:hover,.sc-b a:hover{background:#d9a441;color:#10243a}.sup-s{color:var(--mute);font-size:12px}
 .supcard{flex-direction:column;border-left:3px solid #d9a441;padding:4px 0 4px 14px}.sc-h{font:700 18px/1.25 Georgia,serif;color:var(--ink)}.sc-t{margin:6px 0 10px;font:14px/1.45 system-ui,sans-serif;color:var(--mute)}.sc-b{display:flex;flex-direction:column;gap:8px;align-items:flex-start}.sc-b a{font:600 14px system-ui,sans-serif;padding:7px 18px;min-width:84px;text-align:center}.sc-s{margin:10px 0 0;font:11px/1.4 system-ui,sans-serif;color:var(--mute)}
 @media (min-width:1060px){.support{display:none}.supcard{height:auto;align-self:flex-start}}
+.feat{background:#fdeef3;border:1px solid #e8a9c0;border-radius:10px;padding:10px 14px;margin:0 0 10px;font:14px/1.5 system-ui,sans-serif;color:var(--ink)}.feat p{margin:4px 0}.feat small{color:#666;font-size:12px}
 .how{margin:0 0 8px;padding-left:20px;font:14px/1.55 system-ui,sans-serif;color:var(--ink)}.how li{margin:3px 0}
 .mic-row{margin-top:12px;display:flex;flex-wrap:wrap;gap:12px;align-items:center}.mic-al{font:14px system-ui,sans-serif;color:var(--ink)}.mic-out{margin-top:10px;padding:10px 12px;border:1px dashed var(--bd);border-radius:10px}.mic-msg{font:600 15px system-ui,sans-serif;margin-top:4px}.mic-msg.ok{color:#1e7d3d}.mic-msg.no{color:#c01c28}.sg-s.done .head,.sg-s.done .acc{fill:#1e9e4a}.mic-live{display:block;width:150px;max-width:60%;height:auto}.mic-btn-on{background:#c01c28!important}
 .qz-row{display:flex;gap:18px;align-items:center;flex-wrap:wrap}.qz-dia svg{width:110px;height:auto;display:block}.ch-n.good{background:var(--pink);border-color:var(--pink);color:#fff}.ch-n.good small{color:#fff}.ch-n.bad{opacity:.45}.foot2{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center}.lnk{background:none;border:0;padding:0;font:inherit;color:#1a4f9c;text-decoration:underline;cursor:pointer}
@@ -114,9 +115,8 @@ svg{display:block;width:100%;height:auto}
 <div class="tabs" id="mode" style="margin-bottom:12px"><button class="on" data-m="n" onclick="setMode('n')">Normal notes</button><button data-m="#" onclick="setMode('#')">Sharps ♯</button><button data-m="b" onclick="setMode('b')">Flats ♭</button><button id="snd" class="on" onclick="toggleSound()">Sound: on</button></div>
 <div id="staves"></div>
 <section class="chords" id="songs"><details class="fold"><summary class="ch-sum">Simple songs</summary>
-<p class="key" style="margin:0 0 6px">Learn a tune note by note. Songs are in written pitch, so they work on alto, soprano and tenor.</p>
-<ol class="how"><li><b>Pick a song</b> from the buttons below.</li><li><b>Tap any note</b> on the staff to see its fingering, or press <b>Play song</b> to hear the tune.</li><li><b>Play your own sax:</b> press <b>Listen with microphone</b>. The note you play shows on the staff. Tick <b>Play along</b> and it waits for each note of the song, turning it green when you get it right.</li></ol>
-<p class="key" style="margin:0 0 8px;font-size:12px">Tip: use a quiet room and keep your sax near your phone or computer. Your sound is analysed on your device only and is never recorded or sent anywhere.</p>
+<div class="feat"><b>Play your own sax</b><p>Play your sax and see each note you play appear on the staff. Tick <b>Play along</b> and it waits for each note of the song, turning it green when you get it right.</p><div class="mic-row"><button class="ch-play" id="micBtn" onclick="micToggle()">Listen with microphone</button> <label class="mic-al"><input type="checkbox" id="micAlong" onchange="micAlongChg()"> Play along: wait for each note</label></div><small style="display:block;margin-top:8px">Use a quiet room, allow the microphone when asked. Your sound is analysed on your device only and never recorded or sent anywhere.</small></div>
+<p class="key" style="margin:0 0 8px">Then pick a song. Written pitch, so it works on alto, soprano and tenor. You can also tap any note for its fingering.</p>
 <div class="tabs" id="sgTabs"></div>
 <div id="sgOut" class="ch-out"></div>
 </details></section>
@@ -506,7 +506,7 @@ function renderSongs(){
  t.innerHTML=SONGS.map((s,i)=>`<button class="${i===sgI?'on':''}" onclick="sgI=${i};sgPlay++;renderSongs()">${s.title}</button>`).join('');
  const s=SONGS[sgI],run=songRun(s);
  document.getElementById('sgOut').innerHTML=`<div class="ch-name">${s.title}</div><div class="ch-sub">${s.level}. Tap a note to see its fingering.</div>${songStaffRows(run)}<button class="ch-play" onclick="playSong()">&#9654; Play song</button> <button class="ch-play" style="background:transparent;color:var(--ink);border:1px solid var(--ink)" onclick="sgPlay++;sgMark(-1)">Stop</button>
- <div class="mic-row"><button class="ch-play" id="micBtn" onclick="micToggle()">Listen with microphone</button> <label class="mic-al"><input type="checkbox" id="micAlong" onchange="micAlongChg()"> Play along: wait for each note</label></div><div id="micOut" class="mic-out" hidden><div id="micStat" class="ch-sub"></div><div id="micLive"></div><div id="micMsg" class="mic-msg" aria-live="polite"></div></div>`;
+ <div id="micOut" class="mic-out" hidden><div id="micStat" class="ch-sub"></div><div id="micLive"></div><div id="micMsg" class="mic-msg" aria-live="polite"></div></div>`;
  if(window.micOn)micStop();
 }
 function playSong(){
