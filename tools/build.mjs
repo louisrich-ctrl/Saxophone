@@ -206,6 +206,8 @@ wr('privacy',shell('Privacy and Contact | Saxophone Fingering Chart','How Saxoph
 <p>This site counts visits with GoatCounter, a privacy-friendly counter. It uses no cookies and does not collect your name, email or other personal information. The chart works in your browser and nothing you tap is sent to us.</p>
 <h2>Advertising and links</h2>
 <p>Some banners on this site are paid or sponsored placements, and some links may be affiliate or referral links. If you sign up with a sponsor through one of these links, the site may earn a commission at no extra cost to you. Sponsors are shown for information only, and we do not control their sites or their privacy practices.</p>
+<h2>Tips</h2>
+<p>If you choose to leave a tip, it is paid through PayPal. This site never sees your payment details, and tips are optional.</p>
 <h2>Accuracy</h2>
 <p>Fingerings can differ between saxophone models, and altissimo fingerings vary most. This site is a general guide and is not a substitute for a teacher.</p>
 <h2>Contact</h2>
