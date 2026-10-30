@@ -128,7 +128,7 @@ svg{display:block;width:100%;height:auto}
 <p class="key" style="margin:0 0 8px">Which note is this fingering? Pick the answer.</p>
 <div class="qz-row"><div id="qzDia" class="qz-dia"></div><div><div id="qzOpts" class="ch-notes"></div><div id="qzMsg" class="ch-sub" aria-live="polite"></div><button class="ch-play" id="qzNext" onclick="qzNew()" hidden>Next note</button><div class="ch-sub" id="qzScore"></div></div></div>
 </details></section>
-<p class="key" style="margin-top:14px">Think a fingering is wrong? <a id="report" href="#">Tell us</a>. Corrections from teachers and players are welcome.</p>
+<p class="key" style="margin-top:14px">Any suggestions or improvements to make this site better? <a id="report" href="#">Tell us</a>.</p>
 <!--NOTES-START-->
 <section class="about">
 <details class="more"><summary>How to use this chart, alternate fingerings and range</summary>
@@ -403,7 +403,7 @@ function setReport(){
  const a=document.getElementById('report');if(!a)return;
  let note='(no note selected)',fing='';
  if(cur!==null){const n=N[cur],d=info(n),f=n[3][alt];note=d.name+' (written '+d.written+')';fing=' Fingering shown: '+(f[0]?'octave key, ':'')+'left hand '+(f[1]||'none')+', right hand '+(f[2]||'none')+(f[3]?', keys: '+f[3]:'')+'.';}
- a.href=FEEDBACK+'?subject='+encodeURIComponent(INSTR[inst].name+' sax fingering correction')+'&body='+encodeURIComponent('Note: '+note+'.'+fing+'\n\nWhat should it be?\n');
+ a.href=FEEDBACK+'?subject='+encodeURIComponent('Saxophone Fingering Chart: feedback')+'&body='+encodeURIComponent('Your suggestion or correction:\n\n\n(For reference: '+INSTR[inst].name+' sax, note '+note+'.'+fing+')\n');
 }
 setReport();
 if(window.SaxSound)SaxSound.prepare(N.map(fOf));
