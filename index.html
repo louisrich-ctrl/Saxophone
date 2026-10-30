@@ -623,6 +623,7 @@ function micLoop(){
  }
  mic.raf=requestAnimationFrame(micLoop);
 }
+document.querySelectorAll('#songs details,#chords details').forEach(d=>d.addEventListener('toggle',()=>{if(window.micOn)micStop()}));
 // ---- PRACTICE QUIZ ----
 let qz={n:-1,right:0,tot:0,streak:0,done:false};
 function qzPool(){return N.map((n,i)=>i).filter(i=>!/palm/.test(N[i][3][0][3]||''))}
