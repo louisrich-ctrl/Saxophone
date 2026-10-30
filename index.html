@@ -114,19 +114,14 @@ svg{display:block;width:100%;height:auto}
 <div class="tabs" id="inst" style="margin-bottom:10px"><button class="on" data-i="alto" onclick="setInst('alto')">Alto sax</button><button data-i="soprano" onclick="setInst('soprano')">Soprano sax</button><button data-i="tenor" onclick="setInst('tenor')">Tenor sax</button></div>
 <div class="tabs" id="mode" style="margin-bottom:12px"><button class="on" data-m="n" onclick="setMode('n')">Normal notes</button><button data-m="#" onclick="setMode('#')">Sharps ♯</button><button data-m="b" onclick="setMode('b')">Flats ♭</button><button id="snd" class="on" onclick="toggleSound()">Sound: on</button></div>
 <div id="staves"></div>
-<div class="feat" id="micBox"><b>Play your own sax</b><p>Play your sax and see each note you play appear on the staff. Tick <b>Play along</b> and it waits for each note, turning it green when you get it right.</p>
-<div class="tabs" id="micWhat" style="margin:6px 0 8px"><button class="on" data-w="sg" onclick="micWhat('sg')">A song</button><button data-w="ch" onclick="micWhat('ch')">A scale or chord</button></div>
-<div class="mic-row"><button class="ch-play" id="micBtn" onclick="micToggle()">Listen with microphone</button> <label class="mic-al"><input type="checkbox" id="micAlong" onchange="micAlongChg()"> Play along: wait for each note</label></div>
-<div id="micOut" class="mic-out" hidden><div id="micStat" class="ch-sub"></div><div id="micLive"></div><div id="micMsg" class="mic-msg" aria-live="polite"></div></div>
-<small style="display:block;margin-top:8px">Pick the song or scale below first. Use a quiet room and allow the microphone when asked. Your sound is analysed on your device only and never recorded or sent anywhere.</small></div>
 <section class="chords" id="songs"><details class="fold"><summary class="ch-sum">Simple songs</summary>
-
+<div class="feat"><b>Play your own sax</b><p>Press <b>Listen with microphone</b>, then play the <b>pink note</b> on your sax. It turns <b>green</b> when you get it right, then the next note lights up.</p><div class="mic-row"><button class="ch-play" id="micBtn" onclick="micToggle('sg')">Listen with microphone</button> <label class="mic-al"><input type="checkbox" id="micAlong" checked onchange="micAlongChg()"> Play along (untick to just see what you play)</label></div><small style="display:block;margin-top:8px">Use a quiet room, allow the microphone when asked. Your sound is analysed on your device only and never recorded or sent anywhere.</small></div>
 <p class="key" style="margin:0 0 8px">Then pick a song. Written pitch, so it works on alto, soprano and tenor. You can also tap any note for its fingering.</p>
 <div class="tabs" id="sgTabs"></div>
 <div id="sgOut" class="ch-out"></div>
 </details></section>
 <section class="chords" id="chords"><details class="fold"><summary class="ch-sum">Scales and chords</summary>
-
+<div class="feat"><b>Play along on your sax</b><p>Press <b>Listen with microphone</b>, then play the <b>pink note</b> of the scale or arpeggio on your sax. It turns <b>green</b> when you get it right, then the next note lights up.</p><div class="mic-row"><button class="ch-play" id="chmicBtn" onclick="micToggle('ch')">Listen with microphone</button> <label class="mic-al"><input type="checkbox" id="chmicAlong" checked onchange="micAlongChg()"> Play along (untick to just see what you play)</label></div><div id="chmicOut" class="mic-out" hidden><div id="chmicStat" class="ch-sub"></div><div id="chmicLive"></div><div id="chmicMsg" class="mic-msg" aria-live="polite"></div></div><small style="display:block;margin-top:8px">Use a quiet room, allow the microphone when asked. Your sound is analysed on your device only and never recorded or sent anywhere.</small></div>
 <div class="tabs" id="chTab"></div>
 <p class="key" id="chHelp" style="margin:8px 0"></p>
 <div class="tabs" id="chNames"></div>
@@ -513,7 +508,7 @@ function renderSongs(){
  t.innerHTML=SONGS.map((s,i)=>`<button class="${i===sgI?'on':''}" onclick="sgI=${i};sgPlay++;renderSongs()">${s.title}</button>`).join('');
  const s=SONGS[sgI],run=songRun(s);
  document.getElementById('sgOut').innerHTML=`<div class="ch-name">${s.title}</div><div class="ch-sub">${s.level}. Tap a note to see its fingering.</div>${songStaffRows(run)}<button class="ch-play" onclick="playSong()">&#9654; Play song</button> <button class="ch-play" style="background:transparent;color:var(--ink);border:1px solid var(--ink)" onclick="sgPlay++;sgMark(-1)">Stop</button>
- `;
+ <div id="micOut" class="mic-out" hidden><div id="micStat" class="ch-sub"></div><div id="micLive"></div><div id="micMsg" class="mic-msg" aria-live="polite"></div></div>`;
  if(window.micOn)micStop();
 }
 function playSong(){
@@ -545,17 +540,12 @@ function micWritten(f){
  return {w,cents};
 }
 var micSrc='sg';
-function mE(n){return document.getElementById('mic'+n)}
+function mE(n){return document.getElementById((micSrc==='ch'?'chmic':'mic')+n)}
 function micRun(){return micSrc==='ch'?chRun():songRun(SONGS[sgI])}
 function micMark(k){micSrc==='ch'?chMark(k):sgMark(k)}
 function micDone(k){const q=micSrc==='ch'?'.cs-n[data-k="'+k+'"]':'#sgOut .sg-s[data-k="'+k+'"]';const e=document.querySelector(q);if(e)e.classList.add('done')}
 function micClear(){document.querySelectorAll('#sgOut .sg-s,.cs-n').forEach(e=>e.classList.remove('done'))}
-function micToggle(){if(window.micOn)micStop();else micStart()}
-function micWhat(w){
- if(window.micOn)micStop();micSrc=w;
- document.querySelectorAll('#micWhat button').forEach(b=>b.classList.toggle('on',b.dataset.w===w));
- const d=document.querySelector('#'+(w==='ch'?'chords':'songs')+' details');if(d)d.open=true;
-}
+function micToggle(src){if(window.micOn){const same=src===micSrc;micStop();if(same)return}micSrc=src||'sg';micStart()}
 async function micStart(){
  const out=mE('Out'),st=mE('Stat');
  out.hidden=false;
