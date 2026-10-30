@@ -31,7 +31,7 @@ svg{display:block;width:100%;height:auto}
 .ch-n{border:1px solid var(--ink);border-radius:10px;background:transparent;color:var(--ink);font:inherit;padding:6px 12px;min-width:56px;text-align:center;cursor:pointer}
 .ch-n b{display:block;font-family:Georgia,serif;font-size:20px}.ch-n small{color:var(--mute);font-size:11px}
 .ch-n.on{background:var(--pink);border-color:var(--pink);color:#fff}.ch-n.on small{color:#fff}
-.cs{display:block;width:100%;max-width:470px;height:auto;margin:2px 0 10px}.cs-n{cursor:pointer}.cs-n .head{fill:var(--ink)}.cs-n .acc{fill:var(--ink)}.cs-n.on .head,.cs-n.on .acc{fill:var(--pink)}.cs-n.on .ring{stroke:var(--pink);stroke-width:2;fill:none}.cs-n .ring{fill:transparent;stroke:transparent}
+.cs{display:block;width:100%;max-width:470px;height:auto;margin:2px 0 10px}.cs-n{cursor:pointer}.cs-n .head{fill:var(--ink)}.cs-n .acc{fill:var(--ink)}.cs-n.on .head,.cs-n.on .acc{fill:var(--pink)}.cs-n.done .head,.cs-n.done .acc{fill:#1e9e4a}.cs-n.on .ring{stroke:var(--pink);stroke-width:2;fill:none}.cs-n .ring{fill:transparent;stroke:transparent}
 #quiz{transition:border-color .2s,box-shadow .2s}#quiz.ok{border:2px solid #1e9e4a;box-shadow:0 0 0 3px rgba(30,158,74,.15)}#quiz.no{border:2px solid #d0202f;box-shadow:0 0 0 3px rgba(208,32,47,.15)}#qzMsg.ok{color:#1e7d3d;font-weight:700;font-size:16px}#qzMsg.no{color:#c01c28;font-weight:700;font-size:16px}
 .about details.more{margin:6px 0 4px}.about summary{cursor:pointer;font:600 15px system-ui,sans-serif;color:#1a4f9c;padding:6px 0}
 .fold>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px}.fold>summary::-webkit-details-marker{display:none}.ch-sum{font-family:Georgia,serif;font-size:26px;font-weight:700;line-height:1.2;padding:6px 0}.ch-sum::after{content:"+";font:400 30px/1 system-ui,sans-serif;color:var(--mute)}.fold[open]>.ch-sum::after{content:"\2212"}.fold[open]>summary{margin-bottom:8px}
@@ -114,13 +114,19 @@ svg{display:block;width:100%;height:auto}
 <div class="tabs" id="inst" style="margin-bottom:10px"><button class="on" data-i="alto" onclick="setInst('alto')">Alto sax</button><button data-i="soprano" onclick="setInst('soprano')">Soprano sax</button><button data-i="tenor" onclick="setInst('tenor')">Tenor sax</button></div>
 <div class="tabs" id="mode" style="margin-bottom:12px"><button class="on" data-m="n" onclick="setMode('n')">Normal notes</button><button data-m="#" onclick="setMode('#')">Sharps ♯</button><button data-m="b" onclick="setMode('b')">Flats ♭</button><button id="snd" class="on" onclick="toggleSound()">Sound: on</button></div>
 <div id="staves"></div>
+<div class="feat" id="micBox"><b>Play your own sax</b><p>Play your sax and see each note you play appear on the staff. Tick <b>Play along</b> and it waits for each note, turning it green when you get it right.</p>
+<div class="tabs" id="micWhat" style="margin:6px 0 8px"><button class="on" data-w="sg" onclick="micWhat('sg')">A song</button><button data-w="ch" onclick="micWhat('ch')">A scale or chord</button></div>
+<div class="mic-row"><button class="ch-play" id="micBtn" onclick="micToggle()">Listen with microphone</button> <label class="mic-al"><input type="checkbox" id="micAlong" onchange="micAlongChg()"> Play along: wait for each note</label></div>
+<div id="micOut" class="mic-out" hidden><div id="micStat" class="ch-sub"></div><div id="micLive"></div><div id="micMsg" class="mic-msg" aria-live="polite"></div></div>
+<small style="display:block;margin-top:8px">Pick the song or scale below first. Use a quiet room and allow the microphone when asked. Your sound is analysed on your device only and never recorded or sent anywhere.</small></div>
 <section class="chords" id="songs"><details class="fold"><summary class="ch-sum">Simple songs</summary>
-<div class="feat"><b>Play your own sax</b><p>Play your sax and see each note you play appear on the staff. Tick <b>Play along</b> and it waits for each note of the song, turning it green when you get it right.</p><div class="mic-row"><button class="ch-play" id="micBtn" onclick="micToggle()">Listen with microphone</button> <label class="mic-al"><input type="checkbox" id="micAlong" onchange="micAlongChg()"> Play along: wait for each note</label></div><small style="display:block;margin-top:8px">Use a quiet room, allow the microphone when asked. Your sound is analysed on your device only and never recorded or sent anywhere.</small></div>
+
 <p class="key" style="margin:0 0 8px">Then pick a song. Written pitch, so it works on alto, soprano and tenor. You can also tap any note for its fingering.</p>
 <div class="tabs" id="sgTabs"></div>
 <div id="sgOut" class="ch-out"></div>
 </details></section>
 <section class="chords" id="chords"><details class="fold"><summary class="ch-sum">Scales and chords</summary>
+
 <div class="tabs" id="chTab"></div>
 <p class="key" id="chHelp" style="margin:8px 0"></p>
 <div class="tabs" id="chNames"></div>
@@ -469,6 +475,7 @@ function renderChords(){
  ${chStaff(run)}
  <div class="ch-notes">${run.map((x,k)=>`<button class="ch-n" onclick="chTap(${k})"><b>${x.name}</b><small>${x.o}</small></button>`).join('')}</div>
  <button class="ch-play" onclick="playChord()">&#9654; Play ${chTab==='s'?'scale':'arpeggio'}</button>`;
+ if(window.micOn&&micSrc==='ch')micStop();
 }
 function playChord(){
  const run=chRun(),seq=chTab==='s'?run.concat(run.slice(0,-1).reverse()):run,tok=++chPlay,pos=seq.map((_,k)=>k<run.length?k:2*run.length-2-k);
@@ -506,7 +513,7 @@ function renderSongs(){
  t.innerHTML=SONGS.map((s,i)=>`<button class="${i===sgI?'on':''}" onclick="sgI=${i};sgPlay++;renderSongs()">${s.title}</button>`).join('');
  const s=SONGS[sgI],run=songRun(s);
  document.getElementById('sgOut').innerHTML=`<div class="ch-name">${s.title}</div><div class="ch-sub">${s.level}. Tap a note to see its fingering.</div>${songStaffRows(run)}<button class="ch-play" onclick="playSong()">&#9654; Play song</button> <button class="ch-play" style="background:transparent;color:var(--ink);border:1px solid var(--ink)" onclick="sgPlay++;sgMark(-1)">Stop</button>
- <div id="micOut" class="mic-out" hidden><div id="micStat" class="ch-sub"></div><div id="micLive"></div><div id="micMsg" class="mic-msg" aria-live="polite"></div></div>`;
+ `;
  if(window.micOn)micStop();
 }
 function playSong(){
@@ -537,9 +544,20 @@ function micWritten(f){
  let w=cr-sh;while(w>hi+3)w-=12;while(w<lo-3)w+=12;
  return {w,cents};
 }
+var micSrc='sg';
+function mE(n){return document.getElementById('mic'+n)}
+function micRun(){return micSrc==='ch'?chRun():songRun(SONGS[sgI])}
+function micMark(k){micSrc==='ch'?chMark(k):sgMark(k)}
+function micDone(k){const q=micSrc==='ch'?'.cs-n[data-k="'+k+'"]':'#sgOut .sg-s[data-k="'+k+'"]';const e=document.querySelector(q);if(e)e.classList.add('done')}
+function micClear(){document.querySelectorAll('#sgOut .sg-s,.cs-n').forEach(e=>e.classList.remove('done'))}
 function micToggle(){if(window.micOn)micStop();else micStart()}
+function micWhat(w){
+ if(window.micOn)micStop();micSrc=w;
+ document.querySelectorAll('#micWhat button').forEach(b=>b.classList.toggle('on',b.dataset.w===w));
+ const d=document.querySelector('#'+(w==='ch'?'chords':'songs')+' details');if(d)d.open=true;
+}
 async function micStart(){
- const out=document.getElementById('micOut'),st=document.getElementById('micStat');
+ const out=mE('Out'),st=mE('Stat');
  out.hidden=false;
  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){st.textContent='This browser cannot use the microphone here.';return}
  try{
@@ -549,8 +567,8 @@ async function micStart(){
  if(mic.ctx.state==='suspended')await mic.ctx.resume();
  const src=mic.ctx.createMediaStreamSource(mic.stream);mic.an=mic.ctx.createAnalyser();mic.an.fftSize=2048;mic.buf=new Float32Array(2048);
  src.connect(mic.an);
- window.micOn=true;sgPlay++;mic.hist=[];mic.last=null;mic.armed=true;mic.k=0;mic.al=document.getElementById('micAlong').checked;
- const b=document.getElementById('micBtn');b.textContent='Stop listening';b.classList.add('mic-btn-on');
+ window.micOn=true;sgPlay++;chPlay++;mic.hist=[];mic.last=null;mic.armed=true;mic.k=0;mic.al=mE('Along').checked;
+ const b=mE('Btn');b.textContent='Stop listening';b.classList.add('mic-btn-on');
  micAlongChg();micLoop();
 }
 function micStop(){
@@ -558,16 +576,16 @@ function micStop(){
  if(mic.stream)mic.stream.getTracks().forEach(t=>t.stop());
  if(mic.ctx)mic.ctx.close().catch(()=>{});
  mic.stream=null;mic.ctx=null;
- const b=document.getElementById('micBtn');if(b){b.textContent='Listen with microphone';b.classList.remove('mic-btn-on')}
- const o=document.getElementById('micOut');if(o)o.hidden=true;
- sgMark(-1);document.querySelectorAll('#sgOut .sg-s').forEach(e=>e.classList.remove('done'));
+ const b=mE('Btn');if(b){b.textContent='Listen with microphone';b.classList.remove('mic-btn-on')}
+ const o=mE('Out');if(o)o.hidden=true;
+ micMark(-1);micClear();
 }
 function micAlongChg(){
- const cb=document.getElementById('micAlong');mic.al=!!(cb&&cb.checked);mic.k=0;mic.armed=true;
- document.querySelectorAll('#sgOut .sg-s').forEach(e=>e.classList.remove('done'));
- const st=document.getElementById('micStat'),m=document.getElementById('micMsg');if(!st)return;
+ const cb=mE('Along');mic.al=!!(cb&&cb.checked);mic.k=0;mic.armed=true;
+ micClear();
+ const st=mE('Stat'),m=mE('Msg');if(!st)return;
  m.textContent='';m.className='mic-msg';
- if(mic.al){sgMark(0);st.textContent='Play along: play the pink note, then the next one.'}else{sgMark(-1);st.textContent='Listening. Play any note on your sax and it will show on the staff.'}
+ if(mic.al){micMark(0);st.textContent='Play along: play the pink note, then the next one.'}else{micMark(-1);st.textContent='Listening. Play any note on your sax and it will show on the staff.'}
 }
 function liveStaff(i){
  if(i<0)return '<svg class="mic-live" viewBox="0 40 150 90"><text x="8" y="106" font-size="66" fill="var(--ink)" font-family="\'Noto Music\',\'Apple Symbols\',\'Segoe UI Symbol\',serif">\u{1D11E}</text>'+[60,70,80,90,100].map(y=>`<line x1="4" x2="146" y1="${y}" y2="${y}" stroke="var(--line)"/>`).join('')+'</svg>';
@@ -581,21 +599,21 @@ function liveStaff(i){
  return `<svg class="mic-live" viewBox="0 ${y0} 150 ${y1-y0}">${g}</svg>`;
 }
 function micAccept(w,cents){
- const i=N.findIndex(n=>nMidi(n)===w),live=document.getElementById('micLive'),st=document.getElementById('micStat'),m=document.getElementById('micMsg');
+ const i=N.findIndex(n=>nMidi(n)===w),live=mE('Live'),st=mE('Stat'),m=mE('Msg');
  if(i<0){live.innerHTML=liveStaff(-1);if(!mic.al)st.textContent='That note is outside this chart.';return}
  live.innerHTML=liveStaff(i);
  const d=info(N[i]),tune=Math.abs(cents)<8?'in tune':Math.abs(cents)+' cents '+(cents>0?'sharp':'flat');
  if(!mic.al){st.textContent=`Hearing ${d.name} (written ${d.written}), ${tune}.`;if(mic.last!==w)show(i,0,true)}
  if(mic.al){
-  const run=songRun(SONGS[sgI]),tgt=run[mic.k];
+  const run=micRun(),tgt=run[mic.k];
   if(!tgt)return;
   if(i===tgt.i&&(mic.armed||w!==mic.accW)){
    mic.armed=false;mic.accW=w;
-   const e=document.querySelector('#sgOut .sg-s[data-k="'+mic.k+'"]');if(e)e.classList.add('done');
+   micDone(mic.k);
    m.textContent='✓ '+d.name+' ('+tune+')';m.className='mic-msg ok';show(i,0,true);
    mic.k++;
-   if(mic.k>=run.length){sgMark(-1);m.textContent='✓ Song complete! Well played.';st.textContent='';mic.k=run.length}
-   else sgMark(mic.k);
+   if(mic.k>=run.length){micMark(-1);m.textContent=(micSrc==='ch'?'✓ Complete! Well played.':'✓ Song complete! Well played.');st.textContent='';mic.k=run.length}
+   else micMark(mic.k);
   }else if(i!==tgt.i&&mic.last!==w){
    m.textContent='✗ You played '+d.name+'. Look for '+info(N[tgt.i]).name+'.';m.className='mic-msg no';
   }
