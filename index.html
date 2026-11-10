@@ -109,7 +109,6 @@ svg{display:block;width:100%;height:auto}
  </div>
 </header>
 <main>
-<div class="ad ad-top" data-slot="top"><a href="#" class="adlink"></a></div>
 <p class="lead">Pick a note type, then tap a note to see its name and fingering.</p>
 <div class="tabs" id="inst" style="margin-bottom:10px"><button class="on" data-i="alto" onclick="setInst('alto')">Alto sax</button><button data-i="soprano" onclick="setInst('soprano')">Soprano sax</button><button data-i="tenor" onclick="setInst('tenor')">Tenor sax</button></div>
 <div class="tabs" id="mode" style="margin-bottom:12px"><button class="on" data-m="n" onclick="setMode('n')">Normal notes</button><button data-m="#" onclick="setMode('#')">Sharps ♯</button><button data-m="b" onclick="setMode('b')">Flats ♭</button><button id="snd" class="on" onclick="toggleSound()">Sound: on</button></div>
@@ -671,7 +670,7 @@ if('serviceWorker' in navigator&&location.protocol==='https:')navigator.serviceW
 // top = 728x90 banner, left/right = 160x600 tower. href = their website. alt = their name.
 const CONTACT='mailto:ads@saxophonefingeringchart.com?subject=Advertising%20on%20Saxophone%20Fingering%20Chart';
 // Each slot takes ONE sponsor (exclusive) or a LIST of sponsors (shared, they take turns).
-// Exclusive:  top:{img:'assets/sponsors/online-sax-academy-728x90.png',href:'https://www.newonlinesaxacademy.com/memberships?ref=https%3A%2F%2Fwww.newonlinesaxacademy.com%2Fa%2F2148338580%2FJmCuxgoF',alt:'Online Sax Academy'},
+// Exclusive:  top:[],
 // Shared:     top:[{img:'a.png',href:'https://a.com',alt:'A'},{img:'b.png',href:'https://b.com',alt:'B'}],
 // Leave a slot as [] to show "Advertise here". Shared sponsors rotate every ROTATE_SECONDS.
 const ROTATE_SECONDS=12;

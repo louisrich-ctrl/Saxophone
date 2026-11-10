@@ -200,18 +200,18 @@ wr('beginners',shell('Your First Six Notes on Alto Saxophone: B A G F E D | Saxo
 <p>Play each note for four slow counts, then play down from B to D and back up. Aim for a steady, clear sound before you go faster. A few minutes a day works better than one long session.</p>
 <p><a class="btn" href="../">Open the interactive fingering chart</a> <a class="btn" href="../print/">Printable chart</a></p>`));
 // privacy and contact
-wr('privacy',shell('Privacy and Contact | Saxophone Fingering Chart','How Saxophone Fingering Chart handles visitor data, advertising and links, and how to contact us.','privacy/',
+wr('privacy',shell('Privacy and Contact | Saxophone Fingering Chart','How Saxophone Fingering Chart handles visitor data and tips, and how to contact us.','privacy/',
 `<h1>Privacy and contact</h1>
 <h2>Visitor data</h2>
 <p>This site counts visits with GoatCounter, a privacy-friendly counter. It uses no cookies and does not collect your name, email or other personal information. The chart works in your browser and nothing you tap is sent to us.</p>
 <h2>Advertising and links</h2>
-<p>Some banners on this site are paid or sponsored placements, and some links may be affiliate or referral links. If you sign up with a sponsor through one of these links, the site may earn a commission at no extra cost to you. Sponsors are shown for information only, and we do not control their sites or their privacy practices.</p>
+<p>This site does not currently show advertising or sponsored placements. If that changes, any paid or sponsored content will be clearly labelled here.</p>
 <h2>Tips</h2>
 <p>If you choose to leave a tip, it is paid through PayPal. This site never sees your payment details, and tips are optional.</p>
 <h2>Accuracy</h2>
 <p>Fingerings can differ between saxophone models, and altissimo fingerings vary most. This site is a general guide and is not a substitute for a teacher.</p>
 <h2>Contact</h2>
-<p>Corrections and feedback: <a href="mailto:hello@saxophonefingeringchart.com">hello@saxophonefingeringchart.com</a><br>Advertising: <a href="mailto:ads@saxophonefingeringchart.com">ads@saxophonefingeringchart.com</a></p>`));
+<p>Corrections and feedback: <a href="mailto:hello@saxophonefingeringchart.com">hello@saxophonefingeringchart.com</a></p>`));
 // printable chart
 const pcards=notes.map(o=>`<div class="pc"><b>${o.nm.short}<small>${o.d.written.replace(/^[A-G][♯♭]?/,'')}</small></b>${dia(o.f[0])}</div>`).join('');
 wr('print',shell('Printable Saxophone Fingering Chart: Alto, Soprano, Tenor','Print a one-page saxophone fingering chart for alto, soprano and tenor sax, low B♭ to high F. Free to print.','print/',
