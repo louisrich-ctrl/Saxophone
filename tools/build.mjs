@@ -150,9 +150,9 @@ const text=`<!--NOTES-START-->
 <section class="about">
 <details class="more"><summary>How to use this chart, alternate fingerings and range</summary>
 <h2>Saxophone fingering chart: alto, soprano and tenor</h2>
-<p>Tap any note to see its fingering and hear it. Choose alto, soprano or tenor. Natural notes are pink, sharps are blue and flats are orange. The notes are written pitch, and the fingering is the same on all three saxophones.</p>
+<p>Tap any note to see its fingering and hear it. Choose alto, soprano or tenor. Natural notes are black, sharps are gold and flats are blue. The notes are written pitch, and the fingering is the same on all three saxophones.</p>
 <h2>Reading the diagram</h2>
-<p>A filled circle is a key you press and an open circle is one you leave up. The diagram uses the same colour as the note you tapped: pink for natural, blue for sharps and orange for flats. A sharp and its matching flat use the same fingering.</p>
+<p>A filled circle is a key you press and an open circle is one you leave up. The diagram uses the same colour as the note you tapped: black for natural, gold for sharps and blue for flats. A sharp and its matching flat use the same fingering.</p>
 <h2>Written and concert pitch</h2>
 <p>Alto (E♭) sounds a major sixth lower than written. Soprano and tenor (B♭) sound a major second and a major ninth lower.</p>
 ${guideExtra}
