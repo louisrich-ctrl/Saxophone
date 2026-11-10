@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Saxophone Fingering Chart: Alto, Soprano and Tenor | Tap any note</title>
 <style>
-:root{--pink:#e0457b;--bg:#ffffff;--ink:#1d2a33;--mute:#6b7780;--line:#3a4650;--sel:#b8461f;--card:#ffffff;--bd:#d8dce0;--red:#d0202f;--blue:#1f5fd0;
+:root{--pink:#e0457b;--sh:#2b7fe8;--fl:#f08a1c;--bg:#ffffff;--ink:#1d2a33;--mute:#6b7780;--line:#3a4650;--sel:#b8461f;--card:#ffffff;--bd:#d8dce0;--red:#d0202f;--blue:#1f5fd0;
 box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);}
 *{box-sizing:border-box}
 html{color-scheme:light;scroll-padding-top:env(safe-area-inset-top,0px)}
@@ -19,9 +19,9 @@ svg{display:block;width:100%;height:auto}
 .hit:focus{outline:none}
 .hit:focus-visible .ring{stroke:var(--sel);stroke-width:2}
 .ring{fill:transparent;stroke:transparent}
-.hit{--c:var(--ink)}.hit.sh{--c:var(--red)}.hit.fl{--c:var(--blue)}
+.hit{--c:var(--pink)}.hit.sh{--c:var(--sh)}.hit.fl{--c:var(--fl)}.legend{display:flex;gap:14px;align-items:center;flex-wrap:wrap;font:13px system-ui,sans-serif;color:var(--ink);margin-right:4px}.legend span{display:inline-flex;align-items:center;gap:6px}.legend i{width:12px;height:12px;border-radius:50%;display:inline-block}
 .head{fill:var(--c)}
-.sel .ring{fill:none;stroke:var(--pink);stroke-width:2}.sel .head{fill:var(--pink)}
+.sel .ring{fill:none;stroke:var(--c);stroke-width:2.5}.sel .head{fill:var(--c);stroke:var(--ink);stroke-width:1.5}
 .red{color:var(--red)}.blue{color:var(--blue)}
 .chords{margin:18px 0 6px;padding:14px;border:1px solid var(--bd);border-radius:10px;background:var(--card)}
 .ch-h{font-family:Georgia,serif;font-size:20px;margin:0 0 6px}
@@ -95,9 +95,9 @@ svg{display:block;width:100%;height:auto}
 }
 </style>
 <!--SEO-HEAD-START-->
-<meta name="description" content="Free interactive saxophone fingering chart for alto, soprano and tenor sax. Tap any note on the staff to see its name and fingering, with sharps and flats shown separately. Low B♭ to high F.">
+<meta name="description" content="Free interactive saxophone fingering chart for alto, soprano and tenor sax. Tap any note on the staff to see its name and fingering, with sharps and flats colour-coded on the same chart. Low B♭ to high F.">
 <link rel="canonical" href="https://saxophonefingeringchart.com/">
-<meta property="og:title" content="Saxophone Fingering Chart: Alto, Soprano and Tenor | Tap any note"><meta property="og:description" content="Free interactive saxophone fingering chart for alto, soprano and tenor sax. Tap any note on the staff to see its name and fingering, with sharps and flats shown separately. Low B♭ to high F."><meta property="og:type" content="website"><meta property="og:url" content="https://saxophonefingeringchart.com/"><meta property="og:image" content="https://saxophonefingeringchart.com/assets/og-image.jpg"><meta name="twitter:card" content="summary_large_image"><meta name="theme-color" content="#10243a"><link rel="manifest" href="https://saxophonefingeringchart.com/manifest.webmanifest"><link rel="apple-touch-icon" href="https://saxophonefingeringchart.com/assets/icon-192.png">
+<meta property="og:title" content="Saxophone Fingering Chart: Alto, Soprano and Tenor | Tap any note"><meta property="og:description" content="Free interactive saxophone fingering chart for alto, soprano and tenor sax. Tap any note on the staff to see its name and fingering, with sharps and flats colour-coded on the same chart. Low B♭ to high F."><meta property="og:type" content="website"><meta property="og:url" content="https://saxophonefingeringchart.com/"><meta property="og:image" content="https://saxophonefingeringchart.com/assets/og-image.jpg"><meta name="twitter:card" content="summary_large_image"><meta name="theme-color" content="#10243a"><link rel="manifest" href="https://saxophonefingeringchart.com/manifest.webmanifest"><link rel="apple-touch-icon" href="https://saxophonefingeringchart.com/assets/icon-192.png">
 <script data-goatcounter="https://louisdatoy.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 <!--SEO-HEAD-END-->
 </head>
@@ -109,9 +109,9 @@ svg{display:block;width:100%;height:auto}
  </div>
 </header>
 <main>
-<p class="lead">Pick a note type, then tap a note to see its name and fingering.</p>
+<p class="lead">Tap any note to see its name and fingering. Pink notes are natural, blue are sharps and orange are flats.</p>
 <div class="tabs" id="inst" style="margin-bottom:10px"><button class="on" data-i="alto" onclick="setInst('alto')">Alto sax</button><button data-i="soprano" onclick="setInst('soprano')">Soprano sax</button><button data-i="tenor" onclick="setInst('tenor')">Tenor sax</button></div>
-<div class="tabs" id="mode" style="margin-bottom:12px"><button class="on" data-m="n" onclick="setMode('n')">Normal notes</button><button data-m="#" onclick="setMode('#')">Sharps ♯</button><button data-m="b" onclick="setMode('b')">Flats ♭</button><button id="snd" class="on" onclick="toggleSound()">Sound: on</button></div>
+<div class="tabs" id="mode" style="margin-bottom:12px;align-items:center"><div class="legend"><span><i style="background:var(--pink)"></i>Natural</span><span><i style="background:var(--sh)"></i>Sharp &#9839;</span><span><i style="background:var(--fl)"></i>Flat &#9837;</span></div><button class="on" data-m="all" onclick="setMode('all')">All notes</button><button data-m="n" onclick="setMode('n')">Natural only</button><button id="snd" class="on" onclick="toggleSound()">Sound: on</button></div>
 <div id="staves"></div>
 <section class="chords" id="songs"><details class="fold"><summary class="ch-sum">Simple songs</summary>
 <div class="feat"><b>Play your own sax</b><p>Press <b>Listen with microphone</b>, then play the <b>pink note</b> on your sax. It turns <b>green</b> when you get it right, then the next note lights up.</p><div class="mic-row"><button class="ch-play" id="micBtn" onclick="micToggle('sg')">Listen with microphone</button> <label class="mic-al"><input type="checkbox" id="micAlong" checked onchange="micAlongChg()"> Play along (untick to just see what you play)</label></div><small style="display:block;margin-top:8px">Use a quiet room, allow the microphone when asked. Your sound is analysed on your device only and never recorded or sent anywhere.</small></div>
@@ -137,9 +137,9 @@ svg{display:block;width:100%;height:auto}
 <section class="about">
 <details class="more"><summary>How to use this chart, alternate fingerings and range</summary>
 <h2>Saxophone fingering chart: alto, soprano and tenor</h2>
-<p>Tap any note to see its fingering and hear it. Choose alto, soprano or tenor, then normal notes, sharps or flats. The notes are written pitch, and the fingering is the same on all three saxophones.</p>
+<p>Tap any note to see its fingering and hear it. Choose alto, soprano or tenor. Natural notes are pink, sharps are blue and flats are orange. The notes are written pitch, and the fingering is the same on all three saxophones.</p>
 <h2>Reading the diagram</h2>
-<p>A filled circle is a key you press and an open circle is one you leave up. Sharps are red and flats are blue. A sharp and its matching flat use the same fingering.</p>
+<p>A filled circle is a key you press and an open circle is one you leave up. The diagram uses the same colour as the note you tapped: pink for natural, blue for sharps and orange for flats. A sharp and its matching flat use the same fingering.</p>
 <h2>Written and concert pitch</h2>
 <p>Alto (E♭) sounds a major sixth lower than written. Soprano and tenor (B♭) sound a major second and a major ninth lower.</p>
 <h2>Scales and chords on the saxophone</h2>
@@ -234,7 +234,7 @@ const SONGS=[
 ];
 function songRun(s){return s.m.split(' ').map(t=>{const [nm,b]=t.split(':'),l=nm[0],o=+nm.slice(-1),a=nm.length>2?nm[1]:'',i=N.findIndex(n=>n[0]===l&&n[1]===o&&n[2]===a);return{i,name:l+(a==='#'?'♯':a==='b'?'♭':''),o,b:+b}})}
 const Y=(s)=>100-(s-30)*5;
-let mode='n';
+let mode='all',nextV=null,curV=null;
 function sp(n){let [l,o,a]=n;
  if(mode==='#'&&a==='b'){l=L[(L.indexOf(l)+6)%7];a='#'}
  else if(mode==='b'&&a==='#'){l=L[(L.indexOf(l)+1)%7];a='b'}
@@ -355,9 +355,13 @@ function diaCombo(f){
  return `<svg class="combo" viewBox="0 0 345 300" aria-label="Fingering diagram with matching keys on a photo of an alto saxophone"><image href="assets/alto-photo.png" x="${px}" y="0" width="${509*pk}" height="300"/>${ln}${d}${dots}</svg>`;
 }
 function show(i,k,quiet){
- cur=i;alt=k||0;
- const n=N[i],d=info(n),fs=n[3],f=fs[alt];
- document.querySelectorAll('.hit').forEach(g=>g.classList.toggle('sel',+g.dataset.i===i));
+ const n=N[i];
+ if(nextV){curV=nextV}else if(i!==cur||!curV){curV=n[2]===''?'n':n[2]}
+ nextV=null;cur=i;alt=k||0;
+ const d=info(n),fs=n[3],f=fs[alt];
+ const hl=curV==='#'?'var(--sh)':curV==='b'?'var(--fl)':'var(--pink)';
+ ['dia','info'].forEach(id=>document.getElementById(id).style.setProperty('--pink',hl));
+ document.querySelectorAll('.hit').forEach(g=>g.classList.toggle('sel',+g.dataset.i===i&&g.dataset.v===curV));
  document.getElementById('dia').innerHTML=inst==='alto'?diaCombo(f):dia(f);
  const chips=(f[3]||'').split(',').filter(Boolean).map(k=>`<span class="chip">${CHIP[k]}</span>`).join('')+(f[0]?'<span class="chip">Octave key</span>':'');
  const tabs=fs.length>1?'<div class="tabs">'+fs.map((_,j)=>`<button class="${j===alt?'on':''}" onclick="show(${i},${j},true)">${j?'Alternate '+j:'Main'}</button>`).join('')+'</div>':'';
@@ -368,7 +372,7 @@ function show(i,k,quiet){
 }
 const E=[];N.forEach((n,i)=>{const [l,o,a]=n;if(a===''){E.push({i,l,o,a})}else{const t=L.indexOf(l);E.push({i,l:a==='#'?l:L[(t+6)%7],o,a:'#'},{i,l:a==='b'?l:L[(t+1)%7],o,a:'b'})}});
 const wrap=document.getElementById('staves'),per=11;
-function draw(){wrap.innerHTML='';const F=E.filter(e=>mode==='n'?e.a==='':e.a===mode);
+function draw(){wrap.innerHTML='';const F=E.filter(e=>mode==='n'?e.a==='':true);
 for(let st=0;st<F.length;st+=per){
  const part=F.slice(st,st+per);
  let s='<div class="staff"><svg viewBox="0 0 390 140" role="group" aria-label="Staff">';
@@ -381,7 +385,7 @@ for(let st=0;st<F.length;st+=per){
   for(let q=40;q<=d.s;q+=2)led+=`<line x1="${x-11}" x2="${x+11}" y1="${Y(q)}" y2="${Y(q)}" stroke="var(--line)"/>`;
   for(let q=28;q>=d.s;q-=2)led+=`<line x1="${x-11}" x2="${x+11}" y1="${Y(q)}" y2="${Y(q)}" stroke="var(--line)"/>`;
   const acc=d.a==='#'?'♯':d.a==='b'?'♭':'';
-  s+=`<g class="hit ${d.a==='#'?'sh':d.a==='b'?'fl':''}" data-i="${idx}" tabindex="0" role="button" aria-label="${d.written}" onclick="show(${idx})" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();show(${idx})}">${led}<circle class="ring" cx="${x}" cy="${y}" r="14"/><ellipse class="head" cx="${x}" cy="${y}" rx="7" ry="5" transform="rotate(-18 ${x} ${y})"/>${acc?`<text x="${x-12}" y="${y+5}" font-size="17" text-anchor="middle" fill="var(--c)">${acc}</text>`:''}</g>`;
+  s+=`<g class="hit ${d.a==='#'?'sh':d.a==='b'?'fl':''}" data-i="${idx}" data-v="${d.a===''?'n':d.a}" tabindex="0" role="button" aria-label="${d.written}" onclick="nextV='${d.a===''?'n':d.a}';show(${idx})" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();nextV='${d.a===''?'n':d.a}';show(${idx})}">${led}<circle class="ring" cx="${x}" cy="${y}" r="14"/><ellipse class="head" cx="${x}" cy="${y}" rx="7" ry="5" transform="rotate(-18 ${x} ${y})"/>${acc?`<text x="${x-12}" y="${y+5}" font-size="17" text-anchor="middle" fill="var(--c)">${acc}</text>`:''}</g>`;
  });
  wrap.insertAdjacentHTML('beforeend',s+'</svg></div>');
 }
@@ -457,7 +461,7 @@ function chMark(k){document.querySelectorAll('.cs-n').forEach(e=>e.classList.tog
 function chTap(k){
  const x=chRun()[k];if(!x)return;
  const m=x.name.length===1?'n':x.name.includes('♯')?'#':'b';
- if(mode!==m)setMode(m);
+ nextV=m;if(m!=='n'&&mode==='n')setMode('all');
  show(x.i,0,false);chMark(k);
 }
 function renderChords(){
@@ -508,7 +512,7 @@ function songStaffRows(run){
  return rows.join('');
 }
 function sgMark(k){document.querySelectorAll('#sgOut .sg-s').forEach(e=>e.classList.toggle('on',+e.dataset.k===k))}
-function sgTap(k){const x=songRun(SONGS[sgI])[k];sgPlay++;show(x.i,0,false);sgMark(k)}
+function sgTap(k){const x=songRun(SONGS[sgI])[k];sgPlay++;nextV=x.name.length===1?'n':x.name.includes('♯')?'#':'b';if(nextV!=='n'&&mode==='n')setMode('all');show(x.i,0,false);sgMark(k)}
 function renderSongs(){
  const t=document.getElementById('sgTabs');if(!t)return;
  t.innerHTML=SONGS.map((s,i)=>`<button class="${i===sgI?'on':''}" onclick="sgI=${i};sgPlay++;renderSongs()">${s.title}</button>`).join('');

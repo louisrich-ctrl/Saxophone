@@ -117,7 +117,7 @@ ${FOOT("../../")}
 
 // ---- homepage: SEO head + visible text + links to every note ----
 const hTitle='Saxophone Fingering Chart: Alto, Soprano and Tenor | Tap any note';
-const hDesc='Free interactive saxophone fingering chart for alto, soprano and tenor sax. Tap any note on the staff to see its name and fingering, with sharps and flats shown separately. Low B♭ to high F.';
+const hDesc='Free interactive saxophone fingering chart for alto, soprano and tenor sax. Tap any note on the staff to see its name and fingering, with sharps and flats colour-coded on the same chart. Low B♭ to high F.';
 html=html.replace(/<title>[\s\S]*?<\/title>/,`<title>${esc(hTitle)}</title>`);
 const head=`<!--SEO-HEAD-START-->
 <meta name="description" content="${esc(hDesc)}">
@@ -150,9 +150,9 @@ const text=`<!--NOTES-START-->
 <section class="about">
 <details class="more"><summary>How to use this chart, alternate fingerings and range</summary>
 <h2>Saxophone fingering chart: alto, soprano and tenor</h2>
-<p>Tap any note to see its fingering and hear it. Choose alto, soprano or tenor, then normal notes, sharps or flats. The notes are written pitch, and the fingering is the same on all three saxophones.</p>
+<p>Tap any note to see its fingering and hear it. Choose alto, soprano or tenor. Natural notes are pink, sharps are blue and flats are orange. The notes are written pitch, and the fingering is the same on all three saxophones.</p>
 <h2>Reading the diagram</h2>
-<p>A filled circle is a key you press and an open circle is one you leave up. Sharps are red and flats are blue. A sharp and its matching flat use the same fingering.</p>
+<p>A filled circle is a key you press and an open circle is one you leave up. The diagram uses the same colour as the note you tapped: pink for natural, blue for sharps and orange for flats. A sharp and its matching flat use the same fingering.</p>
 <h2>Written and concert pitch</h2>
 <p>Alto (E♭) sounds a major sixth lower than written. Soprano and tenor (B♭) sound a major second and a major ninth lower.</p>
 ${guideExtra}
