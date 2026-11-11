@@ -200,14 +200,14 @@ wr('beginners',shell('Your First Six Notes on Alto Saxophone: B A G F E D | Saxo
 <p>Play each note for four slow counts, then play down from B to D and back up. Aim for a steady, clear sound before you go faster. A few minutes a day works better than one long session.</p>
 <p><a class="btn" href="../">Open the interactive fingering chart</a> <a class="btn" href="../print/">Printable chart</a></p>`));
 // privacy and contact
-wr('privacy',shell('Privacy and Contact | Saxophone Fingering Chart','How Saxophone Fingering Chart handles visitor data and tips, and how to contact us.','privacy/',
+wr('privacy',shell('Privacy and Contact | Saxophone Fingering Chart','How Saxophone Fingering Chart handles visitor data and sponsorship, and how to contact us.','privacy/',
 `<h1>Privacy and contact</h1>
 <h2>Visitor data</h2>
 <p>This site counts visits with GoatCounter, a privacy-friendly counter. It uses no cookies and does not collect your name, email or other personal information. The chart works in your browser and nothing you tap is sent to us.</p>
 <h2>Advertising and links</h2>
-<p>This site does not currently show advertising or sponsored placements. If that changes, any paid or sponsored content will be clearly labelled here.</p>
-<h2>Tips</h2>
-<p>If you choose to leave a tip, it is paid through PayPal. This site never sees your payment details, and tips are optional.</p>
+<p>This site does not currently show advertising or sponsored placements. Companies are welcome to ask about sponsoring the site. Any paid or sponsored content will be clearly labelled as such.</p>
+<h2>Sponsorship</h2>
+<p>To ask about sponsoring the site, email the address below. The site does not collect donations or payments.</p>
 <h2>Accuracy</h2>
 <p>Fingerings can differ between saxophone models, and altissimo fingerings vary most. This site is a general guide and is not a substitute for a teacher.</p>
 <h2>Contact</h2>
