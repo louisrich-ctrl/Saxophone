@@ -60,7 +60,7 @@ function staff(n){
 const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
 const HEADX=`<meta property="og:image" content="${BASE}/assets/og-image.jpg"><meta name="twitter:card" content="summary_large_image"><meta name="theme-color" content="#10243a"><link rel="manifest" href="${BASE}/manifest.webmanifest"><link rel="apple-touch-icon" href="${BASE}/assets/icon-192.png">`;
 const GC='<script data-goatcounter="https://louisdatoy.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>';
-const FOOT=(p)=>`<p class="small foot"><a href="${p}">Saxophone fingering chart</a> &middot; <a href="${p}beginners/">Beginners: first notes</a> &middot; <a href="${p}songs/">Simple songs</a> &middot; <a href="${p}print/">Printable chart</a> &middot; <a href="${p}privacy/">Privacy and contact</a></p>`;
+const FOOT=(p)=>`<p class="small foot"><a href="${p}">Saxophone fingering chart</a> &middot; <a href="${p}beginners/">Beginners: first notes</a> &middot; <a href="${p}songs/">Simple songs</a> &middot; <a href="${p}scales/">Scales</a> &middot; <a href="${p}guides/">Guides</a> &middot; <a href="${p}tuner/">Tuner</a> &middot; <a href="${p}metronome/">Metronome</a> &middot; <a href="${p}print/">Printable chart</a> &middot; <a href="${p}privacy/">Privacy and contact</a></p>`;
 const today=new Date().toISOString().slice(0,10);
 const notes=N.map((n,i)=>({n,i,nm:nameOf(n),f:n[3],d:info(n)}));
 
@@ -243,7 +243,7 @@ function songStaffSvg(run){
  }
  return out;
 }
-const SCSS=`:root{--pink:#e0457b;--bg:#fff}.sgl{list-style:none;padding:0;margin:12px 0}.sgl li{margin:8px 0}.sgl a{font:600 18px Georgia,serif}.lvl{color:var(--mute);font:14px system-ui,sans-serif}
+const SCSS=`:root{--pink:#1d2a33;--bg:#fff}.sgl{list-style:none;padding:0;margin:12px 0}.sgl li{margin:8px 0}.sgl a{font:600 18px Georgia,serif}.lvl{color:var(--mute);font:14px system-ui,sans-serif}
 .seq{font:600 17px/1.9 system-ui,sans-serif;letter-spacing:.02em}.six{grid-template-columns:repeat(auto-fill,minmax(120px,1fr))}.six svg{width:80px}`;
 wr('songs',shell('Simple Saxophone Songs: Happy Birthday, Twinkle Twinkle and More | Saxophone Fingering Chart','Easy songs to play on alto, soprano or tenor saxophone, with the notes, fingerings and a play-along. Happy Birthday, Twinkle Twinkle Little Star, Ode to Joy and more.','songs/',
 `<h1>Simple saxophone songs</h1>
@@ -273,8 +273,153 @@ ${songStaffSvg(run)}
  wr('songs/'+s.slug,shell(title,desc,`songs/${s.slug}/`,body,SCSS).replace(/href="\.\.\/"/g,'href="../"'));
 });
 
+// ---- scales: one page per key and scale type, plus an index ----
+const EXTRA_URLS=[];
+const {SCALES,KEYPC,ACC}=new Function(html.match(/^const SCALES=.*;$/m)[0]+html.match(/^const KEYPC=.*;$/m)[0]+html.match(/^const ACC=.*;$/m)[0]+';return {SCALES,KEYPC,ACC}')();
+const MM=[0,2,4,5,7,9,11];
+const nMidi=n=>12*(n[1]+1)+MM[L.indexOf(n[0])]+(n[2]==='#'?1:n[2]==='b'?-1:0);
+const nName=n=>n[0]+(n[2]==='#'?'♯':n[2]==='b'?'♭':'');
+const CHS=['C','C♯','D','D♯','E','F','F♯','G','G♯','A','A♯','B'],CHF=['C','D♭','D','E♭','E','F','G♭','G','A♭','A','B♭','B'];
+const KNAMES=KEYPC.map(([l,a])=>l+(a<0?'♭':a>0?'♯':''));
+const ksl=n=>n.toLowerCase().replace('♭','-flat').replace('♯','-sharp');
+const lo=Math.min(...N.map(nMidi)),hi=Math.max(...N.map(nMidi));
+function scaleRun(wpc,[nm,iv,steps]){
+ let base=lo;while(((base-wpc)%12+12)%12!==0)base++;
+ const [rl]=KEYPC[wpc],out=[];
+ iv.forEach((d,k)=>{const i=N.findIndex(n=>nMidi(n)===base+d);if(i<0)return;
+  let name=nName(N[i]);
+  if(nm==='Chromatic'){const pc=((wpc+d)%12+12)%12;name=(k<=24?CHS:CHF)[pc]}
+  else if(steps){const let_=L[(L.indexOf(rl)+steps[k])%7],pc=((wpc+d)%12+12)%12,nat=MM[L.indexOf(let_)];let df=((pc-nat)%12+12)%12;if(df>6)df-=12;name=let_+(ACC[df]??name.slice(1))}
+  out.push({i,name,o:N[i][1],b:1})});
+ return {run:out,missing:iv.length-out.length};
+}
+const STYPES=[
+ ['Major','major','Major scale','The major scale is the bright, happy-sounding scale that most beginner tunes use. It is the first scale most teachers set, and the best place to start.'],
+ ['Natural minor','natural-minor','Natural minor scale','The natural minor scale has a darker, more serious sound. Every major key has a matching minor key that shares the same notes.'],
+ ['Minor pentatonic','minor-pentatonic','Minor pentatonic scale','The minor pentatonic scale has only five notes, which makes it easy to play. It is the sound of blues, rock and a lot of improvised solos.'],
+ ['Blues','blues','Blues scale','The blues scale is the minor pentatonic scale with one extra note, the flat fifth, which gives it the classic bluesy bend.'],
+ ['Chromatic','chromatic','Chromatic scale','The chromatic scale uses every note, one semitone at a time. It is great for finger practice. This one goes up two octaves with sharps and comes back down with flats.']
+];
+const sbtn=(D,B,SP)=>`<script src="../../sound.js"></script><script>var D=${JSON.stringify(D)},B=${JSON.stringify(B)},T=0;document.querySelectorAll('.play').forEach(function(b){b.addEventListener('click',function(){var f=D[b.dataset.i],t=0;T++;var my=T;f.forEach(function(h,k){var at=t;t+=B[k]*${SP};setTimeout(function(){if(my===T&&window.SaxSound)SaxSound.play(h)},at)})})});</script>`;
+const ECSS=`:root{--pink:#1d2a33;--bg:#fff;--mute:#6b7780;--ink:#1d2a33;--card:#fff}.six{grid-template-columns:repeat(auto-fill,minmax(110px,1fr))}.six svg{width:76px}.seq{font:600 17px/1.9 system-ui,sans-serif;letter-spacing:.02em}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:6px;margin:8px 0}.grid a{display:block;text-align:center;border:1px solid var(--bd);border-radius:8px;padding:6px 4px;text-decoration:none;font:600 15px system-ui,sans-serif}.guides{list-style:none;padding:0}.guides li{margin:14px 0}.guides a{font:600 18px Georgia,serif}.guides span{display:block;color:var(--mute);font:14px/1.4 system-ui,sans-serif}`;
+const wideSvg=run=>songStaffSvg(run).replace(/style="display:block;width:[^"]*"/g,'style="display:block;width:100%;max-width:520px;height:auto"');
+// the staff helper above scales width by 360; make rows equal width instead
+STYPES.forEach(([tn,tslug,tlabel,intro])=>{
+ const sc=SCALES.find(s=>s[0]===tn);
+ KNAMES.forEach((kn,wpc)=>{
+  const {run,missing}=scaleRun(wpc,sc);if(!run.length)return;
+  const slug=`${ksl(kn)}-${tslug}`,us=uniq(run);
+  const names=tn==='Chromatic'?`${run.slice(0,13).map(x=>x.name).join(' ')} and back down`:run.map(x=>x.name).join(' ');
+  const title=`${kn} ${tlabel} on Saxophone: Notes and Fingering (Alto, Tenor, Soprano)`;
+  const desc=`${kn} ${tlabel.toLowerCase()} for alto, tenor and soprano saxophone. The notes, the staff and a fingering diagram for every note.`;
+  const conc=IK.map(k=>`<tr><th>${INSTR[k].name} sax</th><td>${CHF[((wpc+INSTR[k].shift)%12+12)%12]}</td></tr>`).join('');
+  const hz=IK.map(k=>{setI(k);const r={k,I:INSTR[k],f:run.map(x=>+fOf(N[x.i]).toFixed(2))};setI('alto');return r});
+  const sp=tn==='Chromatic'?300:450;
+  const others=STYPES.filter(s=>s[1]!==tslug).map(s=>`<a href="../${ksl(kn)}-${s[1]}/">${kn} ${s[2].toLowerCase()}</a>`).join(' &middot; ');
+  const keys=KNAMES.map(k2=>`<a href="../${ksl(k2)}-${tslug}/">${k2}</a>`).join('');
+  const body=`<h1>${kn} ${tlabel.toLowerCase()} on saxophone</h1>
+<p class="sub">Written pitch, so these notes and fingerings are the same on alto, soprano and tenor sax.</p>
+<p>${intro}</p>
+<p>${hz.map(h=>`<button class="play" data-i="${h.k}" type="button">&#9654; Play on ${h.I.name.toLowerCase()}</button>`).join(' ')}</p>
+<h2>The notes</h2>
+${wideSvg(run)}
+<p class="seq">${names}</p>
+${missing?`<p class="small">The top of this scale is above the highest note on the chart, so ${missing} note${missing>1?'s are':' is'} left out.</p>`:''}
+<h2>What your saxophone sounds</h2>
+<p>When you read ${kn} ${tn.toLowerCase()} on your music, the pitch you hear is different on each saxophone:</p>
+<table class="rng"><tr><th>Instrument</th><th>Sounds as (concert key)</th></tr>${conc}</table>
+<h2>Fingerings for the notes in this scale</h2>
+<div class="six">${us.map(i=>{const o=notes[i];return `<div class="card"><h3>${o.nm.short}<small>${o.d.written.replace(/^[A-G][♯♭]?/,'')}</small></h3><a href="../../notes/${o.nm.slug}/">${dia(o.f[0])}</a><div class="small">${brief(o.f[0])}</div></div>`}).join('')}</div>
+<h2>Same scale in other keys</h2>
+<div class="grid">${keys}</div>
+<p class="small">Other ${kn} scales: ${others}</p>
+<p><a class="btn" href="../../">Open the interactive fingering chart</a> <a class="btn" href="../">All scales</a></p>
+<p class="small">Practise slowly with a metronome, and check fingerings with your teacher.</p>
+${sbtn(Object.fromEntries(hz.map(h=>[h.k,h.f])),run.map(x=>x.b),sp)}`;
+  wr('scales/'+slug,shell(title,desc,`scales/${slug}/`,body,ECSS));EXTRA_URLS.push(`scales/${slug}/`);
+ });
+});
+wr('scales',shell('Saxophone Scales: Major, Minor, Pentatonic, Blues and Chromatic | Saxophone Fingering Chart','Saxophone scales in every key for alto, tenor and soprano sax: major, natural minor, minor pentatonic, blues and chromatic, with notes and fingerings.','scales/',
+`<h1>Saxophone scales in every key</h1>
+<p class="sub">Notes and fingerings for the main scales in all 12 keys. The keys are written pitch, so the fingerings are the same on alto, soprano and tenor.</p>
+${STYPES.map(([tn,tslug,tlabel,intro])=>`<h2>${tlabel}s</h2><p>${intro}</p><div class="grid">${KNAMES.map(k=>`<a href="${ksl(k)}-${tslug}/">${k}</a>`).join('')}</div>`).join('')}
+<p><a class="btn" href="../">Open the interactive fingering chart</a></p>`,ECSS));EXTRA_URLS.push('scales/');
+
+// ---- guides ----
+const G=[];
+const guide=(slug,title,desc,h1,sub,inner)=>{G.push([slug,h1,sub]);wr('guides/'+slug,shell(title,desc,`guides/${slug}/`,`<h1>${h1}</h1><p class="sub">${sub}</p>${inner}<p><a class="btn" href="../../">Open the interactive fingering chart</a> <a class="btn" href="../">More guides</a></p>`,ECSS));EXTRA_URLS.push(`guides/${slug}/`)};
+guide('breathing-and-long-tones','Saxophone Breathing and Long Tones: A Simple Guide | Saxophone Fingering Chart','How to breathe and support your sound on saxophone, and how to practise long tones for a steady, full tone on low and high notes.','Breathing and long tones on saxophone','How to breathe, how to support the sound, and the simplest exercise for a better tone.',
+`<h2>Breathe low and wide</h2>
+<p>Stand or sit tall with your shoulders relaxed. Breathe in through the corners of your mouth, and let your belly and lower ribs move outwards as the air comes in. Avoid lifting your shoulders. A big, relaxed breath gives you plenty of air without any tension.</p>
+<h2>Blow warm, steady air</h2>
+<p>Think of the air you would use to fog a mirror, not a puff to blow out a candle. The air should be warm, fast and steady. Your belly and lower ribs gently push the air out. You do not need to blow hard, because a good sound comes from steady air more than from strong air.</p>
+<h2>Low notes and high notes</h2>
+<p>For low notes, keep your throat and mouth open and relaxed, and use slower, wider air. Cover the keys fully, because a small leak makes low notes crack or go airy. For high notes, use faster air with a slightly firmer embouchure, but do not bite down on the mouthpiece. Biting makes the sound thin and sharp.</p>
+<h2>The long tone exercise</h2>
+<ol><li>Pick an easy note, like written B, A or G.</li><li>Breathe in for four slow counts.</li><li>Play the note at a medium volume for eight slow counts, keeping the sound and the pitch as steady as you can.</li><li>Rest for a few breaths, then repeat. Next time try ten counts, then twelve.</li><li>Move down or up one note at a time as the first notes get easier.</li></ol>
+<p>Try it with the <a href="../../tuner/">tuner</a>. The needle should stay still. If it wobbles, your air or your jaw is moving.</p>
+<h2>Good habits</h2>
+<ul><li>Rest between exercises. If you feel dizzy, stop and breathe normally.</li><li>Practise a few minutes every day rather than one long session.</li><li>If anything hurts, stop and ask your teacher.</li></ul>
+<p class="small">A teacher can hear and see what you are doing, so use this page alongside lessons.</p>`);
+const withAlts=notes.filter(o=>o.f.length>1);
+guide('alternate-fingerings','Saxophone Alternate Fingerings and Trills | Saxophone Fingering Chart','Alternate saxophone fingerings for the notes that have more than one, with diagrams. Useful for trills, fast passages and tuning.','Alternate fingerings and trills','Some notes can be played more than one way. Here are the alternates in the chart.',
+`<p>An alternate fingering is a different way to play the same note. Players use them to make fast passages and trills easier, to change between two notes more smoothly, and sometimes to improve the tuning of a note. The main fingering is a good default, and your teacher can tell you which alternate to use and when.</p>
+<p>A trill is a quick back and forth between two notes. On some notes a trill is awkward with the main fingering, so players switch to an alternate that changes only one finger or key.</p>
+<h2>Notes with alternate fingerings</h2>
+${withAlts.map(o=>`<div class="card"><h3><a href="../../notes/${o.nm.slug}/">${o.nm.short}${o.d.written.replace(/^[A-G][♯♭]?/,'')}</a> <small>written ${o.d.written}</small></h3><div class="row">${o.f.map((x,j)=>`<div class="dia"><div class="small">${j?'Alternate '+j:'Main'}</div>${dia(x)}<div class="small">${brief(x)}</div></div>`).join('')}</div></div>`).join('')}
+<p class="small">Altissimo (very high) notes vary a lot between players and instruments. Check these with your teacher.</p>`);
+guide('common-problems','Common Saxophone Problems and Fixes: Squeaks, Weak Low Notes and More | Saxophone Fingering Chart','Fixes for common beginner saxophone problems: squeaks, weak low notes, a sharp or flat pitch, notes that crack and reeds that feel too hard or soft.','Common saxophone problems and fixes','Simple things to try first when something does not sound right.',
+`<h2>Squeaks</h2>
+<p>Squeaks usually come from the reed or the embouchure. Check that the reed is centred and level with the tip of the mouthpiece, and that the ligature is tight enough to hold it. Take in about a centimetre or two of the mouthpiece, keep your bottom lip soft, and do not bite. A chipped or worn reed squeaks too, so try a fresh one.</p>
+<h2>Low notes are weak or crack</h2>
+<p>Low notes need every key covered fully. Check that your fingers are flat on the keys and not on the edges. Use slower, wider air and a relaxed mouth. If the low notes still will not speak, a pad may be leaking and a repairer can check it.</p>
+<h2>Notes crack between registers</h2>
+<p>Press the octave key just as you change notes, and keep your fingers close to the keys so they move together. Practise slowly, and use the <a href="../../">chart</a> to check the fingering for each note.</p>
+<h2>Too sharp or too flat</h2>
+<p>Biting the mouthpiece makes the pitch sharp, and a loose mouth makes it flat. If the whole instrument is out of tune, move the mouthpiece a little along the cork, in to go lower or out to go higher. The <a href="../../tuner/">tuner</a> shows you where you are.</p>
+<h2>The reed feels too hard or too soft</h2>
+<p>A reed that is too hard makes the sound stuffy and tiring to blow. One that is too soft sounds buzzy and thin. Beginners usually do best on a softer strength, often around 2 or 2.5, and a teacher can suggest the right one for you.</p>
+<h2>Looking after your reeds</h2>
+<ul><li>Wet the reed before you play.</li><li>Wipe the reed and store it flat in a reed case.</li><li>Rotate between two or three reeds so none wears out too fast.</li><li>Replace any reed that is chipped, warped or dull.</li></ul>
+<p class="small">If your instrument leaks or keys are bent, take it to a repairer. A teacher can also check your mouthpiece, reed and posture in person.</p>`);
+const rt=(m,items)=>`<h2>${m} minutes</h2><ol>${items.map(i=>`<li>${i}</li>`).join('')}</ol>`;
+guide('practice-routine','Saxophone Practice Routine: 10, 20 and 30 Minute Plans | Saxophone Fingering Chart','Simple saxophone practice routines for 10, 20 and 30 minutes a day using long tones, scales, arpeggios and songs.','A simple saxophone practice routine','Short daily practice beats one long session. Pick the length that fits your day.',
+`${rt(10,['<b>Long tones (2 min):</b> hold a few easy notes, steady and full. See the <a href="../breathing-and-long-tones/">long tone exercise</a>.','<b>One scale (3 min):</b> play it slowly with the <a href="../../metronome/">metronome</a>, up and down.','<b>One song (5 min):</b> pick a tune from <a href="../../songs/">Simple songs</a> and play along with the microphone.'])}
+${rt(20,['<b>Long tones (3 min):</b> low, middle and high notes.','<b>Scales (6 min):</b> two scales, slowly and evenly. Try <a href="../../scales/">any key</a>.','<b>Arpeggios (4 min):</b> the Major or Minor chord in the same key as your scale.','<b>Songs (7 min):</b> one tune you know and one you are learning.'])}
+${rt(30,['<b>Long tones and tuning (5 min):</b> check your pitch with the <a href="../../tuner/">tuner</a>.','<b>Scales (8 min):</b> two or three scales, then the chromatic scale for finger practice.','<b>Arpeggios (5 min):</b> maj7, m7 and 7 chords if you are working on jazz.','<b>Songs (10 min):</b> new tune first, then an old favourite.','<b>Finish (2 min):</b> something fun, then wipe out your sax.'])}
+<h2>Tips</h2>
+<ul><li>Start slowly. Speed comes from accuracy, not the other way around.</li><li>Practise the hard part, not just the parts you like.</li><li>Play every day, even for ten minutes.</li><li>Record yourself now and then and listen back.</li></ul>
+<p class="small">Your teacher can change this plan to suit what you are working on.</p>`);
+// transposition
+const cKeys=KNAMES.map((k,pc)=>`<tr><th>${k}</th>${IK.map(kk=>`<td>${CHF[((pc-INSTR[kk].shift)%12+12)%12]}</td>`).join('')}</tr>`).join('');
+const wKeys=KNAMES.map((k,pc)=>`<tr><th>${k}</th>${IK.map(kk=>`<td>${CHF[((pc+INSTR[kk].shift)%12+12)%12]}</td>`).join('')}</tr>`).join('');
+guide('concert-pitch','Saxophone Concert Pitch Converter: Alto, Tenor and Soprano Transposition | Saxophone Fingering Chart','A simple chart to convert between concert pitch and the written pitch for alto, tenor and soprano saxophone, so you can play along with a band or backing track.','Concert pitch and saxophone transposition','What key to play on your sax when the band or backing track is in a different key.',
+`<p>Saxophones are transposing instruments. When you play a written C on alto sax, the note you hear is an E♭. Other instruments such as piano and guitar usually play in concert pitch, which is the pitch you actually hear. So if a backing track is in the key of C, your sax has to play in a different key to match it.</p>
+<ul><li><b>Alto sax</b> sounds a major sixth lower than written.</li><li><b>Soprano sax</b> sounds a major second lower than written.</li><li><b>Tenor sax</b> sounds a major ninth lower than written, which is an octave plus a major second.</li></ul>
+<h2>The band is in this key. What do I play?</h2>
+<table class="rng"><tr><th>Concert key</th>${IK.map(k=>`<th>${INSTR[k].name} sax plays</th>`).join('')}</tr>${cKeys}</table>
+<h2>I am playing this key. What does it sound as?</h2>
+<table class="rng"><tr><th>Written key</th>${IK.map(k=>`<th>${INSTR[k].name} sax sounds</th>`).join('')}</tr>${wKeys}</table>
+<p class="small">Example: the band plays in G. Alto sax reads and plays in E. Tenor and soprano sax play in A. Some keys can also be written with sharps, for example G♭ is the same as F♯.</p>
+<p>The <a href="../../">fingering chart</a> and <a href="../../scales/">scale pages</a> use written pitch, so fingerings stay the same whichever sax you play. In the chart you can also switch between written and concert pitch in Scales and chords.</p>`);
+wr('guides',shell('Saxophone Guides: Practice, Breathing, Alternate Fingerings and More | Saxophone Fingering Chart','Simple saxophone guides: breathing and long tones, alternate fingerings, common problems, a daily practice routine and a concert pitch converter.','guides/',
+`<h1>Saxophone guides</h1><p class="sub">Short, practical guides to go with the fingering chart.</p>
+<ul class="guides">${G.map(([s,h,sub])=>`<li><a href="${s}/">${h}</a><span>${sub}</span></li>`).join('')}<li><a href="../tuner/">Saxophone tuner</a><span>Check whether the note you play is sharp or flat.</span></li><li><a href="../metronome/">Metronome</a><span>A steady beat for scales and songs.</span></li><li><a href="../scales/">Saxophone scales in every key</a><span>Notes and fingerings for 60 scales.</span></li></ul>`,ECSS));EXTRA_URLS.push('guides/');
+// tuner and metronome pages
+const TCSS=fs.readFileSync(path.join(ROOT,'tools.css'),'utf8');
+wr('tuner',shell('Online Saxophone Tuner: Free, Works for Alto, Tenor and Soprano | Saxophone Fingering Chart','A free online tuner for saxophone. Play a note and see the written note for alto, tenor or soprano sax, and whether you are sharp or flat.','tuner/',
+`<h1>Saxophone tuner</h1><p class="sub">Play a long note and see the note and how sharp or flat it is. It shows the written note for your sax.</p><div id="tunerMount"></div>
+<h2>How to use it</h2><ol><li>Choose alto, soprano or tenor.</li><li>Press Start tuner and allow the microphone.</li><li>Play a long, steady note. The needle shows if you are flat (left) or sharp (right). It turns green when you are in tune.</li></ol>
+<p class="small">Your sound is analysed on your device only and never recorded or sent anywhere. See the <a href="../guides/common-problems/">common problems guide</a> if you are always sharp or flat.</p>
+<script src="../tools.js"></script><script>mountTuner(document.getElementById('tunerMount'))</script>`,ECSS+TCSS));EXTRA_URLS.push('tuner/');
+wr('metronome',shell('Free Online Metronome for Saxophone Practice | Saxophone Fingering Chart','A simple free metronome for practising saxophone scales and songs. Adjustable tempo, beats per bar and tap tempo.','metronome/',
+`<h1>Metronome</h1><p class="sub">A steady beat for practising scales and songs.</p><div id="metroMount"></div>
+<h2>How to use it</h2><p>Set a slow speed, such as 60 to 80 beats per minute, and play one note on each beat. When it feels easy, raise the tempo a little. Use Tap tempo to match a song you know.</p>
+<p><a href="../scales/">Choose a scale to practise</a> or follow the <a href="../guides/practice-routine/">practice routine</a>.</p>
+<script src="../tools.js"></script><script>mountMetronome(document.getElementById('metroMount'))</script>`,ECSS+TCSS));EXTRA_URLS.push('metronome/');
+
 // ---- sitemap + robots ----
-const urls=[`${BASE}/`,`${BASE}/beginners/`,`${BASE}/songs/`,...SONGS.map(s=>`${BASE}/songs/${s.slug}/`),`${BASE}/print/`,`${BASE}/privacy/`,...notes.map(o=>`${BASE}/notes/${o.nm.slug}/`)];
+const urls=[`${BASE}/`,`${BASE}/beginners/`,`${BASE}/songs/`,...SONGS.map(s=>`${BASE}/songs/${s.slug}/`),`${BASE}/print/`,`${BASE}/privacy/`,...EXTRA_URLS.map(u=>`${BASE}/${u}`),...notes.map(o=>`${BASE}/notes/${o.nm.slug}/`)];
 fs.writeFileSync(path.join(ROOT,'sitemap.xml'),`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`+urls.map(u=>`<url><loc>${u}</loc><lastmod>${today}</lastmod></url>`).join('\n')+`\n</urlset>\n`);
 fs.writeFileSync(path.join(ROOT,'robots.txt'),`User-agent: *\nAllow: /\n\nSitemap: ${BASE}/sitemap.xml\n`);
 console.log('built',notes.length,'note pages; base',BASE);

@@ -31,11 +31,11 @@ svg{display:block;width:100%;height:auto}
 .ch-n{border:1px solid var(--ink);border-radius:10px;background:transparent;color:var(--ink);font:inherit;padding:6px 12px;min-width:56px;text-align:center;cursor:pointer}
 .ch-n b{display:block;font-family:Georgia,serif;font-size:20px}.ch-n small{color:var(--mute);font-size:11px}
 .ch-n{--c:var(--nat);border-color:var(--c)}.ch-n.sh{--c:var(--sh)}.ch-n.fl{--c:var(--fl)}.ch-n:not(.on):not(.good):not(.bad) b{color:var(--c)}.ch-n.on{background:var(--c);border-color:var(--c);color:#fff}.ch-n.on small{color:#fff}
-.cs{display:block;width:100%;max-width:470px;height:auto;margin:2px 0 10px}.cs-n{cursor:pointer}.cs-n{--c:var(--nat)}.cs-n.sh{--c:var(--sh)}.cs-n.fl{--c:var(--fl)}.cs-n .head,.cs-n .acc{fill:var(--c)}.cs-n.on .head{stroke:var(--ink);stroke-width:1.5}.cs-n.done .head,.cs-n.done .acc{fill:#1e9e4a}.cs-n.on .ring{stroke:var(--c);stroke-width:2.5;fill:none}.cs-n .ring{fill:transparent;stroke:transparent}
+.cs{display:block;max-width:100%;height:auto;margin:2px 0 10px}.cs-n{cursor:pointer}.cs-n{--c:var(--nat)}.cs-n.sh{--c:var(--sh)}.cs-n.fl{--c:var(--fl)}.cs-n .head,.cs-n .acc{fill:var(--c)}.cs-n.on .head{stroke:var(--ink);stroke-width:1.5}.cs-n.done .head,.cs-n.done .acc{fill:#1e9e4a}.cs-n.on .ring{stroke:var(--c);stroke-width:2.5;fill:none}.cs-n .ring{fill:transparent;stroke:transparent}
 #quiz{transition:border-color .2s,box-shadow .2s}#quiz.ok{border:2px solid #1e9e4a;box-shadow:0 0 0 3px rgba(30,158,74,.15)}#quiz.no{border:2px solid #d0202f;box-shadow:0 0 0 3px rgba(208,32,47,.15)}#qzMsg.ok{color:#1e7d3d;font-weight:700;font-size:16px}#qzMsg.no{color:#c01c28;font-weight:700;font-size:16px}
 .about details.more{margin:6px 0 4px}.about summary{cursor:pointer;font:600 15px system-ui,sans-serif;color:#1a4f9c;padding:6px 0}
 .fold>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px}.fold>summary::-webkit-details-marker{display:none}.ch-sum{font-family:Georgia,serif;font-size:26px;font-weight:700;line-height:1.2;padding:6px 0}.ch-sum::after{content:"+";font:400 30px/1 system-ui,sans-serif;color:var(--mute)}.fold[open]>.ch-sum::after{content:"\2212"}.fold[open]>summary{margin-bottom:8px}
-.sg-s{cursor:pointer}.sg-s .head,.sg-s .acc{fill:var(--ink)}.sg-s.on .head,.sg-s.on .acc{fill:var(--pink)}.sg-s .ring{fill:transparent;stroke:transparent}.sg-s.on .ring{stroke:var(--pink);stroke-width:2;fill:none}.sg-row{display:block;width:100%;max-width:520px;height:auto;margin:0 0 4px}
+.sg-s{cursor:pointer}.sg-s .head,.sg-s .acc{fill:var(--ink)}.sg-s.on .head,.sg-s.on .acc{fill:var(--pink)}.sg-s .ring{fill:transparent;stroke:transparent}.sg-s.on .ring{stroke:var(--pink);stroke-width:2;fill:none}.sg-row{display:block;max-width:100%;height:auto;margin:0 0 4px}
 .support{margin:22px 0 6px;padding:14px 16px;border:1px solid var(--bd);border-radius:10px;background:var(--card);font:15px/1.4 system-ui,sans-serif}.sup-b{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 6px}.sup-b a,.sc-b a{background:#10243a;color:#fff;text-decoration:none;font-weight:600;padding:8px 18px;border-radius:20px}.sup-b a:hover,.sc-b a:hover{background:#d9a441;color:#10243a}.sup-s{color:var(--mute);font-size:12px}
 .supcard{flex-direction:column;border-left:3px solid #d9a441;padding:4px 0 4px 14px}.sc-h{font:700 18px/1.25 Georgia,serif;color:var(--ink)}.sc-t{margin:6px 0 10px;font:14px/1.45 system-ui,sans-serif;color:var(--mute)}.sc-b{display:flex;flex-direction:column;gap:8px;align-items:flex-start}.sc-b a{font:600 14px system-ui,sans-serif;padding:7px 18px;min-width:84px;text-align:center}.sc-s{margin:10px 0 0;font:11px/1.4 system-ui,sans-serif;color:var(--mute)}
 @media (min-width:1060px){.support{display:none}.supcard{height:auto;align-self:flex-start}}
@@ -93,6 +93,16 @@ svg{display:block;width:100%;height:auto}
  .rail-r{left:calc(50% + 320px + 30px)}
  .qcard,.pcard{height:auto;max-height:600px;align-self:flex-start}
 }
+
+.tn-tabs{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 10px}.tn-tabs button,.tn-btn,.mt-go,.mt-tap,.mt-m,.mt-p{font:inherit;font-size:14px;border:1px solid #d8dce0;background:transparent;color:#1d2a33;border-radius:16px;padding:7px 14px;min-height:36px;cursor:pointer}
+.tn-tabs button.on{background:#1d2a33;color:#fff;border-color:#1d2a33}.tn-btn,.mt-go{background:#1d2a33;color:#fff;border-color:#1d2a33;font-weight:600}
+.tn-box{border:2px solid #d8dce0;border-radius:12px;padding:14px 16px;text-align:center;transition:border-color .15s,background .15s}.tn-box.ok{border-color:#1e9e4a;background:rgba(30,158,74,.08)}.tn-box.near{border-color:#c99a00}.tn-box.off{border-color:#2f6fdb}
+.tn-note{font:700 46px/1.1 Georgia,serif}.tn-sub{font:13px system-ui,sans-serif;color:#5d6a74;min-height:18px}
+.tn-meter{position:relative;height:16px;border-radius:8px;background:linear-gradient(90deg,#2f6fdb22,#1e9e4a33 45%,#1e9e4a33 55%,#c99a0033);margin:14px 4px 4px}.tn-zone{position:absolute;left:47%;width:6%;top:-3px;bottom:-3px;border:2px solid #1e9e4a;border-radius:4px}
+.tn-needle{position:absolute;left:50%;top:-5px;width:4px;height:26px;margin-left:-2px;border-radius:2px;background:#1d2a33;transition:left .08s}.tn-scale{display:flex;justify-content:space-between;font:12px system-ui,sans-serif;color:#5d6a74;margin:0 4px}.tn-cents{font:600 15px system-ui,sans-serif;min-height:22px;margin-top:4px}
+.tn-ref{font:14px system-ui,sans-serif;margin-left:8px}.tn-msg{font:13px system-ui,sans-serif;color:#5d6a74}
+.mt-box{text-align:center}.mt-bpm .mt-n{font:700 56px/1 Georgia,serif}.mt-bpm small{display:block;font:13px system-ui,sans-serif;color:#5d6a74}.mt-dots{display:flex;justify-content:center;gap:12px;margin:12px 0}.mt-dots i{width:18px;height:18px;border-radius:50%;border:2px solid #1d2a33;display:block}.mt-dots i.first{border-color:#c93b8a}.mt-dots i.on{background:#1d2a33}.mt-dots i.first.on{background:#c93b8a}
+.mt-row{display:flex;gap:10px;justify-content:center;align-items:center;flex-wrap:wrap;font:14px system-ui,sans-serif}.mt-r{width:min(320px,60vw)}.mt-m,.mt-p{min-width:40px;font-size:20px;line-height:1}
 </style>
 <!--SEO-HEAD-START-->
 <meta name="description" content="Free interactive saxophone fingering chart for alto, soprano and tenor sax. Tap any note on the staff to see its name and fingering, with sharps and flats colour-coded on the same chart. Low B♭ to high F.">
@@ -132,6 +142,12 @@ svg{display:block;width:100%;height:auto}
 <p class="key" style="margin:0 0 8px">Which note is this fingering? Pick the answer.</p>
 <div class="qz-row"><div id="qzDia" class="qz-dia"></div><div><div id="qzOpts" class="ch-notes"></div><div id="qzMsg" class="ch-sub" aria-live="polite"></div><button class="ch-play" id="qzNext" onclick="qzNew()" hidden>Next note</button><div class="ch-sub" id="qzScore"></div></div></div>
 </details></section>
+<section class="chords" id="tuner"><details class="fold"><summary class="ch-sum">Tuner</summary>
+<p class="key" style="margin:0 0 8px">Play a long note and the tuner shows the note you are playing and whether it is sharp or flat. It shows the written note for your sax.</p>
+<div id="tunerMount"></div></details></section>
+<section class="chords" id="metro"><details class="fold"><summary class="ch-sum">Metronome</summary>
+<p class="key" style="margin:0 0 8px">A steady beat for practising scales and songs. Start slow and speed up when it feels easy.</p>
+<div id="metroMount"></div></details></section>
 <p class="key" style="margin-top:14px">Any suggestions or improvements to make this site better? <a id="report" href="#">Tell us</a>.</p>
 <!--NOTES-START-->
 <section class="about">
@@ -163,7 +179,7 @@ svg{display:block;width:100%;height:auto}
 <!--NOTES-END-->
 <div class="support" id="support"><div class="sup-t"><b>Enjoying the chart?</b> It's free to use. A small tip helps keep the site going.</div><div class="sup-b"><a href="https://www.paypal.me/SaxVibe/2AUD" target="_blank" rel="noopener">$2</a><a href="https://www.paypal.me/SaxVibe/5AUD" target="_blank" rel="noopener">$5</a><a href="https://www.paypal.me/SaxVibe/10AUD" target="_blank" rel="noopener">$10</a><a href="https://www.paypal.me/SaxVibe" target="_blank" rel="noopener">Other</a></div><div class="sup-s">Tips are paid through PayPal in Australian dollars.</div></div>
 <p id="privacy-note" class="key" style="margin-top:14px">Visits are counted with GoatCounter, a privacy-friendly counter. It uses no cookies and collects no personal information.</p>
-<p class="key foot2" style="margin-top:6px"><a href="beginners/">Beginners: first notes</a><a href="songs/">Simple songs</a><a href="print/">Printable chart</a><a href="privacy/">Privacy and contact</a><button class="lnk" onclick="shareSite()">Share this chart</button><button class="lnk" onclick="addHome()">Add to home screen</button><span id="shMsg" aria-live="polite"></span></p>
+<p class="key foot2" style="margin-top:6px"><a href="beginners/">Beginners: first notes</a><a href="songs/">Simple songs</a><a href="scales/">Scales</a><a href="guides/">Guides</a><a href="tuner/">Tuner</a><a href="metronome/">Metronome</a><a href="print/">Printable chart</a><a href="privacy/">Privacy and contact</a><button class="lnk" onclick="shareSite()">Share this chart</button><button class="lnk" onclick="addHome()">Add to home screen</button><span id="shMsg" aria-live="polite"></span></p>
 </main>
 <aside class="rail rail-l supcard" id="supportRail"><div class="sc-h">Enjoying the chart?</div><p class="sc-t">It's free to use. A small tip helps keep the site going.</p><div class="sc-b"><a href="https://www.paypal.me/SaxVibe/2AUD" target="_blank" rel="noopener">$2</a><a href="https://www.paypal.me/SaxVibe/5AUD" target="_blank" rel="noopener">$5</a><a href="https://www.paypal.me/SaxVibe/10AUD" target="_blank" rel="noopener">$10</a><a href="https://www.paypal.me/SaxVibe" target="_blank" rel="noopener">Other</a></div><p class="sc-s">Tips are paid through PayPal in Australian dollars.</p></aside>
 <aside class="rail rail-r qcard" id="quote" aria-live="off"><div class="qmark">&ldquo;</div><p class="qt" id="qt"></p><p class="qa" id="qa"></p></aside>
@@ -230,7 +246,8 @@ const SONGS=[
  {slug:'silent-night',title:'Silent Night',level:'Medium: low C up to high F',m:'G4:1.5 A4:.5 G4:1 E4:3 G4:1.5 A4:.5 G4:1 E4:3 D5:2 D5:1 B4:3 C5:2 C5:1 G4:3 A4:2 A4:1 C5:1.5 B4:.5 A4:1 G4:1.5 A4:.5 G4:1 E4:3 A4:2 A4:1 C5:1.5 B4:.5 A4:1 G4:1.5 A4:.5 G4:1 E4:3 D5:2 D5:1 F5:1.5 D5:.5 B4:1 C5:3 E5:3 C5:1.5 G4:.5 E4:1 G4:1.5 F4:.5 D4:1 C4:3'},
  {slug:'amazing-grace',title:'Amazing Grace',level:'Medium: low D up to high D',m:'D4:1 G4:2 B4:.5 G4:.5 B4:2 A4:1 G4:2 E4:1 D4:2 D4:1 G4:2 B4:.5 G4:.5 B4:2 A4:1 D5:3 D5:2 B4:.5 D5:.5 D5:2 B4:1 G4:2 E4:1 D4:2 D4:1 G4:2 B4:.5 G4:.5 B4:2 A4:1 G4:3'},
  {slug:'greensleeves',title:'Greensleeves',level:'Medium: has a G sharp and a high F',m:'A4:1 C5:2 D5:1 E5:1.5 F5:.5 E5:1 D5:2 B4:1 G4:1.5 A4:.5 B4:1 C5:2 A4:1 A4:1.5 G#4:.5 A4:1 B4:2 G#4:1 E4:3'},
- {slug:'when-the-saints',title:'When the Saints Go Marching In',level:'Easy: low C up to G',m:'C4:1 E4:1 F4:1 G4:4 C4:1 E4:1 F4:1 G4:4 C4:1 E4:1 F4:1 G4:2 E4:2 C4:2 E4:2 D4:4 E4:1 E4:1 D4:1 C4:1 C4:1 E4:1 G4:1 G4:1 F4:4 E4:1 F4:1 G4:1 E4:1 C4:1 D4:1 C4:4'}
+ {slug:'when-the-saints',title:'When the Saints Go Marching In',level:'Easy: low C up to G',m:'C4:1 E4:1 F4:1 G4:4 C4:1 E4:1 F4:1 G4:4 C4:1 E4:1 F4:1 G4:2 E4:2 C4:2 E4:2 D4:4 E4:1 E4:1 D4:1 C4:1 C4:1 E4:1 G4:1 G4:1 F4:4 E4:1 F4:1 G4:1 E4:1 C4:1 D4:1 C4:4'},
+ {slug:'old-macdonald',title:'Old MacDonald Had a Farm',level:'Easy: low D up to B',m:'G4:1 G4:1 G4:1 D4:1 E4:1 E4:1 D4:2 B4:1 B4:1 A4:1 A4:1 G4:3'}
 ];
 function songRun(s){return s.m.split(' ').map(t=>{const [nm,b]=t.split(':'),l=nm[0],o=+nm.slice(-1),a=nm.length>2?nm[1]:'',i=N.findIndex(n=>n[0]===l&&n[1]===o&&n[2]===a);return{i,name:l+(a==='#'?'♯':a==='b'?'♭':''),o,b:+b}})}
 const Y=(s)=>100-(s-30)*5;
@@ -389,9 +406,11 @@ for(let st=0;st<F.length;st+=per){
  });
  wrap.insertAdjacentHTML('beforeend',s+'</svg></div>');
 }
-if(cur!==null)show(cur,alt,true)}
+if(cur!==null)show(cur,alt,true);if(window.fitStaves)fitStaves()}
 function setInst(k){inst=k;document.querySelectorAll('#inst button').forEach(b=>b.classList.toggle('on',b.dataset.i===k)); 
  if(window.SaxSound)SaxSound.prepare(N.map(n=>fOf(n)));setReport();if(cur!==null)show(cur,alt,true)}
+function fitStaves(){const m=document.querySelector('#staves .staff svg');if(!m)return;const sc=m.getBoundingClientRect().width/390;if(!sc)return;document.querySelectorAll('.cs[data-w],.sg-row[data-w]').forEach(e=>{e.style.width=(e.dataset.w*sc)+'px'})}
+window.addEventListener('resize',fitStaves);
 function setMode(m){mode=m;document.querySelectorAll('#mode button[data-m]').forEach(b=>b.classList.toggle('on',b.dataset.m===m));draw()}
 draw();
 
@@ -447,8 +466,8 @@ function chRun(){
 }
 function chKeyName(pc){return KN[pc]}
 function chStaff(run){
- if(run.length<=16)return chRow(run,0);
- let h='';for(let a=0;a<run.length;a+=13)h+=chRow(run.slice(a,a+13),a);return h}
+ if(run.length<=10)return chRow(run,0);
+ let h='';for(let a=0;a<run.length;a+=10)h+=chRow(run.slice(a,a+10),a);return h}
 function chRow(run,off){
  const W=60+run.length*30,sp=[];let g='';
  [60,70,80,90,100].forEach(y=>g+=`<line x1="4" x2="${W-4}" y1="${y}" y2="${y}" stroke="var(--line)" stroke-width="1"/>`);
@@ -460,7 +479,7 @@ function chRow(run,off){
   g+=`<g class="cs-n ${x.name.includes('♯')?'sh':x.name.includes('♭')?'fl':''}" data-k="${k+off}" onclick="chTap(${k+off})" role="button" aria-label="${x.name} ${x.o}">${led}<circle class="ring" cx="${cx}" cy="${y}" r="14"/><ellipse class="head" cx="${cx}" cy="${y}" rx="7" ry="5" transform="rotate(-18 ${cx} ${y})"/>${acc?`<text class="acc" x="${cx-15}" y="${y+5}" font-size="16" text-anchor="middle">${acc}</text>`:''}</g>`;
  });
  const ys=run.map(x=>Y(x.o*7+L.indexOf(x.name[0]))),y0=Math.min(45,Math.min(...ys)-18),y1=Math.max(112,Math.max(...ys)+18);
- return `<svg class="cs" viewBox="0 ${y0} ${W} ${y1-y0}" aria-label="The notes on the staff">${g}</svg>`;
+ return `<svg class="cs" data-w="${W}" viewBox="0 ${y0} ${W} ${y1-y0}" aria-label="The notes on the staff">${g}</svg>`;
 }
 function chMark(k){document.querySelectorAll('.cs-n').forEach(e=>e.classList.toggle('on',+e.dataset.k===k));document.querySelectorAll('#chOut .ch-n').forEach((b,j)=>b.classList.toggle('on',j===k))}
 function chTap(k){
@@ -485,6 +504,7 @@ function renderChords(){
  ${chStaff(run)}
 ${nm==='Chromatic'?'':`<div class="ch-notes">${run.map((x,k)=>`<button class="ch-n ${x.name.includes('♯')?'sh':x.name.includes('♭')?'fl':''}" onclick="chTap(${k})"><b>${x.name}</b><small>${x.o}</small></button>`).join('')}</div>`}
  <button class="ch-play" onclick="playChord()">&#9654; Play ${chTab==='s'?'scale':'arpeggio'}</button>`;
+ fitStaves();
  if(window.micOn&&micSrc==='ch')micStop();
 }
 function set0(){const st=chSet();return st[Math.min(chType,st.length-1)][0]}
@@ -513,7 +533,7 @@ function songStaffRows(run){
    g+=`<g class="sg-s" data-k="${k}" onclick="sgTap(${k})" role="button" aria-label="${x.name} ${x.o}">${led}<circle class="ring" cx="${cx}" cy="${y}" r="14"/><ellipse class="head" cx="${cx}" cy="${y}" rx="7" ry="5" transform="rotate(-18 ${cx} ${y})"/>${acc?`<text class="acc" x="${cx-15}" y="${y+5}" font-size="16" text-anchor="middle">${acc}</text>`:''}</g>`;
   });
   const ys=part.map(x=>Y(x.o*7+L.indexOf(x.name[0]))),y0=Math.min(45,Math.min(...ys)-18),y1=Math.max(112,Math.max(...ys)+18);
-  rows.push(`<svg class="sg-row" style="width:${W/360*100}%" viewBox="0 ${y0} ${W} ${y1-y0}" aria-label="Notes ${st+1} to ${st+part.length}">${g}</svg>`);
+  rows.push(`<svg class="sg-row" data-w="${W}" viewBox="0 ${y0} ${W} ${y1-y0}" aria-label="Notes ${st+1} to ${st+part.length}">${g}</svg>`);
  }
  return rows.join('');
 }
@@ -525,6 +545,7 @@ function renderSongs(){
  const s=SONGS[sgI],run=songRun(s);
  document.getElementById('sgOut').innerHTML=`<div class="ch-name">${s.title}</div><div class="ch-sub">${s.level}. Tap a note to see its fingering.</div>${songStaffRows(run)}<button class="ch-play" onclick="playSong()">&#9654; Play song</button> <button class="ch-play" style="background:transparent;color:var(--ink);border:1px solid var(--ink)" onclick="sgPlay++;sgMark(-1)">Stop</button>
  <div id="micOut" class="mic-out" hidden><div id="micStat" class="ch-sub"></div><div id="micLive"></div><div id="micMsg" class="mic-msg" aria-live="polite"></div></div>`;
+ fitStaves();
  if(window.micOn)micStop();
 }
 function playSong(){
@@ -715,5 +736,8 @@ document.querySelectorAll('.ad[data-slot]').forEach(box=>{
  });
 })();
 </script>
+<script src="tools.js"></script>
+<script>(function(){var t=document.getElementById("tunerMount"),m=document.getElementById("metroMount");if(window.mountTuner&&t)mountTuner(t);if(window.mountMetronome&&m)mountMetronome(m);
+["tuner","metro"].forEach(function(id){var d=document.querySelector("#"+id+" details");if(d)d.addEventListener("toggle",function(){if(!d.open){var r=document.getElementById(id==="tuner"?"tunerMount":"metroMount");if(r.stopTuner)r.stopTuner();if(r.stopMetronome)r.stopMetronome()}})})})();</script>
 </body>
 </html>
