@@ -30,7 +30,7 @@ svg{display:block;width:100%;height:auto}
 .ch-notes{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}
 .ch-n{border:1px solid var(--ink);border-radius:10px;background:transparent;color:var(--ink);font:inherit;padding:6px 12px;min-width:56px;text-align:center;cursor:pointer}
 .ch-n b{display:block;font-family:Georgia,serif;font-size:20px}.ch-n small{color:var(--mute);font-size:11px}
-.ch-back{font:inherit;font-size:14px;border:1px solid #d8dce0;background:transparent;color:var(--ink);border-radius:16px;padding:7px 14px;min-height:36px;cursor:pointer}.ch-n{--c:var(--nat);border-color:var(--c)}.ch-n.sh{--c:var(--sh)}.ch-n.fl{--c:var(--fl)}.ch-n:not(.on):not(.good):not(.bad) b{color:var(--c)}.ch-n.on{background:var(--c);border-color:var(--c);color:#fff}.ch-n.on small{color:#fff}
+.ch-guide{margin:10px 0 0}.ch-back{font:inherit;font-size:14px;border:1px solid #d8dce0;background:transparent;color:var(--ink);border-radius:16px;padding:7px 14px;min-height:36px;cursor:pointer}.ch-n{--c:var(--nat);border-color:var(--c)}.ch-n.sh{--c:var(--sh)}.ch-n.fl{--c:var(--fl)}.ch-n:not(.on):not(.good):not(.bad) b{color:var(--c)}.ch-n.on{background:var(--c);border-color:var(--c);color:#fff}.ch-n.on small{color:#fff}
 .cs{display:block;max-width:100%;height:auto;margin:2px 0 10px}.cs-n{cursor:pointer}.cs-n{--c:var(--nat)}.cs-n.sh{--c:var(--sh)}.cs-n.fl{--c:var(--fl)}.cs-n .head,.cs-n .acc{fill:var(--c)}.cs-n.on .head{stroke:var(--ink);stroke-width:1.5}.cs-n.done .head,.cs-n.done .acc{fill:#1e9e4a}.cs-n.on .ring{stroke:var(--c);stroke-width:2.5;fill:none}.cs-n .ring{fill:transparent;stroke:transparent}
 #quiz{transition:border-color .2s,box-shadow .2s}#quiz.ok{border:2px solid #1e9e4a;box-shadow:0 0 0 3px rgba(30,158,74,.15)}#quiz.no{border:2px solid #d0202f;box-shadow:0 0 0 3px rgba(208,32,47,.15)}#qzMsg.ok{color:#1e7d3d;font-weight:700;font-size:16px}#qzMsg.no{color:#c01c28;font-weight:700;font-size:16px}
 .about details.more{margin:6px 0 4px}.about summary{cursor:pointer;font:600 15px system-ui,sans-serif;color:#1a4f9c;padding:6px 0}
@@ -447,7 +447,7 @@ const CHORDS=[['maj7',[0,4,7,11,12],[0,2,4,6,7]],['m7',[0,3,7,10,12],[0,2,4,6,7]
 const CHS=['C','C♯','D','D♯','E','F','F♯','G','G♯','A','A♯','B'],CHF=['C','D♭','D','E♭','E','F','G♭','G','A♭','A','B♭','B'];
 const KEYPC=[['C',0],['D',-1],['D',0],['E',-1],['E',0],['F',0],['F',1],['G',0],['A',-1],['A',0],['B',-1],['B',0]];
 const KN=KEYPC.map(([l,a])=>l+(a<0?'♭':a>0?'♯':''));
-let chTab='s',chNm='w',chRoot=0,chType=0,chPlay=0,chShowK=-1;
+let chTab='s',chNm='w',chRoot=0,chType=0,chPlay=0,chShowK=-1,chAuto=null,chSpd=4000;
 const nMidi=n=>12*(n[1]+1)+M[L.indexOf(n[0])]+(n[2]==='#'?1:n[2]==='b'?-1:0);
 const nName=n=>n[0]+(n[2]==='#'?'♯':n[2]==='b'?'♭':'');
 const ACC={'-2':'♭♭','-1':'♭','0':'','1':'♯','2':'♯♯'};
@@ -482,14 +482,23 @@ function chRow(run,off){
  return `<svg class="cs" data-w="${W}" viewBox="0 ${y0} ${W} ${y1-y0}" aria-label="The notes on the staff">${g}</svg>`;
 }
 function chMark(k){document.querySelectorAll('.cs-n').forEach(e=>e.classList.toggle('on',+e.dataset.k===k));document.querySelectorAll('#chOut .ch-n').forEach((b,j)=>b.classList.toggle('on',j===k))}
-function chTap(k){
+function chTap(k,auto){
+ if(!auto)chGuideStop();
  const x=chRun()[k];if(!x)return;
  const m=x.name.length===1?'n':x.name.includes('♯')?'#':'b';
  nextV=m;if(m!=='n'&&mode==='n')setMode('all');
  show(x.i,0,false);chMark(k);chShowK=k;chShowTxt();
 }
+function chGuideStop(){if(chAuto){clearTimeout(chAuto);chAuto=null}const b=document.getElementById('chGuideBtn');if(b)b.textContent='Guide me through it'}
+function chGuide(){
+ if(chAuto){chGuideStop();return}
+ const run=chRun();if(!run.length)return;if(window.micOn)micStop();chPlay++;
+ let k=chShowK>=run.length-1?-1:chShowK;
+ const b=document.getElementById('chGuideBtn');if(b)b.textContent='Stop guide';
+ (function step(){k++;if(k>=run.length){chGuideStop();return}chTap(k,true);chAuto=setTimeout(step,chSpd)})();
+}
 function chShowTxt(){const e=document.getElementById('chShowTxt');if(!e)return;const run=chRun();e.textContent=chShowK<0?'':'Note '+(chShowK+1)+' of '+run.length+': '+run[chShowK].name+run[chShowK].o}
-function chNext(d){const run=chRun();if(!run.length)return;if(window.micOn)micStop();chPlay++;let k=chShowK+(d||1);if(k>=run.length)k=0;if(k<0)k=run.length-1;chTap(k);const b=document.getElementById('chShowBtn');if(b)b.textContent='Next note'}
+function chNext(d){chGuideStop();const run=chRun();if(!run.length)return;if(window.micOn)micStop();chPlay++;let k=chShowK+(d||1);if(k>=run.length)k=0;if(k<0)k=run.length-1;chTap(k);const b=document.getElementById('chShowBtn');if(b)b.textContent='Next note'}
 function renderChords(){
  const r=document.getElementById('chRoot');if(!r)return;
  const set=chSet();if(chType>=set.length)chType=0;
@@ -505,8 +514,9 @@ function renderChords(){
  document.getElementById('chOut').innerHTML=`<div class="ch-name">${title}</div><div class="ch-sub">${sub}Tap a note to see its fingering.</div>
  ${chStaff(run)}
 ${nm.startsWith('Chromatic')?'':`<div class="ch-notes">${run.map((x,k)=>`<button class="ch-n ${x.name.includes('♯')?'sh':x.name.includes('♭')?'fl':''}" onclick="chTap(${k})"><b>${x.name}</b><small>${x.o}</small></button>`).join('')}</div>`}
- <button class="ch-play" onclick="playChord()">&#9654; Play ${chTab==='s'?'scale':'arpeggio'}</button> <button class="ch-play" id="chShowBtn" onclick="chNext()">Show me the first note</button> <button class="ch-back" onclick="chNext(-1)" aria-label="Previous note">Back</button> <span id="chShowTxt" class="ch-sub" aria-live="polite"></span>`;
- chShowK=-1;fitStaves();
+ <button class="ch-play" onclick="playChord()">&#9654; Play ${chTab==='s'?'scale':'arpeggio'}</button> <button class="ch-play" id="chShowBtn" onclick="chNext()">Show me the first note</button> <button class="ch-back" onclick="chNext(-1)" aria-label="Previous note">Back</button> <span id="chShowTxt" class="ch-sub" aria-live="polite"></span>
+<div class="ch-guide"><button class="ch-play" id="chGuideBtn" onclick="chGuide()">Guide me through it</button> <label class="mic-al">Speed <select onchange="chSpd=+this.value"><option value="6000"${chSpd===6000?' selected':''}>Slow, 6 seconds a note</option><option value="4000"${chSpd===4000?' selected':''}>Medium, 4 seconds</option><option value="2500"${chSpd===2500?' selected':''}>Fast, 2.5 seconds</option></select></label><div class="key" style="margin:4px 0 0">It steps to each note by itself and shows the fingering, so you can play along on your sax.</div></div>`;
+ chGuideStop();chShowK=-1;fitStaves();
  if(window.micOn&&micSrc==='ch')micStop();
 }
 function set0(){const st=chSet();return st[Math.min(chType,st.length-1)][0]}
@@ -581,11 +591,12 @@ function micWritten(f){
 var micSrc='sg';
 function mE(n){return document.getElementById((micSrc==='ch'?'chmic':'mic')+n)}
 function micRun(){return micSrc==='ch'?chRun():songRun(SONGS[sgI])}
-function micMark(k){micSrc==='ch'?chMark(k):sgMark(k)}
+function micMark(k){micSrc==='ch'?chMark(k):sgMark(k);
+ if(k>=0&&mic&&mic.al){const x=micRun()[k];if(x){nextV=x.name.length===1?'n':x.name.includes('♯')?'#':'b';if(nextV!=='n'&&mode==='n')setMode('all');show(x.i,0,true);if(micSrc==='ch'){chShowK=k;chShowTxt()}}}}
 function micDone(k){const q=micSrc==='ch'?'.cs-n[data-k="'+k+'"]':'#sgOut .sg-s[data-k="'+k+'"]';const e=document.querySelector(q);if(e)e.classList.add('done')}
 function micClear(){document.querySelectorAll('#sgOut .sg-s,.cs-n').forEach(e=>e.classList.remove('done'))}
 function micToggle(src){if(window.micOn){const same=src===micSrc;micStop();if(same)return}micSrc=src||'sg';micStart()}
-async function micStart(){
+async function micStart(){chGuideStop();
  const out=mE('Out'),st=mE('Stat');
  out.hidden=false;
  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){st.textContent='This browser cannot use the microphone here.';return}
@@ -614,7 +625,7 @@ function micAlongChg(){
  micClear();
  const st=mE('Stat'),m=mE('Msg');if(!st)return;
  m.textContent='';m.className='mic-msg';
- if(mic.al){micMark(0);st.textContent='Play along: play the pink note, then the next one.'}else{micMark(-1);st.textContent='Listening. Play any note on your sax and it will show on the staff.'}
+ if(mic.al){micMark(0);st.textContent='Play along: play the highlighted note. Its fingering is shown below, then it moves to the next note.'}else{micMark(-1);st.textContent='Listening. Play any note on your sax and it will show on the staff.'}
 }
 function liveStaff(i){
  if(i<0)return '<svg class="mic-live" viewBox="0 40 150 90"><text x="8" y="106" font-size="66" fill="var(--ink)" font-family="\'Noto Music\',\'Apple Symbols\',\'Segoe UI Symbol\',serif">\u{1D11E}</text>'+[60,70,80,90,100].map(y=>`<line x1="4" x2="146" y1="${y}" y2="${y}" stroke="var(--line)"/>`).join('')+'</svg>';
@@ -662,7 +673,7 @@ function micLoop(){
  }
  mic.raf=requestAnimationFrame(micLoop);
 }
-document.querySelectorAll('#songs details,#chords details').forEach(d=>d.addEventListener('toggle',()=>{if(window.micOn)micStop()}));
+document.querySelectorAll('#songs details,#chords details').forEach(d=>d.addEventListener('toggle',()=>{if(window.micOn)micStop();chGuideStop()}));
 // ---- PRACTICE QUIZ ----
 let qz={n:-1,right:0,tot:0,streak:0,done:false};
 function qzPool(){return N.map((n,i)=>i).filter(i=>!/palm/.test(N[i][3][0][3]||''))}
