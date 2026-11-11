@@ -103,6 +103,20 @@ svg{display:block;width:100%;height:auto}
 .tn-ref{font:14px system-ui,sans-serif;margin-left:8px}.tn-msg{font:13px system-ui,sans-serif;color:#5d6a74}
 .mt-box{text-align:center}.mt-bpm .mt-n{font:700 56px/1 Georgia,serif}.mt-bpm small{display:block;font:13px system-ui,sans-serif;color:#5d6a74}.mt-dots{display:flex;justify-content:center;gap:12px;margin:12px 0}.mt-dots i{width:18px;height:18px;border-radius:50%;border:2px solid #1d2a33;display:block}.mt-dots i.first{border-color:#c93b8a}.mt-dots i.on{background:#1d2a33}.mt-dots i.first.on{background:#c93b8a}
 .mt-row{display:flex;gap:10px;justify-content:center;align-items:center;flex-wrap:wrap;font:14px system-ui,sans-serif}.mt-r{width:min(320px,60vw)}.mt-m,.mt-p{min-width:40px;font-size:20px;line-height:1}
+
+#mainTabs{position:sticky;top:0;z-index:30;display:flex;flex-wrap:nowrap;overflow-x:auto;gap:3px;align-items:flex-end;padding:8px 2px 1px;margin:0;background:linear-gradient(#cfd5da,#cfd5da) bottom/100% 1px no-repeat,var(--bg,#fff);scrollbar-width:none}
+#mainTabs::-webkit-scrollbar{display:none}
+#mainTabs button{flex:0 0 auto;white-space:nowrap;font:600 13px system-ui,sans-serif;color:#4a5760;background:#eef1f4;border:1px solid #cfd5da;border-top:3px solid var(--tc,#1d2a33);border-bottom:1px solid #cfd5da;border-radius:9px 9px 0 0;padding:8px 11px 7px;min-height:0;cursor:pointer}
+#mainTabs button:hover{background:#f6f8fa}
+#mainTabs button.on{background:#fff;color:var(--ink);border-bottom-color:#fff;margin-bottom:-1px;padding-bottom:9px}
+#tabPage{border:1px solid #cfd5da;border-top:none;border-radius:0 0 12px 12px;background:#fff;padding:14px 14px 16px;margin:0 0 14px}
+body[data-tab] section.chords{border:none;padding:0;margin:0;background:none;box-shadow:none}
+body[data-tab] section.chords{display:none}
+body[data-tab=songs] #songs,body[data-tab=chords] #chords,body[data-tab=quiz] #quiz,body[data-tab=tuner] #tuner,body[data-tab=metro] #metro{display:block}
+body[data-tab] section.chords details.fold>summary{display:none}
+body:not([data-tab=chart]) #pane-chart{height:0;overflow:hidden;visibility:hidden;margin:0;padding:0}
+body:not([data-tab=chart]) .about{display:none}
+body[data-tab=tuner],body[data-tab=metro]{padding-bottom:24px}body[data-tab=tuner] #panel,body[data-tab=metro] #panel,body[data-tab=tuner] #inst,body[data-tab=metro] #inst{display:none}
 </style>
 <!--SEO-HEAD-START-->
 <meta name="description" content="Free interactive saxophone fingering chart for alto, soprano and tenor sax. Tap any note on the staff to see its name and fingering, with sharps and flats colour-coded on the same chart. Low B♭ to high F.">
@@ -111,7 +125,7 @@ svg{display:block;width:100%;height:auto}
 <script data-goatcounter="https://louisdatoy.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 <!--SEO-HEAD-END-->
 </head>
-<body>
+<body data-tab="chart">
 <header class="hero">
  <div class="hero-in">
   <div class="hero-photo" role="img" aria-label="Two young saxophonists playing outdoors"></div>
@@ -119,10 +133,12 @@ svg{display:block;width:100%;height:auto}
  </div>
 </header>
 <main>
-<p class="lead">Tap any note to see its name and fingering. Black notes are natural, gold are sharps and blue are flats.</p>
+<nav class="tabs" id="mainTabs" aria-label="Sections"><button class="on" style="--tc:#1d2a33" data-t="chart" onclick="goTab('chart')">Chart</button><button style="--tc:#c93b8a" data-t="songs" onclick="goTab('songs')">Simple songs</button><button style="--tc:#2f6fdb" data-t="chords" onclick="goTab('chords')">Scales and chords</button><button style="--tc:#c99a00" data-t="quiz" onclick="goTab('quiz')">Practice quiz</button><button style="--tc:#12908e" data-t="tuner" onclick="goTab('tuner')">Tuner</button><button style="--tc:#7a4fc4" data-t="metro" onclick="goTab('metro')">Metronome</button></nav>
+<div id="tabPage">
 <div class="tabs" id="inst" style="margin-bottom:10px"><button class="on" data-i="alto" onclick="setInst('alto')">Alto sax</button><button data-i="soprano" onclick="setInst('soprano')">Soprano sax</button><button data-i="tenor" onclick="setInst('tenor')">Tenor sax</button></div>
+<div id="pane-chart"><p class="lead">Tap any note to see its name and fingering. Black notes are natural, gold are sharps and blue are flats.</p>
 <div class="tabs" id="mode" style="margin-bottom:12px;align-items:center"><div class="legend"><span><i style="background:var(--nat)"></i>Natural</span><span><i style="background:var(--sh)"></i>Sharp &#9839;</span><span><i style="background:var(--fl)"></i>Flat &#9837;</span></div><button data-m="all" onclick="setMode('all')">All notes</button><button class="on" data-m="n" onclick="setMode('n')">Natural only</button><button id="snd" class="on" onclick="toggleSound()">Sound: on</button></div>
-<div id="staves"></div>
+<div id="staves"></div></div>
 <section class="chords" id="songs"><details class="fold"><summary class="ch-sum">Simple songs</summary>
 <div class="feat"><b>Play your own sax</b><p>Press <b>Listen with microphone</b>, then play the <b>pink note</b> on your sax. It turns <b>green</b> when you get it right, then the next note lights up.</p><div class="mic-row"><button class="ch-play" id="micBtn" onclick="micToggle('sg')">Listen with microphone</button> <label class="mic-al"><input type="checkbox" id="micAlong" checked onchange="micAlongChg()"> Play along (untick to just see what you play)</label></div><small style="display:block;margin-top:8px">Use a quiet room, allow the microphone when asked. Your sound is analysed on your device only and never recorded or sent anywhere.</small></div>
 <p class="key" style="margin:0 0 8px">Then pick a song. Written pitch, so it works on alto, soprano and tenor. You can also tap any note for its fingering.</p>
@@ -148,6 +164,7 @@ svg{display:block;width:100%;height:auto}
 <section class="chords" id="metro"><details class="fold"><summary class="ch-sum">Metronome</summary>
 <p class="key" style="margin:0 0 8px">A steady beat for practising scales and songs. Start slow and speed up when it feels easy.</p>
 <div id="metroMount"></div></details></section>
+</div>
 <p class="key" style="margin-top:14px">Any suggestions or improvements to make this site better? <a id="report" href="#">Tell us</a>.</p>
 <!--NOTES-START-->
 <section class="about">
@@ -531,7 +548,7 @@ function playChord(){
 const _setInst=setInst;setInst=function(k){_setInst(k);renderChords()};
 renderChords();
 // ---- SIMPLE SONGS ----
-let sgI=0,sgPlay=0;
+let sgI=0,sgPlay=0,sgShowK=-1,sgAuto=null,sgSpd=4000;
 function songStaffRows(run){
  const per=10,rows=[];
  for(let st=0;st<run.length;st+=per){
@@ -550,17 +567,30 @@ function songStaffRows(run){
  return rows.join('');
 }
 function sgMark(k){document.querySelectorAll('#sgOut .sg-s').forEach(e=>e.classList.toggle('on',+e.dataset.k===k))}
-function sgTap(k){const x=songRun(SONGS[sgI])[k];sgPlay++;nextV=x.name.length===1?'n':x.name.includes('♯')?'#':'b';if(nextV!=='n'&&mode==='n')setMode('all');show(x.i,0,false);sgMark(k)}
+function sgTap(k,auto){if(!auto)sgGuideStop();const x=songRun(SONGS[sgI])[k];if(!x)return;sgPlay++;sgShowK=k;sgShowTxt();nextV=x.name.length===1?'n':x.name.includes('♯')?'#':'b';if(nextV!=='n'&&mode==='n')setMode('all');show(x.i,0,false);sgMark(k)}
+function sgGuideStop(){if(sgAuto){clearTimeout(sgAuto);sgAuto=null}const b=document.getElementById('sgGuideBtn');if(b)b.textContent='Guide me through it'}
+function sgShowTxt(){const e=document.getElementById('sgShowTxt');if(!e)return;const run=songRun(SONGS[sgI]);e.textContent=sgShowK<0?'':'Note '+(sgShowK+1)+' of '+run.length+': '+run[sgShowK].name+run[sgShowK].o}
+function sgNext(d){sgGuideStop();const run=songRun(SONGS[sgI]);if(!run.length)return;if(window.micOn)micStop();let k=sgShowK+(d||1);if(k>=run.length)k=0;if(k<0)k=run.length-1;sgTap(k);const b=document.getElementById('sgShowBtn');if(b)b.textContent='Next note'}
+function sgGuide(){
+ if(sgAuto){sgGuideStop();return}
+ const run=songRun(SONGS[sgI]);if(!run.length)return;if(window.micOn)micStop();sgPlay++;
+ let k=sgShowK>=run.length-1?-1:sgShowK;
+ const b=document.getElementById('sgGuideBtn');if(b)b.textContent='Stop guide';
+ (function step(){k++;if(k>=run.length){sgGuideStop();return}sgTap(k,true);sgAuto=setTimeout(step,sgSpd)})();
+}
 function renderSongs(){
  const t=document.getElementById('sgTabs');if(!t)return;
  t.innerHTML=SONGS.map((s,i)=>`<button class="${i===sgI?'on':''}" onclick="sgI=${i};sgPlay++;renderSongs()">${s.title}</button>`).join('');
  const s=SONGS[sgI],run=songRun(s);
- document.getElementById('sgOut').innerHTML=`<div class="ch-name">${s.title}</div><div class="ch-sub">${s.level}. Tap a note to see its fingering.</div>${songStaffRows(run)}<button class="ch-play" onclick="playSong()">&#9654; Play song</button> <button class="ch-play" style="background:transparent;color:var(--ink);border:1px solid var(--ink)" onclick="sgPlay++;sgMark(-1)">Stop</button>
+ document.getElementById('sgOut').innerHTML=`<div class="ch-name">${s.title}</div><div class="ch-sub">${s.level}. Tap a note to see its fingering.</div>${songStaffRows(run)}<button class="ch-play" onclick="playSong()">&#9654; Play song</button> <button class="ch-play" style="background:transparent;color:var(--ink);border:1px solid var(--ink)" onclick="sgGuideStop();sgPlay++;sgMark(-1)">Stop</button>
+ <button class="ch-play" id="sgShowBtn" onclick="sgNext()">Show me the first note</button> <button class="ch-back" onclick="sgNext(-1)" aria-label="Previous note">Back</button> <span id="sgShowTxt" class="ch-sub" aria-live="polite"></span>
+<div class="ch-guide"><button class="ch-play" id="sgGuideBtn" onclick="sgGuide()">Guide me through it</button> <label class="mic-al">Speed <select onchange="sgSpd=+this.value"><option value="6000"${sgSpd===6000?' selected':''}>Slow, 6 seconds a note</option><option value="4000"${sgSpd===4000?' selected':''}>Medium, 4 seconds</option><option value="2500"${sgSpd===2500?' selected':''}>Fast, 2.5 seconds</option></select></label><div class="key" style="margin:4px 0 0">It steps to each note of the song by itself and shows the fingering, so you can play along on your sax.</div></div>
  <div id="micOut" class="mic-out" hidden><div id="micStat" class="ch-sub"></div><div id="micLive"></div><div id="micMsg" class="mic-msg" aria-live="polite"></div></div>`;
- fitStaves();
+ sgGuideStop();sgShowK=-1;fitStaves();
  if(window.micOn)micStop();
 }
 function playSong(){
+ sgGuideStop();
  const run=songRun(SONGS[sgI]),tok=++sgPlay;let t=0;
  run.forEach((x,k)=>{const at=t;t+=x.b*470;
   setTimeout(()=>{if(tok!==sgPlay)return;sgMark(k);show(x.i,0,true);if(soundOn&&window.SaxSound)SaxSound.play(fOf(N[x.i]))},at)});
@@ -596,7 +626,7 @@ function micMark(k){micSrc==='ch'?chMark(k):sgMark(k);
 function micDone(k){const q=micSrc==='ch'?'.cs-n[data-k="'+k+'"]':'#sgOut .sg-s[data-k="'+k+'"]';const e=document.querySelector(q);if(e)e.classList.add('done')}
 function micClear(){document.querySelectorAll('#sgOut .sg-s,.cs-n').forEach(e=>e.classList.remove('done'))}
 function micToggle(src){if(window.micOn){const same=src===micSrc;micStop();if(same)return}micSrc=src||'sg';micStart()}
-async function micStart(){chGuideStop();
+async function micStart(){chGuideStop();sgGuideStop();
  const out=mE('Out'),st=mE('Stat');
  out.hidden=false;
  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){st.textContent='This browser cannot use the microphone here.';return}
@@ -673,7 +703,7 @@ function micLoop(){
  }
  mic.raf=requestAnimationFrame(micLoop);
 }
-document.querySelectorAll('#songs details,#chords details').forEach(d=>d.addEventListener('toggle',()=>{if(window.micOn)micStop();chGuideStop()}));
+document.querySelectorAll('#songs details,#chords details').forEach(d=>d.addEventListener('toggle',()=>{if(window.micOn)micStop();chGuideStop();sgGuideStop()}));
 // ---- PRACTICE QUIZ ----
 let qz={n:-1,right:0,tot:0,streak:0,done:false};
 function qzPool(){return N.map((n,i)=>i).filter(i=>!/palm/.test(N[i][3][0][3]||''))}
@@ -752,5 +782,20 @@ document.querySelectorAll('.ad[data-slot]').forEach(box=>{
 <script src="tools.js"></script>
 <script>(function(){var t=document.getElementById("tunerMount"),m=document.getElementById("metroMount");if(window.mountTuner&&t)mountTuner(t);if(window.mountMetronome&&m)mountMetronome(m);
 ["tuner","metro"].forEach(function(id){var d=document.querySelector("#"+id+" details");if(d)d.addEventListener("toggle",function(){if(!d.open){var r=document.getElementById(id==="tuner"?"tunerMount":"metroMount");if(r.stopTuner)r.stopTuner();if(r.stopMetronome)r.stopMetronome()}})})})();</script>
+
+<script>
+function goTab(t,keep){
+ var ok=['chart','songs','chords','quiz','tuner','metro'];if(ok.indexOf(t)<0)t='chart';
+ try{if(window.micOn)micStop();chGuideStop();sgGuideStop();sgPlay++;chPlay++}catch(e){}
+ ['tunerMount','metroMount'].forEach(function(id){var r=document.getElementById(id);if(r){if(r.stopTuner)r.stopTuner();if(r.stopMetronome)r.stopMetronome()}});
+ document.body.dataset.tab=t;
+ [].forEach.call(document.querySelectorAll('#mainTabs button'),function(b){b.classList.toggle('on',b.dataset.t===t)});
+ if(!keep){try{history.replaceState(null,'',t==='chart'?location.pathname:'#'+t)}catch(e){}}
+ if(window.fitStaves)fitStaves();
+ var bar=document.getElementById('mainTabs');var ab=bar&&bar.querySelector('button.on');if(ab){var l=ab.offsetLeft-bar.offsetLeft,r=l+ab.offsetWidth;if(l<bar.scrollLeft)bar.scrollLeft=l-8;else if(r>bar.scrollLeft+bar.clientWidth)bar.scrollLeft=r-bar.clientWidth+8}if(bar&&window.scrollY>bar.offsetTop)window.scrollTo(0,bar.offsetTop);
+}
+(function(){[].forEach.call(document.querySelectorAll('section.chords details.fold'),function(d){d.open=true});
+ var h=(location.hash||'').slice(1);if(h)goTab(h,true)})();
+</script>
 </body>
 </html>
