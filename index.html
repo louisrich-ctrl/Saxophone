@@ -30,7 +30,7 @@ svg{display:block;width:100%;height:auto}
 .ch-notes{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}
 .ch-n{border:1px solid var(--ink);border-radius:10px;background:transparent;color:var(--ink);font:inherit;padding:6px 12px;min-width:56px;text-align:center;cursor:pointer}
 .ch-n b{display:block;font-family:Georgia,serif;font-size:20px}.ch-n small{color:var(--mute);font-size:11px}
-.ch-n{--c:var(--nat);border-color:var(--c)}.ch-n.sh{--c:var(--sh)}.ch-n.fl{--c:var(--fl)}.ch-n:not(.on):not(.good):not(.bad) b{color:var(--c)}.ch-n.on{background:var(--c);border-color:var(--c);color:#fff}.ch-n.on small{color:#fff}
+.ch-back{font:inherit;font-size:14px;border:1px solid #d8dce0;background:transparent;color:var(--ink);border-radius:16px;padding:7px 14px;min-height:36px;cursor:pointer}.ch-n{--c:var(--nat);border-color:var(--c)}.ch-n.sh{--c:var(--sh)}.ch-n.fl{--c:var(--fl)}.ch-n:not(.on):not(.good):not(.bad) b{color:var(--c)}.ch-n.on{background:var(--c);border-color:var(--c);color:#fff}.ch-n.on small{color:#fff}
 .cs{display:block;max-width:100%;height:auto;margin:2px 0 10px}.cs-n{cursor:pointer}.cs-n{--c:var(--nat)}.cs-n.sh{--c:var(--sh)}.cs-n.fl{--c:var(--fl)}.cs-n .head,.cs-n .acc{fill:var(--c)}.cs-n.on .head{stroke:var(--ink);stroke-width:1.5}.cs-n.done .head,.cs-n.done .acc{fill:#1e9e4a}.cs-n.on .ring{stroke:var(--c);stroke-width:2.5;fill:none}.cs-n .ring{fill:transparent;stroke:transparent}
 #quiz{transition:border-color .2s,box-shadow .2s}#quiz.ok{border:2px solid #1e9e4a;box-shadow:0 0 0 3px rgba(30,158,74,.15)}#quiz.no{border:2px solid #d0202f;box-shadow:0 0 0 3px rgba(208,32,47,.15)}#qzMsg.ok{color:#1e7d3d;font-weight:700;font-size:16px}#qzMsg.no{color:#c01c28;font-weight:700;font-size:16px}
 .about details.more{margin:6px 0 4px}.about summary{cursor:pointer;font:600 15px system-ui,sans-serif;color:#1a4f9c;padding:6px 0}
@@ -442,12 +442,12 @@ function setReport(){
 setReport();
 if(window.SaxSound)SaxSound.prepare(N.map(fOf));
 // ---- SCALES AND CHORDS ----
-const SCALES=[['Major',[0,2,4,5,7,9,11,12],[0,1,2,3,4,5,6,7]],['Natural minor',[0,2,3,5,7,8,10,12],[0,1,2,3,4,5,6,7]],['Harmonic minor',[0,2,3,5,7,8,11,12],[0,1,2,3,4,5,6,7]],['Melodic minor',[0,2,3,5,7,9,11,12],[0,1,2,3,4,5,6,7]],['Major pentatonic',[0,2,4,7,9,12],[0,1,2,4,5,7]],['Minor pentatonic',[0,3,5,7,10,12],[0,2,3,4,6,7]],['Blues',[0,3,5,6,7,10,12],[0,2,3,4,4,6,7]],['Chromatic',[...Array(25).keys(),...[...Array(24).keys()].reverse()],null]];
+const SCALES=[['Major',[0,2,4,5,7,9,11,12],[0,1,2,3,4,5,6,7]],['Natural minor',[0,2,3,5,7,8,10,12],[0,1,2,3,4,5,6,7]],['Harmonic minor',[0,2,3,5,7,8,11,12],[0,1,2,3,4,5,6,7]],['Melodic minor',[0,2,3,5,7,9,11,12],[0,1,2,3,4,5,6,7]],['Major pentatonic',[0,2,4,7,9,12],[0,1,2,4,5,7]],['Minor pentatonic',[0,3,5,7,10,12],[0,2,3,4,6,7]],['Blues',[0,3,5,6,7,10,12],[0,2,3,4,4,6,7]],['Chromatic',[...Array(13).keys(),...[...Array(12).keys()].reverse()],null],['Chromatic (2 octaves)',[...Array(25).keys(),...[...Array(24).keys()].reverse()],null]];
 const CHORDS=[['maj7',[0,4,7,11,12],[0,2,4,6,7]],['m7',[0,3,7,10,12],[0,2,4,6,7]],['7',[0,4,7,10,12],[0,2,4,6,7]],['m7♭5',[0,3,6,10,12],[0,2,4,6,7]],['dim7',[0,3,6,9,12],[0,2,4,6,7]],['Major',[0,4,7,12],[0,2,4,7]],['Minor',[0,3,7,12],[0,2,4,7]]];
 const CHS=['C','C♯','D','D♯','E','F','F♯','G','G♯','A','A♯','B'],CHF=['C','D♭','D','E♭','E','F','G♭','G','A♭','A','B♭','B'];
 const KEYPC=[['C',0],['D',-1],['D',0],['E',-1],['E',0],['F',0],['F',1],['G',0],['A',-1],['A',0],['B',-1],['B',0]];
 const KN=KEYPC.map(([l,a])=>l+(a<0?'♭':a>0?'♯':''));
-let chTab='s',chNm='w',chRoot=0,chType=0,chPlay=0;
+let chTab='s',chNm='w',chRoot=0,chType=0,chPlay=0,chShowK=-1;
 const nMidi=n=>12*(n[1]+1)+M[L.indexOf(n[0])]+(n[2]==='#'?1:n[2]==='b'?-1:0);
 const nName=n=>n[0]+(n[2]==='#'?'♯':n[2]==='b'?'♭':'');
 const ACC={'-2':'♭♭','-1':'♭','0':'','1':'♯','2':'♯♯'};
@@ -459,7 +459,7 @@ function chRun(){
  const [rl,ra]=KEYPC[wpc],out=[];
  iv.forEach((d,k)=>{const i=N.findIndex(n=>nMidi(n)===base+d);if(i<0)return;
   let name=nName(N[i]);
-  if(nm==='Chromatic'){const pc=((wpc+d)%12+12)%12;name=(k<=24?CHS:CHF)[pc]}
+  if(nm.startsWith('Chromatic')){const pc=((wpc+d)%12+12)%12;name=(k<=(iv.length-1)/2?CHS:CHF)[pc]}
   if(steps){const let_=L[(L.indexOf(rl)+steps[k])%7],pc=((wpc+d)%12+12)%12,nat=M[L.indexOf(let_)];let df=((pc-nat)%12+12)%12;if(df>6)df-=12;name=let_+(ACC[df]??name.slice(1))}
   out.push({i,name,o:N[i][1]})});
  return out;
@@ -486,8 +486,10 @@ function chTap(k){
  const x=chRun()[k];if(!x)return;
  const m=x.name.length===1?'n':x.name.includes('♯')?'#':'b';
  nextV=m;if(m!=='n'&&mode==='n')setMode('all');
- show(x.i,0,false);chMark(k);
+ show(x.i,0,false);chMark(k);chShowK=k;chShowTxt();
 }
+function chShowTxt(){const e=document.getElementById('chShowTxt');if(!e)return;const run=chRun();e.textContent=chShowK<0?'':'Note '+(chShowK+1)+' of '+run.length+': '+run[chShowK].name+run[chShowK].o}
+function chNext(d){const run=chRun();if(!run.length)return;if(window.micOn)micStop();chPlay++;let k=chShowK+(d||1);if(k>=run.length)k=0;if(k<0)k=run.length-1;chTap(k);const b=document.getElementById('chShowBtn');if(b)b.textContent='Next note'}
 function renderChords(){
  const r=document.getElementById('chRoot');if(!r)return;
  const set=chSet();if(chType>=set.length)chType=0;
@@ -499,22 +501,22 @@ function renderChords(){
  const key=KN[chRoot];
  document.getElementById('chHelp').textContent=chNm==='w'?`Key names are as written on your ${ins} sax music.`:`Key names are concert pitch, so your ${ins} sax plays them transposed.`;
  const title=chTab==='s'?`${key} ${nm.toLowerCase()} scale`:`${key}${nm}`;
- const sub=(nm==='Chromatic'?'Two octaves up with sharps, then back down with flats. ':'')+(chNm==='c'?`Concert ${key} on ${ins} sax is written ${KN[wpc]}. `:'');
+ const sub=(nm.startsWith('Chromatic')?(nm==='Chromatic'?'One octave up with sharps, then back down with flats. ':'Two octaves up with sharps, then back down with flats. '):'')+(chNm==='c'?`Concert ${key} on ${ins} sax is written ${KN[wpc]}. `:'');
  document.getElementById('chOut').innerHTML=`<div class="ch-name">${title}</div><div class="ch-sub">${sub}Tap a note to see its fingering.</div>
  ${chStaff(run)}
-${nm==='Chromatic'?'':`<div class="ch-notes">${run.map((x,k)=>`<button class="ch-n ${x.name.includes('♯')?'sh':x.name.includes('♭')?'fl':''}" onclick="chTap(${k})"><b>${x.name}</b><small>${x.o}</small></button>`).join('')}</div>`}
- <button class="ch-play" onclick="playChord()">&#9654; Play ${chTab==='s'?'scale':'arpeggio'}</button>`;
- fitStaves();
+${nm.startsWith('Chromatic')?'':`<div class="ch-notes">${run.map((x,k)=>`<button class="ch-n ${x.name.includes('♯')?'sh':x.name.includes('♭')?'fl':''}" onclick="chTap(${k})"><b>${x.name}</b><small>${x.o}</small></button>`).join('')}</div>`}
+ <button class="ch-play" onclick="playChord()">&#9654; Play ${chTab==='s'?'scale':'arpeggio'}</button> <button class="ch-play" id="chShowBtn" onclick="chNext()">Show me the first note</button> <button class="ch-back" onclick="chNext(-1)" aria-label="Previous note">Back</button> <span id="chShowTxt" class="ch-sub" aria-live="polite"></span>`;
+ chShowK=-1;fitStaves();
  if(window.micOn&&micSrc==='ch')micStop();
 }
 function set0(){const st=chSet();return st[Math.min(chType,st.length-1)][0]}
 function playChord(){
- const run=chRun(),seq=chTab==='s'&&set0()!=='Chromatic'?run.concat(run.slice(0,-1).reverse()):run,tok=++chPlay,pos=seq.map((_,k)=>k<run.length?k:2*run.length-2-k);
+ const run=chRun(),seq=chTab==='s'&&!set0().startsWith('Chromatic')?run.concat(run.slice(0,-1).reverse()):run,tok=++chPlay,pos=seq.map((_,k)=>k<run.length?k:2*run.length-2-k);
  seq.forEach((x,k)=>setTimeout(()=>{if(tok!==chPlay)return;
   chMark(pos[k]);
   show(x.i,0,true);if(soundOn&&window.SaxSound)SaxSound.play(fOf(N[x.i]));
   if(k===seq.length-1)setTimeout(()=>{if(tok===chPlay)chMark(-1)},700);
- },k*(chTab==='s'?(set0()==='Chromatic'?300:450):650)));
+ },k*(chTab==='s'?(set0().startsWith('Chromatic')?300:450):650)));
 }
 const _setInst=setInst;setInst=function(k){_setInst(k);renderChords()};
 renderChords();

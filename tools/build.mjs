@@ -288,7 +288,7 @@ function scaleRun(wpc,[nm,iv,steps]){
  const [rl]=KEYPC[wpc],out=[];
  iv.forEach((d,k)=>{const i=N.findIndex(n=>nMidi(n)===base+d);if(i<0)return;
   let name=nName(N[i]);
-  if(nm==='Chromatic'){const pc=((wpc+d)%12+12)%12;name=(k<=24?CHS:CHF)[pc]}
+  if(nm.startsWith('Chromatic')){const pc=((wpc+d)%12+12)%12;name=(k<=(iv.length-1)/2?CHS:CHF)[pc]}
   else if(steps){const let_=L[(L.indexOf(rl)+steps[k])%7],pc=((wpc+d)%12+12)%12,nat=MM[L.indexOf(let_)];let df=((pc-nat)%12+12)%12;if(df>6)df-=12;name=let_+(ACC[df]??name.slice(1))}
   out.push({i,name,o:N[i][1],b:1})});
  return {run:out,missing:iv.length-out.length};
@@ -298,7 +298,8 @@ const STYPES=[
  ['Natural minor','natural-minor','Natural minor scale','The natural minor scale has a darker, more serious sound. Every major key has a matching minor key that shares the same notes.'],
  ['Minor pentatonic','minor-pentatonic','Minor pentatonic scale','The minor pentatonic scale has only five notes, which makes it easy to play. It is the sound of blues, rock and a lot of improvised solos.'],
  ['Blues','blues','Blues scale','The blues scale is the minor pentatonic scale with one extra note, the flat fifth, which gives it the classic bluesy bend.'],
- ['Chromatic','chromatic','Chromatic scale','The chromatic scale uses every note, one semitone at a time. It is great for finger practice. This one goes up two octaves with sharps and comes back down with flats.']
+ ['Chromatic','chromatic','Chromatic scale','The chromatic scale uses every note, one semitone at a time, so it is great for finger practice. This one goes up one octave with sharps and comes back down with flats.'],
+ ['Chromatic (2 octaves)','chromatic-2-octaves','Chromatic scale, 2 octaves','The two octave chromatic scale uses every note for two octaves. It goes up with sharps and comes back down with flats, and it is a good workout for your fingers and your breath.']
 ];
 const sbtn=(D,B,SP)=>`<script src="../../sound.js"></script><script>var D=${JSON.stringify(D)},B=${JSON.stringify(B)},T=0;document.querySelectorAll('.play').forEach(function(b){b.addEventListener('click',function(){var f=D[b.dataset.i],t=0;T++;var my=T;f.forEach(function(h,k){var at=t;t+=B[k]*${SP};setTimeout(function(){if(my===T&&window.SaxSound)SaxSound.play(h)},at)})})});</script>`;
 const ECSS=`:root{--pink:#1d2a33;--bg:#fff;--mute:#6b7780;--ink:#1d2a33;--card:#fff}.six{grid-template-columns:repeat(auto-fill,minmax(110px,1fr))}.six svg{width:76px}.seq{font:600 17px/1.9 system-ui,sans-serif;letter-spacing:.02em}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:6px;margin:8px 0}.grid a{display:block;text-align:center;border:1px solid var(--bd);border-radius:8px;padding:6px 4px;text-decoration:none;font:600 15px system-ui,sans-serif}.guides{list-style:none;padding:0}.guides li{margin:14px 0}.guides a{font:600 18px Georgia,serif}.guides span{display:block;color:var(--mute);font:14px/1.4 system-ui,sans-serif}`;
@@ -309,12 +310,12 @@ STYPES.forEach(([tn,tslug,tlabel,intro])=>{
  KNAMES.forEach((kn,wpc)=>{
   const {run,missing}=scaleRun(wpc,sc);if(!run.length)return;
   const slug=`${ksl(kn)}-${tslug}`,us=uniq(run);
-  const names=tn==='Chromatic'?`${run.slice(0,13).map(x=>x.name).join(' ')} and back down`:run.map(x=>x.name).join(' ');
+  const names=tn.startsWith('Chromatic')?`${run.slice(0,(run.length+1)/2|0).map(x=>x.name).join(' ')} and back down`:run.map(x=>x.name).join(' ');
   const title=`${kn} ${tlabel} on Saxophone: Notes and Fingering (Alto, Tenor, Soprano)`;
   const desc=`${kn} ${tlabel.toLowerCase()} for alto, tenor and soprano saxophone. The notes, the staff and a fingering diagram for every note.`;
   const conc=IK.map(k=>`<tr><th>${INSTR[k].name} sax</th><td>${CHF[((wpc+INSTR[k].shift)%12+12)%12]}</td></tr>`).join('');
   const hz=IK.map(k=>{setI(k);const r={k,I:INSTR[k],f:run.map(x=>+fOf(N[x.i]).toFixed(2))};setI('alto');return r});
-  const sp=tn==='Chromatic'?300:450;
+  const sp=tn.startsWith('Chromatic')?300:450;
   const others=STYPES.filter(s=>s[1]!==tslug).map(s=>`<a href="../${ksl(kn)}-${s[1]}/">${kn} ${s[2].toLowerCase()}</a>`).join(' &middot; ');
   const keys=KNAMES.map(k2=>`<a href="../${ksl(k2)}-${tslug}/">${k2}</a>`).join('');
   const body=`<h1>${kn} ${tlabel.toLowerCase()} on saxophone</h1>
