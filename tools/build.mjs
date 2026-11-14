@@ -368,6 +368,12 @@ guide('alternate-fingerings','Saxophone Alternate Fingerings and Trills | Saxoph
 <p>A trill is a quick back and forth between two notes. On some notes a trill is awkward with the main fingering, so players switch to an alternate that changes only one finger or key.</p>
 <h2>Notes with alternate fingerings</h2>
 ${withAlts.map(o=>`<div class="card"><h3><a href="../../notes/${o.nm.slug}/">${o.nm.short}${o.d.written.replace(/^[A-G][♯♭]?/,'')}</a> <small>written ${o.d.written}</small></h3><div class="row">${o.f.map((x,j)=>`<div class="dia"><div class="small">${j?'Alternate '+j:'Main'}</div>${dia(x)}<div class="small">${brief(x)}</div></div>`).join('')}</div></div>`).join('')}
+<h2>Which B♭ fingering to use</h2>
+<p>B♭ is the note with the most choices. The chart shows two: the main side B♭ fingering and the bis key. Two more are used by experienced players in particular passages.</p>
+<p><b>Side B♭ (main):</b> play A with the left hand and add the lowest of the right-hand side keys. It is the best all-round choice, especially in chromatic lines, so learn it first.</p>
+<p><b>Bis B♭ (alternate):</b> press the left index finger on both the B key and the small bis key. It works well in flat keys and scale runs where that finger stays down, but moving between B and B♭ is awkward, so avoid it in chromatic passages.</p>
+<p><b>1 and 1 and 1 and 2 (not shown):</b> these are used for specific moves. The 1 and 1 fingering helps in quick jumps between F and B♭, and the 1 and 2 fingering is mainly for moving between F♯ and A♯. They are left off the chart so beginners are not given too many choices. Ask your teacher when to use them.</p>
+<p class="small">Fingerings can change the tuning and tone a little, so check with a tuner.</p>
 <p class="small">Altissimo (very high) notes vary a lot between players and instruments. Check these with your teacher.</p>`);
 guide('common-problems','Common Saxophone Problems and Fixes: Squeaks, Weak Low Notes and More | Saxophone Fingering Chart','Fixes for common beginner saxophone problems: squeaks, weak low notes, a sharp or flat pitch, notes that crack and reeds that feel too hard or soft.','Common saxophone problems and fixes','Simple things to try first when something does not sound right.',
 `<h2>Squeaks</h2>
