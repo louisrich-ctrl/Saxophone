@@ -104,7 +104,7 @@ ${fingBlocks}
 <p><a class="btn" href="../../">Open the interactive fingering chart</a></p>
 <h2>About this fingering</h2>
 <p>This is the standard fingering for written ${d.written} on alto, soprano and tenor saxophone. All three use the same keys, but they sound at different pitches: ${cc.map(c=>`${c.I.name.toLowerCase()} (${c.I.pitch} instrument) sounds ${c.concert}`).join(', ')}. In the diagram a filled circle is a key you press and an open circle is one you leave up. The small shapes around the main holes are the octave, palm, pinky, side and bis keys.</p>
-<p class="small">Fingerings can differ slightly between saxophone models, and altissimo notes vary most. If something looks wrong, <a href="mailto:hello@saxophonefingeringchart.com?subject=${encodeURIComponent('Sax fingering correction: '+nm.full+' ('+d.written+')')}">tell us</a> and we will check it.</p>
+<p class="small">Fingerings can differ slightly between saxophone models, and altissimo notes vary most. If something looks wrong, <a href="mailto:louisdatoy@gmail.com?subject=${encodeURIComponent('Sax fingering correction: '+nm.full+' ('+d.written+')')}">tell us</a> and we will check it.</p>
 ${FOOT("../../")}
 <div class="nav"><span>${prev?`<a href="../${prev.nm.slug}/">&larr; ${prev.nm.full} (${prev.d.written})</a>`:''}</span><span>${next?`<a href="../${next.nm.slug}/">${next.nm.full} (${next.d.written}) &rarr;</a>`:''}</span></div>
 </main>
@@ -211,7 +211,7 @@ wr('privacy',shell('Privacy and Contact | Saxophone Fingering Chart','How Saxoph
 <h2>Accuracy</h2>
 <p>Fingerings can differ between saxophone models, and altissimo fingerings vary most. This site is a general guide and is not a substitute for a teacher.</p>
 <h2>Contact</h2>
-<p>Corrections and feedback: <a href="mailto:hello@saxophonefingeringchart.com">hello@saxophonefingeringchart.com</a></p>`));
+<p>Corrections and feedback: <a href="mailto:louisdatoy@gmail.com">louisdatoy@gmail.com</a></p>`));
 // printable chart
 const pcards=notes.map(o=>`<div class="pc"><b>${o.nm.short}<small>${o.d.written.replace(/^[A-G][♯♭]?/,'')}</small></b>${dia(o.f[0])}</div>`).join('');
 wr('print',shell('Printable Saxophone Fingering Chart: Alto, Soprano, Tenor','Print a one-page saxophone fingering chart for alto, soprano and tenor sax, low B♭ to high F. Free to print.','print/',
